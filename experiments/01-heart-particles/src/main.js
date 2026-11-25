@@ -18,7 +18,7 @@ const INITIAL = {
   beatPeriod: 2.5,
   bloom: true,
   bloomStrength: 1.8,
-  autoCycle: false
+  autoCycle: true
 };
 const DEFAULTS = { ...INITIAL };
 const state = {

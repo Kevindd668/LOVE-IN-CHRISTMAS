@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-25T08:52:28.644Z",
+  "generatedAt": "2026-11-25T08:55:27.943Z",
   "browser": "158.0.4370.33",
   "labs": [
     {
@@ -13,7 +13,7 @@
         "points": 11400,
         "textures": 14,
         "geometries": 4,
-        "heapBytes": 10489103,
+        "heapBytes": 10667644,
         "canvas": [
           1440,
           900
@@ -22,7 +22,7 @@
           "fps": 240,
           "calls": 17,
           "count": 10000,
-          "mode": "heart"
+          "mode": "burst"
         }
       },
       "errors": []
@@ -38,7 +38,7 @@
         "points": 2760,
         "textures": 18,
         "geometries": 55,
-        "heapBytes": 14881580,
+        "heapBytes": 15210024,
         "canvas": [
           1440,
           900
@@ -65,7 +65,7 @@
         "points": 23860,
         "textures": 13,
         "geometries": 23,
-        "heapBytes": 10436339,
+        "heapBytes": 10986564,
         "canvas": [
           1440,
           900
@@ -92,7 +92,7 @@
         "points": 1200,
         "textures": 87,
         "geometries": 103,
-        "heapBytes": 12821835,
+        "heapBytes": 12763619,
         "canvas": [
           1440,
           900
@@ -117,7 +117,7 @@
         "points": 10600,
         "textures": 14,
         "geometries": 4,
-        "heapBytes": 8148497,
+        "heapBytes": 7439367,
         "canvas": [
           1440,
           900
