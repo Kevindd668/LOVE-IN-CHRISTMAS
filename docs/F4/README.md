@@ -2,7 +2,7 @@
 
 > 分支：`f4-romance-memory`  
 > 基线：F3 `ba1ed8d` / 标签 `f3-accepted`  
-> 状态：**WP0–WP6 实现、真实截图、录屏、性能与回归完成，等待用户验收。**  
+> 状态：**WP0–WP6 已通过用户验收，已合并到 `feature/visual-upgrade`。**  
 > F5 未开始。  
 > 最终 standalone SHA-256：`5A5053593E0F436E530A7C08CE6D6FD7625206AA3B088688F63A8895392816F3`
 
