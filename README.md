@@ -1,10 +1,12 @@
-# A Christmas Wish · 圣诞心愿
+# LOVE IN CHRISTMAS · 圣诞心愿
 
 > *You are my only Christmas wish.*
 >
 > 这个冬天，想把所有浪漫都送给你。
 
-一个可以送给她的 **3D 互动圣诞礼物**。打开页面，是一棵程序化生成的圣诞树、环绕漂浮的照片、520 与 1314、温暖的灯串、雪夜、极光和礼物。她可以上传照片、调整灯光与粒子、换成你们的文字，也可以按下「45 秒圣诞电影」，让整个场景替你说完那段话。
+一个可以送给她的 **68 秒实时 3D 圣诞电影与互动礼物**。打开页面，是「MERRY CHRISTMAS」入口，随后进入由 20,000 粒子星河、巨型 3D 爱心、真实照片、520 / 1314、正式圣诞树和最终告白组成的完整电影。
+
+她也可以上传照片、调整灯光与粒子、换成你们的文字，或沿用原有「45 秒圣诞电影」和「只属于我们的圣诞节」模式。
 
 项目使用 **Three.js r160 + TypeScript + WebGL2 + Vite**。所有场景资产均实时生成，不依赖后台、图库或在线字体。
 
@@ -29,12 +31,12 @@
 
 ## 给她的使用顺序
 
-1. 打开页面，稍等 2 秒，圣诞树会被点亮。
-2. 点右上角 **「开启音乐」**，或者直接开始「45 秒圣诞电影」/「只属于我们的圣诞节」，音乐会在用户手势后自动开启。
-3. 展开右侧 **04 我们的照片**，上传你们的照片；支持 JPG / PNG / WEBP，最多 24 张。
+1. 打开页面，选择 **「开启专属圣诞惊喜」**，观看 68 秒完整电影；或点 **「先逛逛」** 进入正式场景。
+2. 电影 0–8 秒是 20,000 粒子星河与 3D 爱心开场；8–68 秒依次是树灯、爱心、真实照片、520 / 1314、全景和圣诞告白。
+3. 电影结束或退出后，可展开右侧 **04 我们的照片** 上传 JPG / PNG / WEBP，最多 24 张。
 4. 展开 **06 专属浪漫**，改 520、1314、祝福语、落款、礼物里的话和音乐。
-5. 点 **「45 秒圣诞电影」** 播放完整故事；点 **「只属于我们的圣诞节」** 进入亲密特写。
-6. 点右下角的相机图标可进入全屏欣赏。
+5. 也可继续使用原有 **「45 秒圣诞电影」** 和 **「只属于我们的圣诞节」**。
+6. 点右下角相机图标进入全屏欣赏；点电影 HUD 可暂停、上一幕、下一幕、跳过开场或完整重播。
 
 ### 场景里藏着的互动
 
@@ -100,9 +102,12 @@ Christmas-Wish/
 │   ├── photos/                # PhotoManager / PhotoCard / PhotoOrbit / placeholderArt
 │   ├── effects/               # AuroraEffect / BloomEffect / LightEffect
 │   ├── interaction/           # MouseInteraction / GiftInteraction / DemoController / RomanceMoment
-│   ├── ui/                    # ControlPanel / PhotoUploader / SettingsManager / UIManager
-│   ├── audio/                 # MusicEngine
+│   ├── cinematic/             # F5 FilmDirector / FilmStory / camera rig / intro / HUD
+│   ├── memories/ gifts/ romance/ storage/  # F4 内容、记忆、礼物、520/1314、本地存储
+│   ├── ui/                    # ControlPanel / PhotoUploader / SettingsManager / StoryEditor / UIManager
+│   ├── audio/                 # MusicEngine（F5 增加电影同步）
 │   └── assets/fonts/          # 内联字体轮廓 + 字体 NOTICE
+└── docs/F5/                   # 68 秒电影设计、分镜、性能、稳定性、验收与证据
 └── qa/                        # 验收报告、自动化脚本、截图
 ```
 
@@ -170,7 +175,18 @@ npm run build:single
 
 ## 说明与边界
 
-- **照片不会上传**，只通过 `URL.createObjectURL` 在浏览器本地处理；刷新后不保留。这样送礼物时不会有隐私或后端成本。
-- **浏览器策略要求音频先由用户手势触发**。直接点「开启音乐」，或开始电影 / 浪漫模式，音乐都会在当前用户操作后开始。
+- **照片不会上传**，只通过 `URL.createObjectURL` 在浏览器本地处理；如启用 F4 本地记忆可保存到浏览器 IndexedDB，刷新后仍留在本机。
+- **浏览器策略要求音频先由用户手势触发**。入口按钮和电影/浪漫模式都是明确的用户手势；退出电影会恢复原先的音乐开关状态。
 - 没有随机外部图片、CDN、在线字体或第三方音频。只有 Three.js（MIT）和嵌入的 Droid Serif 字体数据（Apache 2.0），见 [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md)。
 - 场景美术为程序化写意风格，追求圣诞夜的温柔氛围，而不是照片级写实。她的照片上传后才是这个场景真正的主角。
+- F5 完整电影与验收证据见 [`docs/F5/README.md`](./docs/F5/README.md)。
+
+## 最终基线
+
+- 项目：**LOVE IN CHRISTMAS**
+- 最终基线：`v1.0.0`（`main`）
+- GitHub：https://github.com/Kevindd668/LOVE-IN-CHRISTMAS
+- 技术基线：Three.js `0.160.0` / TypeScript / Vite；无 GSAP、无第三方音频。
+- 单文件：[`Christmas-Wish.html`](./Christmas-Wish.html)
+- 68 秒电影：[`docs/F5/evidence/02-film-68s.webm`](./docs/F5/evidence/02-film-68s.webm)
+- 最终验收：[`docs/F5/FINAL_ACCEPTANCE.md`](./docs/F5/FINAL_ACCEPTANCE.md)

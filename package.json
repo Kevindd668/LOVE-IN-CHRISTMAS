@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "A Christmas Wish — an interactive 3D Christmas gift made with Three.js and TypeScript.",
+  "description": "LOVE IN CHRISTMAS — a 68-second interactive 3D Christmas film and gift made with Three.js and TypeScript.",
   "scripts": {
     "dev": "node scripts/build.mjs dev",
     "typecheck": "tsc --noEmit",

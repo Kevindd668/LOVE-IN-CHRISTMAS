@@ -1,4 +1,4 @@
-﻿# F5 — Cinematic Experience & Final Release
+# F5 — Cinematic Experience & Final Release
 
 ## 状态
 
@@ -13,9 +13,10 @@
 | S6 WP6 文字与转场 | 完成 |
 | S7 WP7 播放与恢复 | 完成 |
 | S8 WP8 性能与稳定性 | 完成；30 分钟/27 次完整重播 |
-| S9 WP9 完整回归/最终验收 | 回归完成；等待用户最终确认 |
+| S9 WP9 完整回归/最终验收 | 完成；用户已确认最终基线 |
 
-当前分支：`f5-cinematic-full`。  
+当前分支：`main`（最终基线 `v1.0.0`）。  
+GitHub：https://github.com/Kevindd668/LOVE-IN-CHRISTMAS  
 完整电影：68 秒（8 秒开场 + 60 秒故事）。
 
 ## 交付
@@ -46,9 +47,10 @@
 - [STABILITY_REPORT](STABILITY_REPORT.md)
 - [REGRESSION_REPORT](REGRESSION_REPORT.md)
 - [FINAL_ACCEPTANCE](FINAL_ACCEPTANCE.md)
+- [FINAL_BASELINE](FINAL_BASELINE.md)
 - 历史开场：[INTRO](INTRO/README.md)
 
 ## 最终状态
 
 技术开发、真实录屏、性能、30 分钟稳定性、F3/F4 回归均已执行。  
-未 push、未合并 main；等待用户最终确认后再进行发布。
+已合并 `main` 并推送 GitHub；最终基线为 `v1.0.0`。
