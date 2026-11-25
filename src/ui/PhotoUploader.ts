@@ -11,7 +11,10 @@ export class PhotoUploader {
   private readonly uploadZone: HTMLElement;
   private readonly list: HTMLElement;
   private readonly countLabel: HTMLElement;
-  private readonly onChange = (): void => this.render();
+  private readonly onChange = (): void => {
+    this.render();
+    window.dispatchEvent(new Event('christmas-wish-photos-changed'));
+  };
   private reading = false;
 
   constructor(manager: PhotoManager, options: PhotoUploaderOptions) {

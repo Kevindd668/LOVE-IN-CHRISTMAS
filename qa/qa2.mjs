@@ -71,8 +71,12 @@ assert.equal(result.demoStopped.active, false);
 
 // gift lid visual check
 await page.evaluate(() => window.__CHRISTMAS_WISH__.openGift(0));
-await page.waitForTimeout(800);
-await page.locator('#wish-accept').click();
+await page.waitForTimeout(900);
+if (await page.locator('#story-overlay.is-open').count()) {
+  await page.locator('.story-close').click();
+} else if (await page.locator('#wish-overlay.is-open').count()) {
+  await page.locator('#wish-accept').click();
+}
 await page.waitForTimeout(300);
 result.giftLid = await page.evaluate(() => {
   const a = window.__CHRISTMAS_WISH__.app;

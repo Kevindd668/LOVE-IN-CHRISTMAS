@@ -23,12 +23,23 @@ import { HeartParticleSystem } from './particles/HeartParticleSystem';
 import { MagicParticles } from './particles/MagicParticles';
 import { SnowParticles } from './particles/SnowParticles';
 import { StarParticles } from './particles/StarParticles';
+import { PhotoManager } from './photos/PhotoManager';
+import { RomanceContentStore } from './romance/RomanceContentStore';
+import { RomanceStateManager } from './romance/RomanceStateManager';
+import { HeartInteraction } from './romance/HeartInteraction';
+import { LoveNumbersController } from './romance/LoveNumbersController';
+import { ParticleLoveText } from './romance/ParticleLoveText';
+import { MemoryViewer } from './memories/MemoryViewer';
+import { GiftContentManager } from './gifts/GiftContentManager';
+import { GiftExperienceViewer } from './gifts/GiftExperienceViewer';
+import { MemoryStorage } from './storage/MemoryStorage';
+import { StoryEditor, LOCAL_PHOTOS_KEY } from './ui/StoryEditor';
+import { StoryOverlay } from './ui/StoryOverlay';
 
 const TREE_PRESENTATION_SCALE = 1.24;
 const TREE_FRAME_HEADROOM = 1.2;
 const PHOTO_ORBIT_PRESENTATION_SCALE = 1.16;
 const GIFT_PRESENTATION_SCALE = 1.2;
-import { PhotoManager } from './photos/PhotoManager';
 import { ControlPanel } from './ui/ControlPanel';
 import { PhotoUploader } from './ui/PhotoUploader';
 import { SettingsManager } from './ui/SettingsManager';
@@ -63,6 +74,18 @@ class ChristmasWishApp {
   private giftInteraction!: GiftInteraction;
   private demo!: DemoController;
   private romance!: RomanceMoment;
+  private readonly romanceContent = new RomanceContentStore();
+  private readonly romanceState = new RomanceStateManager();
+  private memoryStorage!: MemoryStorage;
+  private storyOverlay!: StoryOverlay;
+  private heartInteraction!: HeartInteraction;
+  private numbersController!: LoveNumbersController;
+  private particleLoveText!: ParticleLoveText;
+  private memoryViewer!: MemoryViewer;
+  private giftContent!: GiftContentManager;
+  private giftViewer!: GiftExperienceViewer;
+  private storyEditor: StoryEditor | null = null;
+  private heartPickProxy: THREE.Mesh | null = null;
 
   private width = Math.max(1, window.innerWidth);
   private height = Math.max(1, window.innerHeight);
@@ -107,6 +130,8 @@ class ChristmasWishApp {
     }
     const canvas = document.querySelector<HTMLCanvasElement>('#scene-canvas');
     if (!canvas) throw new Error('Scene canvas not found');
+    this.memoryStorage = new MemoryStorage();
+    this.storyOverlay = new StoryOverlay();
 
     try {
       this.width = Math.max(1, window.innerWidth);
@@ -127,6 +152,20 @@ class ChristmasWishApp {
       this.music = new MusicEngine();
       this.music.setVolume(this.settings.get('musicVolume'));
 
+      try {
+        const localSave =
+          window.localStorage.getItem(LOCAL_PHOTOS_KEY) === '1';
+        if (localSave) {
+          const stored = await this.memoryStorage.loadAll();
+          if (stored.length > 0) {
+            this.photos.removeDefaultPhotos();
+            await this.photos.addStoredRecords(stored);
+          }
+        }
+      } catch {
+        this.ui.toast('本机照片读取失败，先使用本次页面里的照片');
+      }
+
       this.photoUploader = new PhotoUploader(this.photos, {
         notify: (message) => this.ui.toast(message)
       });
@@ -138,6 +177,18 @@ class ChristmasWishApp {
         onRomance: () => this.startRomance(),
         onNotify: (message) => this.ui.toast(message)
       });
+
+      if (new URLSearchParams(window.location.search).get('edit') === '1') {
+        this.storyEditor = new StoryEditor({
+          content: this.romanceContent,
+          photos: this.photos,
+          storage: this.memoryStorage,
+          notify: (message) => this.ui.toast(message)
+        });
+        this.storyEditor.open();
+      } else {
+        this.controlPanel.close();
+      }
 
       this.applyInitialSettings();
       this.setupInteraction();
@@ -232,12 +283,21 @@ class ChristmasWishApp {
       autoCycle: false
     });
     this.numbers.group.scale.setScalar(TREE_PRESENTATION_SCALE);
+    this.particleLoveText = new ParticleLoveText();
     this.sceneManager.setTreeShadowScale(TREE_PRESENTATION_SCALE);
 
     // The giant heart sits behind the enlarged tree as a halo, so it never
     // blocks the core tree, gifts, photos or 520/1314 labels.
     this.giantHeart.setPosition(4.2, 8.4, -9.8);
     this.giantHeart.setScale(1.4);
+
+    this.heartPickProxy = new THREE.Mesh(
+      new THREE.SphereGeometry(3.3, 16, 12),
+      new THREE.MeshBasicMaterial({ visible: false, depthWrite: false })
+    );
+    this.heartPickProxy.position.copy(this.giantHeart.group.position);
+    this.heartPickProxy.userData.pickType = 'heart';
+    this.heartPickProxy.name = 'giant-heart-pick-proxy';
 
     const scene = this.sceneManager.scene;
     scene.add(this.galaxy.group);
@@ -251,7 +311,9 @@ class ChristmasWishApp {
       this.stars.group,
       this.aurora.group,
       this.magic.group,
-      this.giantHeart.group
+      this.giantHeart.group,
+      this.heartPickProxy,
+      this.particleLoveText.group
     );
 
     const giftShadows: THREE.Object3D[] = [];
@@ -283,6 +345,29 @@ class ChristmasWishApp {
     this.giantHeart.setColors(settings.giantHeartColor, '#FFD58A');
     this.giantHeart.setVisible(settings.giantHeartOn);
     this.giantHeart.setPaused(settings.giantHeartPaused);
+
+    this.numbersController = new LoveNumbersController(this.numbers, this.particleLoveText);
+    this.heartInteraction = new HeartInteraction({
+      heart: this.giantHeart,
+      numbers: this.numbersController,
+      content: this.romanceContent,
+      state: this.romanceState,
+      overlay: this.storyOverlay
+    });
+    this.memoryViewer = new MemoryViewer({
+      photos: this.photos,
+      camera: this.cameraManager,
+      ui: this.ui,
+      onClose: () => this.romanceState.end()
+    });
+    this.giftContent = new GiftContentManager(this.romanceContent, this.photos);
+    this.giftViewer = new GiftExperienceViewer({
+      gifts: this.giftContent,
+      overlay: this.storyOverlay,
+      state: this.romanceState,
+      heart: this.giantHeart,
+      numbers: this.numbersController
+    });
   }
 
   private applyInitialSettings(): void {
@@ -322,15 +407,33 @@ class ChristmasWishApp {
       getMeshes: () => [
         ...this.tree.getPickMeshes(),
         ...this.gifts.getPickMeshes(),
-        ...this.photos.getPickMeshes()
+        ...this.photos.getPickMeshes(),
+        ...(this.heartPickProxy && this.giantHeart.group.visible ? [this.heartPickProxy] : [])
       ],
       isEnabled: () =>
         !this.interactionLocked &&
+        !this.romanceState.isBusy &&
+        !this.ui.hasOpenOverlay &&
         !this.demo?.isActive &&
         !this.romance?.isActive &&
         !document.body.classList.contains('is-cinema'),
       onPick: (target) => this.handlePick(target),
       onHover: (target) => this.handleHover(target)
+    });
+
+    document.querySelector('#btn-heart-promise')?.addEventListener('click', () => {
+      this.controlPanel.close();
+      this.heartInteraction.openPromise();
+    });
+    document.querySelector('#btn-love-numbers')?.addEventListener('click', () => {
+      this.controlPanel.close();
+      if (this.romanceState.isBusy) return;
+      this.romanceState.begin('numbers');
+      this.numbersController.setMode('alternate');
+      window.setTimeout(() => {
+        this.numbersController.setMode('idle');
+        if (this.romanceState.current === 'numbers') this.romanceState.end();
+      }, 11000);
     });
 
     this.giftInteraction = new GiftInteraction({
@@ -620,14 +723,16 @@ class ChristmasWishApp {
         this.giftInteraction.handle(target.index);
         break;
       case 'photo': {
-        const photo = this.photos.getPhotoById(target.id);
-        if (photo) {
-          this.photos.setSelected(target.id);
-          this.ui.showLightbox(photo);
+        if (this.memoryViewer.open(target.id)) {
+          this.romanceState.begin('memory');
           this.music.playEffect('photo');
         }
         break;
       }
+      case 'heart':
+        this.heartInteraction.handleClick(this.elapsed);
+        this.music.playEffect('tap');
+        break;
       case 'tree':
         this.magic.clickBloom(target.point, this.cameraManager.camera);
         this.music.playEffect('tap');
@@ -657,15 +762,8 @@ class ChristmasWishApp {
     this.music.playEffect('gift');
     window.clearTimeout(this.giftWishTimer);
     this.giftWishTimer = window.setTimeout(() => {
-      const settings = this.settings.current;
-      this.ui.showWish({
-        kicker: `A GIFT FOR YOU · ${result.label}`,
-        title: settings.blessingTitle,
-        body: result.message,
-        signature: settings.signature,
-        acceptLabel: '收下这份礼物'
-      });
-    }, 520);
+      this.giftViewer.open(result.index);
+    }, 420);
   }
 
   private startStarBlessing(): void {
@@ -970,6 +1068,7 @@ class ChristmasWishApp {
 
     this.tree.update(delta, elapsed);
     this.numbers.update(delta, elapsed, this.cameraManager.camera);
+    this.numbersController.update(delta);
     this.photos.update(delta, elapsed, this.cameraManager.camera, {
       photoSpeed: this.settings.get('photoSpeed'),
       photoRadius: this.settings.get('photoRadius'),
@@ -1058,7 +1157,22 @@ class ChristmasWishApp {
       galaxy: this.galaxy,
       gatherGiantHeart: () => this.giantHeart.gather(this.elapsed),
       burstGiantHeart: () => this.giantHeart.burst(this.elapsed),
-      photos: () => this.photos.views
+      photos: () => this.photos.views,
+      openMemory: (id: string) => {
+        if (this.memoryViewer.open(id)) this.romanceState.begin('memory');
+      },
+      closeMemory: () => this.memoryViewer.close(),
+      openPromise: () => this.heartInteraction.openPromise(),
+      openStoryGift: (index: number) => this.giftViewer.open(index),
+      getRomanceContent: () => this.romanceContent.current,
+      getRomanceState: () => this.romanceState.current,
+      setLoveNumbers: (mode: 'idle' | 'alternate' | 'love' | 'finale') =>
+        this.numbersController.setMode(mode),
+      getHeartPickProxy: () => this.heartPickProxy,
+      getStoryEditor: () => this.storyEditor,
+      getPhotoMetadata: (id: string) => this.photos.getMetadata(id),
+      setPhotoMetadata: (id: string, patch: Record<string, string>) =>
+        this.photos.setMetadata(id, patch as never)
     };
     document.body.dataset.ready = 'true';
   }
@@ -1080,12 +1194,21 @@ class ChristmasWishApp {
     this.controlPanel?.dispose();
     this.demo?.dispose();
     this.romance?.dispose();
+    this.heartInteraction?.dispose();
+    this.memoryViewer?.dispose();
+    this.storyEditor?.dispose();
+    this.storyOverlay?.dispose();
+    if (this.heartPickProxy) {
+      this.heartPickProxy.geometry.dispose();
+      (this.heartPickProxy.material as THREE.Material).dispose();
+    }
     this.tree?.dispose();
     this.numbers?.dispose();
     this.gifts?.dispose();
     this.photos?.dispose();
     this.hearts?.dispose();
     this.giantHeart?.dispose();
+    this.particleLoveText?.dispose();
     this.galaxy?.dispose();
     this.snow?.dispose();
     this.stars?.dispose();

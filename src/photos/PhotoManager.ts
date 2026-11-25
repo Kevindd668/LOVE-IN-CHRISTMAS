@@ -5,6 +5,24 @@ import { PhotoCard } from './PhotoCard';
 import { PhotoOrbit, type PhotoOrbitSettings } from './PhotoOrbit';
 import { createPlaceholderArt } from './placeholderArt';
 
+export type MemoryCategory = 'meeting' | 'memory' | 'future';
+
+export interface PhotoMetadata {
+  title: string;
+  date: string;
+  description: string;
+  category: MemoryCategory;
+}
+
+export interface StoredPhotoRecord {
+  id: string;
+  name: string;
+  mime: string;
+  blob: Blob;
+  metadata: PhotoMetadata;
+  order: number;
+}
+
 export interface PhotoRecord {
   id: string;
   texture: THREE.Texture;
@@ -13,6 +31,8 @@ export interface PhotoRecord {
   caption: string;
   isDefault: boolean;
   objectUrl?: string;
+  blob?: Blob;
+  metadata: PhotoMetadata;
 }
 
 export interface PhotoListItem {
@@ -22,6 +42,7 @@ export interface PhotoListItem {
   caption: string;
   isDefault: boolean;
   track: number;
+  metadata: PhotoMetadata;
 }
 
 export interface PhotoAddResult {
@@ -50,6 +71,7 @@ export class PhotoManager {
   private showCaptions = true;
   private hoveredId: string | null = null;
   private selectedId: string | null = null;
+  private memoryId: string | null = null;
   private lastCaptionState = true;
   onChange: (() => void) | null = null;
 
@@ -64,13 +86,20 @@ export class PhotoManager {
     // to the existing 24-photo maximum.
     for (let i = 0; i < 6; i += 1) {
       const art = createPlaceholderArt(i);
+      const caption = DEFAULT_CAPTIONS[i] ?? '我们的故事';
       const record: PhotoRecord = {
         id: `default-${i + 1}`,
         texture: art.texture,
         displayUrl: art.dataUrl,
         fileName: `winter-memory-${i + 1}.jpg`,
-        caption: DEFAULT_CAPTIONS[i] ?? '我们的故事',
-        isDefault: true
+        caption,
+        isDefault: true,
+        metadata: {
+          title: caption,
+          date: '',
+          description: '',
+          category: i < 3 ? 'meeting' : 'memory'
+        }
       };
       this.records.push(record);
       const card = new PhotoCard({
@@ -119,9 +148,16 @@ export class PhotoManager {
       texture,
       displayUrl: objectUrl,
       objectUrl,
+      blob: file,
       fileName: file.name,
       caption: '我们的新回忆',
-      isDefault: false
+      isDefault: false,
+      metadata: {
+        title: '我们的新回忆',
+        date: '',
+        description: '',
+        category: 'memory'
+      }
     };
   }
 
@@ -243,11 +279,100 @@ export class PhotoManager {
   }
 
   setCaption(id: string, caption: string): void {
+    this.setMetadata(id, { title: caption });
+  }
+
+  setMetadata(id: string, patch: Partial<PhotoMetadata>): void {
     const record = this.records.find((item) => item.id === id);
     const card = this.cards.get(id);
     if (!record || !card) return;
-    record.caption = caption.slice(0, 32);
+    const next = { ...record.metadata, ...patch };
+    next.title = next.title.slice(0, 32);
+    next.description = next.description.slice(0, 160);
+    next.date = /^\d{4}-\d{2}-\d{2}$/.test(next.date) ? next.date : '';
+    if (!['meeting', 'memory', 'future'].includes(next.category)) next.category = 'memory';
+    record.metadata = next;
+    record.caption = next.title || '我们的故事';
     card.setCaption(record.caption);
+  }
+
+  getMetadata(id: string): PhotoMetadata | null {
+    return this.records.find((record) => record.id === id)?.metadata ?? null;
+  }
+
+  getPhotoBlob(id: string): Blob | null {
+    return this.records.find((record) => record.id === id)?.blob ?? null;
+  }
+
+  getPhotoPosition(id: string): THREE.Vector3 | null {
+    return this.cards.get(id)?.group.getWorldPosition(new THREE.Vector3()) ?? null;
+  }
+
+  setMemoryMode(id: string | null): void {
+    this.memoryId = id;
+    this.selectedId = id;
+  }
+
+  get memoryModeId(): string | null {
+    return this.memoryId;
+  }
+
+  async addStoredRecords(items: StoredPhotoRecord[]): Promise<number> {
+    let added = 0;
+    for (const item of items.slice(0, Math.max(0, PHOTO_MAX - this.records.length))) {
+      try {
+        const file = new File([item.blob], item.name, { type: item.mime || 'image/jpeg' });
+        const record = await this.createRecordFromFile(file);
+        record.id = item.id;
+        record.metadata = { ...item.metadata };
+        record.caption = record.metadata.title || '我们的故事';
+        record.isDefault = false;
+        const card = new PhotoCard({
+          id: record.id,
+          texture: record.texture,
+          caption: record.caption,
+          fileName: record.fileName
+        });
+        card.setCaptionsVisible(this.showCaptions);
+        this.records.push(record);
+        this.cards.set(record.id, card);
+        this.scales.set(record.id, 0.01);
+        this.group.add(card.group);
+        added += 1;
+      } catch {
+        // A single corrupt stored photo must not block the rest.
+      }
+    }
+    if (added > 0) {
+      this.syncOrbit();
+      this.reveal = 1;
+      this.onChange?.();
+    }
+    return added;
+  }
+
+  getStoredRecords(): StoredPhotoRecord[] {
+    return this.records
+      .map((record, order) => ({ record, order }))
+      .filter(({ record }) => !record.isDefault && record.blob)
+      .map(({ record, order }) => ({
+        id: record.id,
+        name: record.fileName,
+        mime: record.blob?.type || 'image/jpeg',
+        blob: record.blob!,
+        metadata: { ...record.metadata },
+        order
+      }));
+  }
+
+  removeDefaultPhotos(): void {
+    for (const record of [...this.records]) {
+      if (record.isDefault) this.removePhoto(record.id);
+    }
+  }
+
+  clearAll(): void {
+    for (const record of [...this.records]) this.removePhoto(record.id);
   }
 
   setShowCaptions(show: boolean): void {
@@ -284,7 +409,8 @@ export class PhotoManager {
       fileName: record.fileName,
       caption: record.caption,
       isDefault: record.isDefault,
-      track: this.orbit.getTrack(record.id)
+      track: this.orbit.getTrack(record.id),
+      metadata: { ...record.metadata }
     };
   }
 
@@ -302,7 +428,11 @@ export class PhotoManager {
       }
     }
 
-    this.orbit.update(dt, time, camera, settings);
+    this.orbit.update(dt, time, camera, {
+      ...settings,
+      photosPaused: settings.photosPaused || Boolean(this.memoryId),
+      frozen: Boolean(this.memoryId)
+    });
 
     const orderedIds = this.records.map((record) => record.id);
     const densityScale =
@@ -356,7 +486,8 @@ export class PhotoManager {
       fileName: record.fileName,
       caption: record.caption,
       isDefault: record.isDefault,
-      track: this.orbit.getTrack(record.id)
+      track: this.orbit.getTrack(record.id),
+      metadata: { ...record.metadata }
     }));
   }
 

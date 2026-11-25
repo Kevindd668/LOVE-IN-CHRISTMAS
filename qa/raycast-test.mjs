@@ -41,9 +41,15 @@ const giftPoint = await page.evaluate(() => {
 });
 await page.mouse.click(giftPoint.x, giftPoint.y);
 await page.waitForTimeout(950);
-result.gift = { point: giftPoint, wishOpen: await page.locator('#wish-overlay').evaluate((el) => el.classList.contains('is-open')), openTargets: await page.evaluate(() => window.__CHRISTMAS_WISH__.app.gifts.gifts.map((g) => g.openTarget)) };
-assert.equal(result.gift.wishOpen, true);
-await page.locator('#wish-accept').click();
+result.gift = {
+  point: giftPoint,
+  storyOpen: await page.locator('#story-overlay').evaluate((el) => el.classList.contains('is-open')),
+  openTargets: await page.evaluate(() =>
+    window.__CHRISTMAS_WISH__.app.gifts.gifts.map((g) => g.openTarget)
+  )
+};
+assert.equal(result.gift.storyOpen, true);
+await page.locator('.story-close').click();
 await page.waitForTimeout(350);
 
 // Star click

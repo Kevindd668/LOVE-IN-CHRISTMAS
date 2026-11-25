@@ -1,0 +1,105 @@
+{
+  "cases": [
+    {
+      "name": "f4-1440-default",
+      "fps": 193,
+      "p50": 4.2,
+      "p95": 8.4,
+      "calls": 315,
+      "triangles": 467184,
+      "points": 34142,
+      "textures": 30,
+      "geometries": 207,
+      "heapMB": 32.9,
+      "photoCount": 6,
+      "canvas": [
+        1440,
+        900
+      ],
+      "state": "idle",
+      "contextLost": 0,
+      "errors": []
+    },
+    {
+      "name": "f4-3840-default",
+      "fps": 146,
+      "p50": 8.3,
+      "p95": 12.5,
+      "calls": 315,
+      "triangles": 467184,
+      "points": 34142,
+      "textures": 30,
+      "geometries": 207,
+      "heapMB": 25.4,
+      "photoCount": 6,
+      "canvas": [
+        3840,
+        2160
+      ],
+      "state": "idle",
+      "contextLost": 0,
+      "errors": []
+    },
+    {
+      "name": "f4-1440-full-bloom",
+      "fps": 184.1,
+      "p50": 4.2,
+      "p95": 8.4,
+      "calls": 329,
+      "triangles": 467198,
+      "points": 34142,
+      "textures": 43,
+      "geometries": 208,
+      "heapMB": 26,
+      "photoCount": 6,
+      "canvas": [
+        1440,
+        900
+      ],
+      "state": "idle",
+      "contextLost": 0,
+      "errors": []
+    },
+    {
+      "name": "f4-1440-24-photos",
+      "fps": 122.7,
+      "p50": 8.3,
+      "p95": 12.5,
+      "calls": 459,
+      "triangles": 493392,
+      "points": 34142,
+      "textures": 66,
+      "geometries": 333,
+      "heapMB": 28,
+      "photoCount": 24,
+      "canvas": [
+        1440,
+        900
+      ],
+      "state": "idle",
+      "contextLost": 0,
+      "errors": []
+    },
+    {
+      "name": "f4-1440-love-numbers",
+      "fps": 168.1,
+      "p50": 4.2,
+      "p95": 8.5,
+      "calls": 310,
+      "triangles": 435792,
+      "points": 35592,
+      "textures": 30,
+      "geometries": 208,
+      "heapMB": 23.5,
+      "photoCount": 6,
+      "canvas": [
+        1440,
+        900
+      ],
+      "state": "idle",
+      "contextLost": 0,
+      "errors": []
+    }
+  ],
+  "errors": []
+}

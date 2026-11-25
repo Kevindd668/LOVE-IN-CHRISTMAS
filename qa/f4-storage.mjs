@@ -1,0 +1,14 @@
+﻿import { chromium } from 'playwright-core';
+const browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:false,args:['--window-position=20,20','--window-size=1480,960']});
+const context=await browser.newContext({viewport:{width:1440,height:900}}); const page=await context.newPage(); const errors=[]; page.on('pageerror',e=>errors.push(e.message)); page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+await page.goto('http://127.0.0.1:4173/?edit=1',{waitUntil:'networkidle'}); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready,{timeout:30000}); await page.waitForTimeout(2500);
+await page.evaluate(async()=>{const a=window.__CHRISTMAS_WISH__.app;const files=[];for(let i=0;i<2;i++){const c=document.createElement('canvas');c.width=320;c.height=400;const x=c.getContext('2d');x.fillStyle=i?'#6b3a51':'#3a586b';x.fillRect(0,0,320,400);const b=await new Promise(r=>c.toBlob(r,'image/png'));files.push(new File([b],`f4-store-${i}.png`,{type:'image/png'}));}await a.photos.addFiles(files);});
+await page.evaluate(()=>{const id=window.__CHRISTMAS_WISH__.photos()[6].id;window.__CHRISTMAS_WISH__.setPhotoMetadata(id,{title:'测试记忆',date:'2026-05-20',description:'这一天的风很温柔。',category:'meeting'});});
+console.log('before',await page.evaluate(()=>({count:window.__CHRISTMAS_WISH__.app.photos.count,meta:window.__CHRISTMAS_WISH__.photos()[6].metadata})));
+await page.locator('.story-local-toggle').check(); await page.waitForTimeout(2200);
+console.log('saved',await page.evaluate(()=>({flag:localStorage.getItem('a-christmas-wish.local-photos.v1'),status:document.querySelector('.story-editor-status')?.textContent})));
+await page.reload({waitUntil:'networkidle'}); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready,{timeout:30000}); await page.waitForTimeout(2500);
+console.log('reloaded',await page.evaluate(()=>({count:window.__CHRISTMAS_WISH__.app.photos.count,meta:window.__CHRISTMAS_WISH__.photos()[0]?.metadata,flag:localStorage.getItem('a-christmas-wish.local-photos.v1')})));
+await page.locator('.story-clear').click(); await page.waitForTimeout(1200); await page.reload({waitUntil:'networkidle'}); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready,{timeout:30000}); await page.waitForTimeout(1800);
+console.log('cleared',await page.evaluate(()=>({count:window.__CHRISTMAS_WISH__.app.photos.count,flag:localStorage.getItem('a-christmas-wish.local-photos.v1')})));
+console.log('errors',errors); await browser.close();

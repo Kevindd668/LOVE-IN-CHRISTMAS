@@ -168,13 +168,19 @@ await page.waitForTimeout(400);
 // --- Gift interaction ---
 await page.evaluate(() => window.__CHRISTMAS_WISH__.openGift(0));
 await page.waitForTimeout(900);
-results.gift = await state();
-assert.equal(results.gift.wishOpen, true);
+results.gift = {
+  ...(await state()),
+  storyOpen: await page.locator('#story-overlay').evaluate((el) => el.classList.contains('is-open'))
+};
+assert.equal(results.gift.storyOpen, true);
 await page.screenshot({ path: 'qa/screenshots/qa-gift.png' });
-await page.locator('#wish-accept').click();
+await page.locator('.story-close').click();
 await page.waitForTimeout(350);
-results.giftClosed = await state();
-assert.equal(results.giftClosed.wishOpen, false);
+results.giftClosed = await page.evaluate(() => ({
+  storyOpen: document.querySelector('#story-overlay')?.classList.contains('is-open'),
+  state: window.__CHRISTMAS_WISH__.getRomanceState()
+}));
+assert.equal(results.giftClosed.storyOpen, false);
 
 // --- Star blessing ---
 await page.evaluate(() => window.__CHRISTMAS_WISH__.app.startStarBlessing());

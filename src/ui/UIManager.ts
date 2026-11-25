@@ -18,6 +18,13 @@ interface CinemaHandlers {
   onRomanceExit: () => void;
 }
 
+interface MemoryHandlers {
+  onClose: () => void;
+  onPrev: () => void;
+  onNext: () => void;
+  onTogglePlay: () => void;
+}
+
 export class UIManager {
   private readonly loader: HTMLElement;
   private readonly toastElement: HTMLElement;
@@ -31,6 +38,12 @@ export class UIManager {
   private readonly lightbox: HTMLElement;
   private readonly lightboxImage: HTMLImageElement;
   private readonly lightboxCaption: HTMLElement;
+  private readonly lightboxDate: HTMLElement;
+  private readonly lightboxDescription: HTMLElement;
+  private readonly lightboxCounter: HTMLElement;
+  private readonly lightboxPrev: HTMLButtonElement;
+  private readonly lightboxNext: HTMLButtonElement;
+  private readonly lightboxPlay: HTMLButtonElement;
   private readonly lightboxClose: HTMLButtonElement;
   private readonly cinema: HTMLElement;
   private readonly cinemaAct: HTMLElement;
@@ -49,6 +62,8 @@ export class UIManager {
   private toastTimer = 0;
   private chapterTimer = 0;
   private wishCloseHandler: (() => void) | null = null;
+  private memoryHandlers: MemoryHandlers | null = null;
+  private memoryPlaying = false;
   private lastProgressSecond = -1;
   private handlers: CinemaHandlers | null = null;
   private readonly hint: HTMLElement;
@@ -68,6 +83,12 @@ export class UIManager {
     this.lightbox = document.querySelector<HTMLElement>('#photo-lightbox')!;
     this.lightboxImage = document.querySelector<HTMLImageElement>('#lightbox-image')!;
     this.lightboxCaption = document.querySelector<HTMLElement>('#lightbox-caption')!;
+    this.lightboxDate = document.querySelector<HTMLElement>('#lightbox-date')!;
+    this.lightboxDescription = document.querySelector<HTMLElement>('#lightbox-description')!;
+    this.lightboxCounter = document.querySelector<HTMLElement>('#lightbox-counter')!;
+    this.lightboxPrev = document.querySelector<HTMLButtonElement>('#lightbox-prev')!;
+    this.lightboxNext = document.querySelector<HTMLButtonElement>('#lightbox-next')!;
+    this.lightboxPlay = document.querySelector<HTMLButtonElement>('#lightbox-play')!;
     this.lightboxClose = document.querySelector<HTMLButtonElement>('#lightbox-close')!;
     this.cinema = document.querySelector<HTMLElement>('#cinema')!;
     this.cinemaAct = document.querySelector<HTMLElement>('#cinema-act')!;
@@ -94,16 +115,29 @@ export class UIManager {
     this.wishOverlay.addEventListener('click', (event) => {
       if (event.target === this.wishOverlay) this.closeWish();
     });
-    this.lightboxClose.addEventListener('click', () => this.closeLightbox());
+    this.lightboxClose.addEventListener('click', () => this.closeMemory());
     this.lightbox.addEventListener('click', (event) => {
-      if (event.target === this.lightbox) this.closeLightbox();
+      if (event.target === this.lightbox) this.closeMemory();
+    });
+    this.lightboxPrev.addEventListener('click', () => this.memoryHandlers?.onPrev());
+    this.lightboxNext.addEventListener('click', () => this.memoryHandlers?.onNext());
+    this.lightboxPlay.addEventListener('click', () => this.memoryHandlers?.onTogglePlay());
+    document.addEventListener('keydown', (event) => {
+      if (!this.lightbox.classList.contains('is-open')) return;
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        this.memoryHandlers?.onPrev();
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        this.memoryHandlers?.onNext();
+      }
     });
     document.addEventListener('keydown', (event) => {
       if (event.key !== 'Escape') return;
       if (this.wishOverlay.classList.contains('is-open')) {
         this.closeWish();
       } else if (this.lightbox.classList.contains('is-open')) {
-        this.closeLightbox();
+        this.closeMemory();
       }
     });
 
@@ -119,6 +153,10 @@ export class UIManager {
     document.querySelector<HTMLButtonElement>('#btn-romance-exit')?.addEventListener('click', () => {
       handlers.onRomanceExit();
     });
+  }
+
+  bindMemoryHandlers(handlers: MemoryHandlers): void {
+    this.memoryHandlers = handlers;
   }
 
   hideLoader(): void {
@@ -165,17 +203,42 @@ export class UIManager {
     handler?.();
   }
 
-  showLightbox(photo: PhotoListItem): void {
+  showMemory(photo: PhotoListItem, index: number, total: number): void {
+    const metadata = photo.metadata;
     this.lightboxImage.src = photo.displayUrl;
-    this.lightboxImage.alt = photo.caption || photo.fileName;
-    this.lightboxCaption.textContent = photo.caption || '我们的故事';
+    this.lightboxImage.alt = metadata.title || photo.caption || photo.fileName;
+    this.lightboxCaption.textContent = metadata.title || photo.caption || '我们的故事';
+    this.lightboxDate.textContent = metadata.date ? metadata.date.replaceAll('-', ' · ') : '某个值得记住的日子';
+    this.lightboxDescription.textContent =
+      metadata.description || '每一张照片，都是我想和你重复很多次的瞬间。';
+    this.lightboxCounter.textContent = `${String(index + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+    this.lightboxPrev.disabled = total <= 1;
+    this.lightboxNext.disabled = total <= 1;
     this.lightbox.classList.add('is-open');
     this.lightbox.setAttribute('aria-hidden', 'false');
+    this.lightbox.classList.toggle('is-memory', true);
     window.setTimeout(() => this.lightboxClose.focus({ preventScroll: true }), 40);
   }
 
+  showLightbox(photo: PhotoListItem): void {
+    this.showMemory(photo, 0, 1);
+  }
+
+  setMemoryPlaying(playing: boolean): void {
+    this.memoryPlaying = playing;
+    this.lightboxPlay.textContent = playing ? '暂停播放' : '自动播放';
+    this.lightboxPlay.classList.toggle('is-active', playing);
+  }
+
+  closeMemory(): void {
+    const wasOpen = this.lightbox.classList.contains('is-open');
+    this.closeLightbox();
+    if (wasOpen) this.memoryHandlers?.onClose();
+  }
+
   closeLightbox(): void {
-    this.lightbox.classList.remove('is-open');
+    this.setMemoryPlaying(false);
+    this.lightbox.classList.remove('is-open', 'is-memory');
     this.lightbox.setAttribute('aria-hidden', 'true');
     this.lightboxImage.removeAttribute('src');
   }
@@ -272,9 +335,14 @@ export class UIManager {
     return (
       this.wishOverlay.classList.contains('is-open') ||
       this.lightbox.classList.contains('is-open') ||
-      this.cinema.classList.contains('is-active') ||
-      document.body.classList.contains('is-romance')
+      document.body.classList.contains('is-romance') ||
+      document.body.classList.contains('is-story-open') ||
+      this.cinema.classList.contains('is-active')
     );
+  }
+
+  get isMemoryOpen(): boolean {
+    return this.lightbox.classList.contains('is-open');
   }
 
   get musicElement(): HTMLButtonElement {

@@ -21,6 +21,7 @@ export interface PhotoOrbitSettings {
   photoRadius: number;
   photosPaused: boolean;
   orbitScale?: number;
+  frozen?: boolean;
 }
 
 const TRACK_CAPS = [4, 6, 8];
@@ -124,6 +125,13 @@ export class PhotoOrbit {
     settings: PhotoOrbitSettings
   ): void {
     const cameraAngle = Math.atan2(camera.position.z, camera.position.x);
+
+    if (settings.frozen) {
+      for (const item of this.items.values()) {
+        item.card.group.quaternion.copy(camera.quaternion);
+      }
+      return;
+    }
 
     for (let track = 0; track < 3; track += 1) {
       if (!settings.photosPaused) {

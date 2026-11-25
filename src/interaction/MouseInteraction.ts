@@ -5,6 +5,7 @@ export type PickTarget =
   | { type: 'star'; point: THREE.Vector3 }
   | { type: 'gift'; index: number; point: THREE.Vector3 }
   | { type: 'photo'; id: string; point: THREE.Vector3 }
+  | { type: 'heart'; point: THREE.Vector3 }
   | { type: 'empty'; point: THREE.Vector3 };
 
 interface MouseInteractionOptions {
@@ -135,6 +136,9 @@ export class MouseInteraction {
           point
         };
       }
+      if (pickType === 'heart') {
+        return { type: 'heart', point };
+      }
       if (pickType === 'star') {
         return { type: 'star', point };
       }
@@ -163,7 +167,9 @@ export class MouseInteraction {
         ? `gift-${target.index}`
         : target.type === 'photo'
           ? `photo-${target.id}`
-          : target.type
+          : target.type === 'heart'
+            ? 'heart'
+            : target.type
       : null;
     if (signature === this.lastHover) return;
     this.lastHover = signature;
