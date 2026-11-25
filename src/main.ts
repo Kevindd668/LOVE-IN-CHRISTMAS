@@ -36,6 +36,7 @@ import { MemoryStorage } from './storage/MemoryStorage';
 import { StoryEditor, LOCAL_PHOTOS_KEY } from './ui/StoryEditor';
 import { StoryOverlay } from './ui/StoryOverlay';
 import { CinematicIntro } from './cinematic/CinematicIntro';
+import { FilmDirector } from './cinematic/FilmDirector';
 
 const TREE_PRESENTATION_SCALE = 1.24;
 const TREE_FRAME_HEADROOM = 1.2;
@@ -88,6 +89,7 @@ class ChristmasWishApp {
   private storyEditor: StoryEditor | null = null;
   private heartPickProxy: THREE.Mesh | null = null;
   private intro!: CinematicIntro;
+  private film!: FilmDirector;
 
   private width = Math.max(1, window.innerWidth);
   private height = Math.max(1, window.innerHeight);
@@ -119,6 +121,10 @@ class ChristmasWishApp {
     if (typeof window === 'undefined') return true;
     const params = new URLSearchParams(window.location.search);
     return params.get('intro') !== '0' && params.get('edit') !== '1';
+  })();
+  private readonly introOnly = (() => {
+    if (typeof window === 'undefined') return false;
+    return new URLSearchParams(window.location.search).get('introOnly') === '1';
   })();
 
   constructor() {
@@ -178,6 +184,9 @@ class ChristmasWishApp {
         particleLoveText: this.particleLoveText,
         heartPickProxy: this.heartPickProxy,
         music: this.music,
+        segmentMode: !this.introOnly,
+        onStart: () => this.film?.onIntroStart(),
+        onSegmentComplete: () => this.film?.onIntroComplete(),
         onBeforeStart: () => {
           this.storyOverlay.close();
           this.giftViewer.close();
@@ -185,6 +194,7 @@ class ChristmasWishApp {
           this.controlPanel?.close();
         }
       });
+      this.film = new FilmDirector({ intro: this.intro });
 
       try {
         const localSave =
@@ -251,7 +261,8 @@ class ChristmasWishApp {
         this.ui.hideLoader();
         if (this.introEnabled) {
           this.cameraManager.resetView(true);
-          this.intro.showEntry();
+          if (this.introOnly) this.intro.showEntry();
+          else this.film.showEntry();
         } else {
           this.cameraManager.playIntro();
         }
@@ -451,7 +462,7 @@ class ChristmasWishApp {
       ],
       isEnabled: () =>
         !this.interactionLocked &&
-        !this.intro?.isBlocking &&
+        !(this.introOnly ? this.intro?.isBlocking : this.film?.isBlocking) &&
         !this.romanceState.isBusy &&
         !this.ui.hasOpenOverlay &&
         !this.demo?.isActive &&
@@ -1098,14 +1109,26 @@ class ChristmasWishApp {
   private tick(delta: number, elapsed: number): void {
     if (!this.pageReady) return;
     this.elapsed = elapsed;
-    if (this.intro?.isActive) {
-      this.intro.update(delta);
-      this.renderer.render();
-      return;
-    }
-    if (this.intro?.isEntryOpen) {
-      this.renderer.render();
-      return;
+    if (this.introOnly) {
+      if (this.intro?.isActive) {
+        this.intro.update(delta);
+        this.renderer.render();
+        return;
+      }
+      if (this.intro?.isEntryOpen) {
+        this.renderer.render();
+        return;
+      }
+    } else {
+      if (this.film?.isActive) {
+        this.film.update(delta);
+        this.renderer.render();
+        return;
+      }
+      if (this.film?.isEntryOpen) {
+        this.renderer.render();
+        return;
+      }
     }
     this.cameraManager.update(delta);
 
@@ -1208,7 +1231,9 @@ class ChristmasWishApp {
       burstGiantHeart: () => this.giantHeart.burst(this.elapsed),
       photos: () => this.photos.views,
       intro: this.intro,
+      film: this.film,
       introSeek: (seconds: number) => this.intro.seek(seconds),
+      filmSeek: (seconds: number) => this.film.seek(seconds),
       showIntroEntry: () => this.intro.showEntry(),
       openMemory: (id: string) => {
         if (this.memoryViewer.open(id)) this.romanceState.begin('memory');
@@ -1250,6 +1275,7 @@ class ChristmasWishApp {
     this.memoryViewer?.dispose();
     this.storyEditor?.dispose();
     this.storyOverlay?.dispose();
+    this.film?.dispose();
     this.intro?.dispose();
     if (this.heartPickProxy) {
       this.heartPickProxy.geometry.dispose();

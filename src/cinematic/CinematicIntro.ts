@@ -42,6 +42,9 @@ interface CinematicIntroOptions {
   heartPickProxy: THREE.Object3D | null;
   music: MusicEngine;
   onBeforeStart?: () => void;
+  segmentMode?: boolean;
+  onStart?: () => void;
+  onSegmentComplete?: () => void;
 }
 
 interface Snapshot {
@@ -95,6 +98,7 @@ export class CinematicIntro {
   private lastRipple = false;
   private titleShown = false;
   private titleHidden = false;
+  private segmentCompleted = false;
   private hideControlsTimer = 0;
 
   constructor(options: CinematicIntroOptions) {
@@ -189,6 +193,7 @@ export class CinematicIntro {
     this.lastRipple = false;
     this.titleShown = false;
     this.titleHidden = false;
+    this.segmentCompleted = false;
     this.phase = 'awakening';
     this.ui.hideEntry();
     this.ui.hideControls();
@@ -223,6 +228,7 @@ export class CinematicIntro {
     this.field.reset();
     this.field.update(0, 0, 0, 1);
     this.updateCamera(0);
+    this.options.onStart?.();
   }
 
   private captureSnapshot(): void {
@@ -344,7 +350,39 @@ export class CinematicIntro {
       this.options.galaxy.setOrbitsEnabled(this.options.settings.get('orbitsOn'));
       this.options.galaxy.setMeteorsEnabled(this.options.settings.get('meteorsOn'));
     }
-    if (t >= DURATION) this.finish();
+    if (t >= DURATION) {
+      if (this.options.segmentMode) this.completeSegment();
+      else this.finish();
+    }
+  }
+
+  private completeSegment(): void {
+    if (!this.active || this.segmentCompleted) return;
+    this.segmentCompleted = true;
+    this.active = false;
+    this.phase = 'done';
+    this.field.setVisible(false);
+    this.ui.hideTitle();
+    this.ui.hideControls();
+    // The formal tree and its reveal groups are intentionally left visible.
+    // FilmDirector takes over at 8s; restoring the normal UI here would end
+    // the film instead of starting the story.
+    this.options.onSegmentComplete?.();
+  }
+
+  /**
+   * Restores the pre-film scene/camera snapshot. Used by FilmDirector when
+   * the complete 68 second film exits or finishes.
+   */
+  restoreScene(): void {
+    this.active = false;
+    this.paused = false;
+    this.phase = 'idle';
+    this.segmentCompleted = false;
+    this.field.setVisible(false);
+    this.ui.hideAll();
+    document.body.classList.remove('is-cinematic-intro', 'is-intro-playing', 'is-intro-entry');
+    this.restoreSnapshot();
   }
 
   private finish(): void {
@@ -412,6 +450,11 @@ export class CinematicIntro {
 
   skip(): void {
     if (!this.active) return;
+    if (this.options.segmentMode) {
+      this.elapsed = DURATION;
+      this.update(0.0001);
+      return;
+    }
     this.elapsed = 7.95;
     this.update(0.02);
     this.finish();
