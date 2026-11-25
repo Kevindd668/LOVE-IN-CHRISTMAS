@@ -1,0 +1,47 @@
+{
+  "gpu": {
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Ti Laptop GPU (0x000024A0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "dpr": 1.0000000298023224,
+    "canvas": [
+      1920,
+      1080
+    ],
+    "photos": 24
+  },
+  "samples": [
+    {
+      "fps": 234,
+      "calls": 414
+    },
+    {
+      "fps": 236,
+      "calls": 413
+    },
+    {
+      "fps": 237,
+      "calls": 413
+    }
+  ],
+  "tiers": {
+    "balanced": {
+      "fps": 240,
+      "calls": 413,
+      "quality": "balanced"
+    },
+    "performance": {
+      "fps": 239,
+      "calls": 413,
+      "quality": "performance"
+    },
+    "ultra": {
+      "fps": 239,
+      "calls": 413,
+      "quality": "ultra"
+    }
+  },
+  "errors": []
+}

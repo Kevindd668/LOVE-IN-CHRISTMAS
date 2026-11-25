@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#04111a" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23061522'/%3E%3Cpath d='M16 4.6c.7 6.4 3.6 9.4 11.4 11.4C19.6 18 16.7 21 16 27.4 15.3 21 12.4 18 4.6 16 12.4 14 15.3 11 16 4.6Z' fill='%23e6c78f'/%3E%3C/svg%3E"
+    />
+    <meta
+      name="description"
+      content="A Christmas Wish · 这个冬天，想把所有浪漫都送给你。一棵会发光的程序化 3D 圣诞树，以及只属于你们的圣诞夜。"
+    />
+    <title>A Christmas Wish · 圣诞心愿</title>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="scene-canvas" aria-label="可交互的 3D 圣诞树场景"></canvas>
+      <div class="scene-wash" aria-hidden="true"></div>
+      <div class="vignette" aria-hidden="true"></div>
+      <div class="film-grain" aria-hidden="true"></div>
+
+      <div id="ui" class="ui">
+        <header class="topbar">
+          <div class="brand" aria-label="A Christmas Wish 圣诞心愿">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none">
+                <path d="M16 1.7c.8 7.9 4.4 11.7 14.3 14.3C20.4 18.6 16.8 22.4 16 30.3 15.2 22.4 11.6 18.6 1.7 16 11.6 13.4 15.2 9.6 16 1.7Z" stroke="currentColor" stroke-width=".8" />
+                <circle cx="16" cy="16" r="2" fill="currentColor" />
+              </svg>
+            </span>
+            <span class="brand-copy">
+              <span class="brand-name">A Christmas Wish</span>
+              <span class="brand-sub">圣诞心愿 · 2026</span>
+            </span>
+          </div>
+
+          <div class="top-actions">
+            <button id="btn-sound" class="icon-button sound-button" type="button" aria-pressed="false" aria-label="开启背景音乐">
+              <span class="sound-wave" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+              <span class="sound-label">开启音乐</span>
+            </button>
+            <button id="btn-fullscreen" class="icon-button utility-button" type="button" aria-label="全屏欣赏" title="全屏欣赏">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5" />
+              </svg>
+            </button>
+            <button id="btn-panel" class="customize-button" type="button" aria-expanded="true" aria-controls="control-panel" aria-label="打开专属定制面板">
+              <span>专属定制</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 7h10M18 7h2M4 17h2M10 17h10" />
+                <circle cx="16" cy="7" r="2" />
+                <circle cx="8" cy="17" r="2" />
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <section class="hero-copy" aria-label="A Christmas Wish">
+          <p class="hero-kicker"><span></span> A LITTLE WINTER STORY, JUST FOR YOU</p>
+          <h1 class="hero-title">You are my<br /><em>only Christmas wish.</em></h1>
+          <p class="hero-sub">这个冬天，想把所有浪漫都送给你。</p>
+          <div class="hero-rule"><i></i><span>MERRY CHRISTMAS</span><i></i></div>
+        </section>
+
+        <div class="action-dock" role="group" aria-label="场景操作">
+          <button id="btn-demo" class="dock-button" type="button">
+            <span class="dock-icon play-icon" aria-hidden="true"></span>
+            <span><strong>45 秒圣诞电影</strong><small>让今夜自己讲一个故事</small></span>
+          </button>
+          <button id="btn-romance" class="dock-button dock-button--warm" type="button">
+            <span class="dock-icon heart-icon" aria-hidden="true">♡</span>
+            <span><strong>只属于我们的圣诞节</strong><small>把这一刻，留给你</small></span>
+          </button>
+          <button id="btn-reset-view" class="dock-circle" type="button" title="复位镜头" aria-label="复位镜头">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4.6 9A8 8 0 1 1 4 13.2M4.6 9V4.8M4.6 9h4.2" />
+            </svg>
+          </button>
+        </div>
+
+        <div id="scene-hint" class="scene-hint">
+          <span class="hint-mouse" aria-hidden="true"></span>
+          <span>拖动旋转 · 滚轮靠近 · 点亮树顶的星，或拆开一份礼物</span>
+          <button id="hint-dismiss" type="button" aria-label="收起提示">×</button>
+        </div>
+
+        <div id="scene-caption" class="scene-caption" aria-live="polite">
+          <span class="caption-rule"></span>
+          <p class="caption-kicker">A CHRISTMAS WISH</p>
+          <p class="caption-title">愿每一次抬头，都有星光回应你。</p>
+        </div>
+
+        <aside id="control-panel" class="control-panel" aria-label="圣诞场景定制面板">
+          <header class="panel-header">
+            <div>
+              <p class="panel-overline">MAKE IT OURS</p>
+              <h2>你的圣诞定制</h2>
+            </div>
+            <button id="btn-panel-close" class="panel-close" type="button" aria-label="收起定制面板">×</button>
+          </header>
+          <p class="panel-intro">这里的每一束光、每一张照片，都可以成为你们的样子。</p>
+
+          <div class="panel-scroll">
+            <details class="control-section" open>
+              <summary>
+                <span class="section-number">01</span>
+                <span class="section-title">圣诞树</span>
+                <span class="section-hint">形状与呼吸感</span>
+                <span class="section-chevron" aria-hidden="true"></span>
+              </summary>
+              <div class="section-body">
+                <label class="field">
+                  <span class="field-head"><span>圣诞树高度</span><output data-for="treeHeight">8.0</output></span>
+                  <input type="range" data-setting="treeHeight" min="4" max="12" step="0.1" value="8" />
+                </label>
+                <label class="field">
+                  <span class="field-head"><span>树冠大小</span><output data-for="crownRadius">2.5</output></span>
+                  <input type="range" data-setting="crownRadius" min="1.5" max="4" step="0.05" value="2.5" />
+                </label>
+                <label class="field">
+                  <span class="field-head"><span>每层枝叶密度</span><output data-for="density">180</output></span>
+                  <input type="range" data-setting="density" min="50" max="400" step="5" value="180" />
+                </label>
+                <div class="field-row">
+                  <label class="field field--compact">
+                    <span class="field-head"><span>枝叶层数</span></span>
+                    <input class="number-input" type="number" data-setting="layers" min="4" max="12" step="1" value="7" />
+                  </label>
+                  <label class="color-field">
+                    <span class="field-head"><span>树叶颜色</span></span>
+                    <span class="color-control">
+                      <input type="color" data-setting="foliageColor" value="#0B5D3B" aria-label="树叶颜色" />
+                      <span data-color-for="foliageColor">#0B5D3B</span>
+                    </span>
+                  </label>
+                </div>
+                <label class="switch-row">
+                  <span><strong>树体缓慢旋转</strong><small>让它像在轻轻呼吸</small></span>
+                  <input type="checkbox" data-setting="treeRotate" />
+                  <span class="switch-track" aria-hidden="true"></span>
+                </label>
+                <label class="field">
+                  <span class="field-head"><span>旋转速度</span><output data-for="treeRotateSpeed">0.30</output></span>
+                  <input type="range" data-setting="treeRotateSpeed" min="0.02" max="1.4" step="0.01" value="0.3" />
+                </label>
+              </div>
+            </details>
+
+            <details class="control-section">
+              <summary>
+                <span class="section-number">02</span>
+                <span class="section-title">树体灯光</span>
+                <span class="section-hint">220 颗小星星</span>
+                <span class="section-chevron" aria-hidden="true"></span>
+              </summary>
+              <div class="section-body">
+                <label class="switch-row">
+                  <span><strong>点亮灯串</strong><small>沿树体螺旋缠绕的光</small></span>
+                  <input type="checkbox" data-setting="lightsOn" checked />
+                  <span class="switch-track" aria-hidden="true"></span>
+                </label>
+                <div class="field-row">
+                  <label class="color-field">
+                    <span class="field-head"><span>灯光主色</span></span>
+                    <span class="color-control">
+                      <input type="color" data-setting="lightColor" value="#FFD6A0" aria-label="灯光主色" />
+                      <span data-color-for="lightColor">#FFD6A0</span>
+                    </span>
+                  </label>
+                  <label class="field field--compact">
+                    <span class="field-head"><span>灯泡数量</span></span>
+                    <input class="number-input" type="number" data-setting="lightCount" min="40" max="400" step="1" value="220" />
+                  </label>
+                </div>
+                <label class="field">
+                  <span class="field-head"><span>灯光亮度</span><output data-for="lightBrightness">1.25</output></span>
+                  <input type="range" data-setting="lightBrightness" min="0.35" max="2.5" step="0.05" value="1.25" />
+                </label>
+                <label class="field">
+                  <span class="field-head"><span>闪烁速度</span><output data-for="lightFlashSpeed">1.00</output></span>
+                  <input type="range" data-setting="lightFlashSpeed" min="0" max="3" step="0.05" value="1" />
+                </label>
+                <label class="select-field">
+                  <span class="field-head"><span>灯光模式</span></span>
+                  <select data-setting="lightMode">
+                    <option value="warm">暖白浪漫</option>
+                    <option value="gold">金色璀璨</option>
+                    <option value="ice">冰蓝梦幻</option>
+                    <option value="rainbow">七彩圣诞</option>
+                    <option value="pink">粉色爱心</option>
+                  </select>
+                </label>
+              </div>
+            </details>
+
+            <details class="control-section">
+              <summary>
+                <span class="section-number">03</span>
+                <span class="section-title">爱心粒子</span>
+                <span class="section-hint">600 颗心跳</span>
+                <span class="section-chevron" aria-hidden="true"></span>
+              </summary>
+              <div class="section-body">
+                <label class="switch-row">
+                  <span><strong>爱心环绕</strong><small>在夜空里缓慢聚散</small></span>
+                  <input type="checkbox" data-setting="heartsOn" checked />
+                  <span class="switch-track" aria-hidden="true"></span>
+                </label>
+                <div class="field-row">
+                  <label class="color-field">
+                    <span class="field-head"><span>爱心颜色</span></span>
+                    <span class="color-control">
+                      <input type="color" data-setting="heartColor" value="#FF5F91" aria-label="爱心颜色" />
+                      <span data-color-for="heartColor">#FF5F91</span>
+                    </span>
+                  </label>
+                  <label class="field field--compact">
+                    <span class="field-head"><span>粒子数量</span></span>
+                    <input class="number-input" type="number" data-setting="heartCount" min="120" max="1500" step="10" value="600" />
+                  </label>
+                </div>
+                <label class="field">
+                  <span class="field-head"><span>粒子大小</span><output data-for="heartSize">1.00</output></span>
+                  <input type="range" data-setting="heartSize" min="0.45" max="2.4" step="0.05" value="1" />
+                </label>
+                <label class="field">
+                  <span class="field-head"><span>旋转速度</span><output data-for="heartSpeed">0.70</output></span>
+                  <input type="range" data-setting="heartSpeed" min="0.15" max="2" step="0.05" value="0.7" />
+                </label>
+                <label class="select-field">
+                  <span class="field-head"><span>粒子模式</span></span>
+                  <select data-setting="heartMode">
+                    <option value="orbit">爱心环绕</option>
+                    <option value="gather">爱心聚合</option>
+                    <option value="drift">爱心飘散</option>
+                  </select>
+                </label>
+                <p class="field-note">一个小秘密：点击夜空，让所有心跳聚合在一起。</p>
+              </div>
+            </details>
+
+            <details class="control-section">
+              <summary>
+                <span class="section-number">04</span>
+                <span class="section-title">我们的照片</span>
+                <span class="section-hint"><span id="photo-count">8</span> / 24 张</span>
+                <span class="section-chevron" aria-hidden="true"></span>
+              </summary>
+              <div class="section-body">
+                <div id="upload-zone" class="upload-zone" tabindex="0" role="button" aria-label="上传照片">
+                  <input id="photo-input" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden />
+                  <span class="upload-icon" aria-hidden="true">＋</span>
+                  <span><strong>上传你们的照片</strong><small>JPG / PNG / WEBP · 最多 24 张 · 只在本地处理</small></span>
+                </div>
+                <div id="photo-list" class="photo-list" aria-label="已添加的照片"></div>
+                <label class="field">
+                  <span class="field-head"><span>照片轨道半径</span><output data-for="photoRadius">1.00</output></span>
+                  <input type="range" data-setting="photoRadius" min="0.78" max="1.38" step="0.01" value="1" />
+                </label>
+                <label class="field">
+                  <span class="field-head"><span>照片旋转速度</span><output data-for="photoSpeed">0.58</output></span>
+                  <input type="range" data-setting="photoSpeed" min="0" max="1.8" step="0.01" value="0.58" />
+                </label>
+                <label class="field">
+                  <span class="field-head"><span>卡片尺寸</span><output data-for="cardScale">1.00</output></span>
+                  <input type="range" data-setting="cardScale" min="0.68" max="1.28" step="0.01" value="1" />
+                </label>
+                <label class="switch-row">
+                  <span><strong>显示照片文字</strong><small>在卡片下方留一句话</small></span>
+                  <input type="checkbox" data-setting="showCaptions" checked />
+                  <span class="switch-track" aria-hidden="true"></span>
+                </label>
+                <label class="switch-row">
+                  <span><strong>暂停旋转</strong><small>让时间停在这一张</small></span>
+                  <input type="checkbox" data-setting="photosPaused" />
+                  <span class="switch-track" aria-hidden="true"></span>
+                </label>
+              </div>
+            </details>
+
+            <details class="control-section">
+              <summary>
+                <span class="section-number">05</span>
+                <span class="section-title">冬夜环境</span>
+                <span class="section-hint">雪、星光与极光</span>
+                <span class="section-chevron" aria-hidden="true"></span>
+              </summary>
+              <div class="section-body">
+                <label class="switch-row">
+                  <span><strong>下雪</strong><small>一千八百片雪落进今夜</small></span>
+                  <input type="checkbox" data-setting="snowOn" checked />
+                  <span class="switch-track" aria-hidden="true"></span>
+                </label>
+                <label class="field">
+                  <span class="field-head"><span>雪花数量</span><output data-for="snowCount">1800</output></span>
+                  <input type="range" data-setting="snowCount" min="200" max="3200" step="50" value="1800" />
+                </label>
+                <label class="field">
+                  <span class="field-head"><span>飘落速度</span><output data-for="snowSpeed">1.00</output></span>
+                  <input type="range" data-setting="snowSpeed" min="0.2" max="2.5" step="0.05" value="1" />
+                </label>
+                <label class="switch-row">
+                  <span><strong>星空</strong><small>1200 颗远处的祝福</small></span>
+                  <input type="checkbox" data-setting="starsOn" checked />
+                  <span class="switch-track" aria-hidden="true"></span>
+                </label>
+                <label class="switch-row">
+                  <span><strong>极光</strong><small>很远、很轻的蓝绿色</small></span>
+                  <input type="checkbox" data-setting="auroraOn" checked />
+                  <span class="switch-track" aria-hidden="true"></span>
+                </label>
+                <div class="field-row">
+                  <label class="color-field">
+                    <span class="field-head"><span>夜空颜色</span></span>
+                    <span class="color-control">
+                      <input type="color" data-setting="backgroundColor" value="#061522" aria-label="夜空颜色" />
+                      <span data-color-for="backgroundColor">#061522</span>
+                    </span>
+                  </label>
+                  <label class="field field--compact">
+                    <span class="field-head"><span>环境亮度</span><output data-for="ambientBrightness">1.00</output></span>
+                    <input type="range" data-setting="ambientBrightness" min="0.45" max="1.7" step="0.05" value="1" />
+                  </label>
+                </div>
+              </div>
+            </details>
+
+            <details class="control-section">
+              <summary>
+                <span class="section-number">06</span>
+                <span class="section-title">专属浪漫</span>
+                <span class="section-hint">只写给她的字</span>
+                <span class="section-chevron" aria-hidden="true"></span>
+              </summary>
+              <div class="section-body">
+                <div class="field-row">
+                  <label class="text-field">
+                    <span class="field-head"><span>树上的数字 · 上方</span></span>
+                    <input type="text" data-setting="text520" maxlength="6" value="520" />
+                  </label>
+                  <label class="text-field">
+                    <span class="field-head"><span>树上的数字 · 下方</span></span>
+                    <input type="text" data-setting="text1314" maxlength="6" value="1314" />
+                  </label>
+                </div>
+                <label class="text-field">
+                  <span class="field-head"><span>祝福标题</span></span>
+                  <input type="text" data-setting="blessingTitle" maxlength="32" value="Merry Christmas" />
+                </label>
+                <label class="text-field">
+                  <span class="field-head"><span>圣诞祝福语</span></span>
+                  <textarea data-setting="blessingMessage" rows="3" maxlength="160">希望未来的每一个圣诞节，都有你。愿我们的爱，从 520 走到 1314。</textarea>
+                </label>
+                <label class="text-field">
+                  <span class="field-head"><span>落款</span></span>
+                  <input type="text" data-setting="signature" maxlength="30" value="永远爱你的我 · 2026" />
+                </label>
+                <div class="text-divider"><span>藏在礼物里的话</span></div>
+                <label class="text-field">
+                  <span class="field-head"><span>礼物一 · 酒红礼盒</span></span>
+                  <textarea data-setting="giftMessage0" rows="2" maxlength="120">今年的圣诞礼物，是希望未来每一个冬天都有你。</textarea>
+                </label>
+                <label class="text-field">
+                  <span class="field-head"><span>礼物二 · 香槟礼盒</span></span>
+                  <textarea data-setting="giftMessage1" rows="2" maxlength="120">和你在一起以后，连冬天都开始变得温柔。</textarea>
+                </label>
+                <label class="text-field">
+                  <span class="field-head"><span>礼物三 · 墨绿礼盒</span></span>
+                  <textarea data-setting="giftMessage2" rows="2" maxlength="120">圣诞快乐，我最喜欢的女孩。以后每一场雪，都想和你一起看。</textarea>
+                </label>
+                <div class="text-divider"><span>冬夜的声音</span></div>
+                <label class="select-field">
+                  <span class="field-head"><span>背景音乐</span></span>
+                  <select data-setting="musicTrack">
+                    <option value="starlight">冬夜星光 · 钢琴与风铃</option>
+                    <option value="sleigh">雪橇轻响 · 铃铛与八音盒</option>
+                    <option value="quiet">静谧雪夜 · 环境氛围</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span class="field-head"><span>音乐音量</span><output data-for="musicVolume">0.45</output></span>
+                  <input type="range" data-setting="musicVolume" min="0" max="1" step="0.01" value="0.45" />
+                </label>
+                <label class="switch-row">
+                  <span><strong>开启背景音乐</strong><small>一段只在今夜响起的旋律</small></span>
+                  <input type="checkbox" data-setting="musicOn" />
+                  <span class="switch-track" aria-hidden="true"></span>
+                </label>
+                <button id="btn-romance-panel" class="panel-primary" type="button">
+                  <span class="panel-primary-star" aria-hidden="true">✦</span>
+                  <span><strong>只属于我们的圣诞节</strong><small>一键进入浪漫时刻</small></span>
+                </button>
+              </div>
+            </details>
+          </div>
+
+          <footer class="panel-footer">
+            <div class="quality-row">
+              <span>画质</span>
+              <div class="quality-switch" role="group" aria-label="画质档位">
+                <button type="button" data-quality="ultra" class="is-active">Ultra</button>
+                <button type="button" data-quality="balanced">Balanced</button>
+                <button type="button" data-quality="performance">Performance</button>
+              </div>
+            </div>
+            <div class="panel-stats">
+              <span><i class="status-dot"></i><b id="fps-value">--</b> FPS</span>
+              <span><b id="drawcall-value">--</b> draw calls</span>
+              <button id="btn-reset-settings" type="button">恢复初始设置</button>
+            </div>
+          </footer>
+        </aside>
+        <button id="panel-backdrop" class="panel-backdrop" type="button" aria-label="关闭定制面板"></button>
+      </div>
+
+      <div id="romance-shade" class="romance-shade" aria-hidden="true"></div>
+      <button id="btn-romance-exit" class="romance-exit" type="button">退出这一刻</button>
+
+      <div id="cinema" class="cinema" aria-hidden="true">
+        <div class="cinema-bar cinema-bar--top" aria-hidden="true"></div>
+        <div class="cinema-bar cinema-bar--bottom" aria-hidden="true"></div>
+        <header class="cinema-header">
+          <p><span class="cinema-star">✦</span> A CHRISTMAS WISH <span class="cinema-roman">/ A SHORT FILM</span></p>
+          <div class="cinema-actions">
+            <button id="cinema-pause" type="button" aria-label="暂停演示"><span class="pause-glyph"></span><span>暂停</span></button>
+            <button id="cinema-exit" type="button">退出</button>
+          </div>
+        </header>
+        <div class="cinema-chapter" aria-live="polite">
+          <p id="cinema-act" class="cinema-act">第一幕 · 星河落雪</p>
+          <p id="cinema-line" class="cinema-line">The night begins for you.</p>
+        </div>
+        <div class="cinema-progress">
+          <span id="cinema-fill" class="cinema-fill"></span>
+          <span id="cinema-time" class="cinema-time">00:00 / 00:45</span>
+        </div>
+        <div id="cinema-ending" class="cinema-ending" role="dialog" aria-modal="true" aria-label="演示结束">
+          <p class="ending-kicker">AND SO, THIS CHRISTMAS WISH IS YOURS</p>
+          <h2>Merry<br /><em>Christmas</em></h2>
+          <div class="ending-numbers"><span>5</span><i>·</i><span>2</span><i>·</i><span>0</span><b></b><span>1</span><i>·</i><span>3</span><i>·</i><span>1</span><i>·</i><span>4</span></div>
+          <p id="cinema-ending-message" class="ending-message">希望未来的每一个圣诞节，都有你。</p>
+          <p id="cinema-ending-signature" class="ending-signature">永远爱你的我 · 2026</p>
+          <div class="ending-actions">
+            <button id="cinema-replay" class="ending-button ending-button--gold" type="button">再看一遍</button>
+            <button id="cinema-close" class="ending-button" type="button">回到我们的圣诞夜</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="wish-overlay" class="wish-overlay" aria-hidden="true">
+        <div class="wish-dialog" role="dialog" aria-modal="true" aria-labelledby="wish-title">
+          <button id="wish-close" class="wish-close" type="button" aria-label="关闭">×</button>
+          <div class="wish-star" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M16 1.7c.8 7.9 4.4 11.7 14.3 14.3C20.4 18.6 16.8 22.4 16 30.3 15.2 22.4 11.6 18.6 1.7 16 11.6 13.4 15.2 9.6 16 1.7Z" stroke="currentColor" stroke-width=".8" />
+              <circle cx="16" cy="16" r="2" fill="currentColor" />
+            </svg>
+          </div>
+          <p id="wish-kicker" class="wish-kicker">A LITTLE SURPRISE FOR YOU</p>
+          <h2 id="wish-title">圣诞快乐</h2>
+          <div class="wish-line"><i></i><span>✦</span><i></i></div>
+          <p id="wish-body" class="wish-body">愿这个冬天，所有温柔都如期而至。</p>
+          <p id="wish-signature" class="wish-signature">永远爱你的我 · 2026</p>
+          <button id="wish-accept" class="wish-accept" type="button">收下这份心意</button>
+        </div>
+      </div>
+
+      <div id="photo-lightbox" class="photo-lightbox" aria-hidden="true">
+        <button id="lightbox-close" class="lightbox-close" type="button" aria-label="关闭照片">×</button>
+        <div class="lightbox-inner">
+          <div class="lightbox-frame"><img id="lightbox-image" alt="" /></div>
+          <div class="lightbox-copy">
+            <p class="lightbox-kicker">A MOMENT WE KEEP</p>
+            <p id="lightbox-caption" class="lightbox-caption">我们的第一次见面</p>
+            <p class="lightbox-hint">每一张照片，都是我想和你重复很多次的瞬间。</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+      <div id="loader" class="loader">
+        <div class="loader-inner">
+          <div class="loader-orbit" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="loader-star" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M16 1.7c.8 7.9 4.4 11.7 14.3 14.3C20.4 18.6 16.8 22.4 16 30.3 15.2 22.4 11.6 18.6 1.7 16 11.6 13.4 15.2 9.6 16 1.7Z" stroke="currentColor" stroke-width=".7" />
+              <circle cx="16" cy="16" r="1.4" fill="currentColor" />
+            </svg>
+          </div>
+          <p class="loader-name">A Christmas Wish</p>
+          <p class="loader-sub">正在为你点亮圣诞树</p>
+          <div class="loader-bar"><span></span></div>
+          <p class="loader-small">EVERY LIGHT IS A LITTLE WISH</p>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

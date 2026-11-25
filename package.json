@@ -1,0 +1,24 @@
+{
+  "name": "christmas-wish",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A Christmas Wish — an interactive 3D Christmas gift made with Three.js and TypeScript.",
+  "scripts": {
+    "dev": "node scripts/build.mjs dev",
+    "typecheck": "tsc --noEmit",
+    "build": "node scripts/build.mjs",
+    "build:single": "npm run build && node scripts/build-single.mjs",
+    "preview": "vite preview --host 127.0.0.1",
+    "qa": "node qa/smoke-test.mjs"
+  },
+  "dependencies": {
+    "three": "0.160.0"
+  },
+  "devDependencies": {
+    "@types/three": "0.160.0",
+    "playwright-core": "1.49.1",
+    "typescript": "5.6.3",
+    "vite": "5.4.11"
+  }
+}
