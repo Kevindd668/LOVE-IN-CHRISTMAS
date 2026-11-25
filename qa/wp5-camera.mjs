@@ -1,0 +1,3 @@
+﻿import { chromium } from 'playwright-core';
+const b=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:true});
+const p=await b.newPage({viewport:{width:1440,height:900}}); await p.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'}); await p.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready,{timeout:30000}); await p.waitForTimeout(4000); console.log(await p.evaluate(()=>{const a=window.__CHRISTMAS_WISH__.app;return {pos:a.cameraManager.camera.position.toArray(),target:a.cameraManager.controls.target.toArray(),home:a.cameraManager.homePosition?.toArray?.()};})); await b.close();

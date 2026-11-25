@@ -27,6 +27,7 @@ export class ChristmasTree {
   private density = 180;
   private layers = 7;
   private foliageColor = '#0B5D3B';
+  private presentationScale = 1;
 
   constructor(settings: WishSettings) {
     this.group.name = 'christmas-tree';
@@ -67,6 +68,15 @@ export class ChristmasTree {
     this.helix.setEnabled(settings.helixOn);
     this.ornaments.setEnabled(settings.ornamentsOn);
     this.star.root.visible = settings.crownHeartOn;
+  }
+
+  setPresentationScale(scale: number): void {
+    this.presentationScale = Math.max(0.5, scale);
+    this.group.scale.setScalar(this.presentationScale);
+  }
+
+  get visualHeight(): number {
+    return this.height * this.presentationScale;
   }
 
   private treeConfig(settings: WishSettings): TreeConfig {
@@ -193,6 +203,7 @@ export class ChristmasTree {
   resetPresentation(): void {
     this.body.visible = true;
     this.body.scale.setScalar(1);
+    this.group.scale.setScalar(this.presentationScale);
     this.star.root.visible = true;
     this.helix.setEnabled(true);
     this.ornaments.setEnabled(true);
@@ -223,7 +234,7 @@ export class ChristmasTree {
   }
 
   getTopY(): number {
-    return this.height + 0.55;
+    return (this.height + 0.55) * this.presentationScale;
   }
 
   get treeHeight(): number {

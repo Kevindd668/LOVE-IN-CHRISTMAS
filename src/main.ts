@@ -23,6 +23,10 @@ import { HeartParticleSystem } from './particles/HeartParticleSystem';
 import { MagicParticles } from './particles/MagicParticles';
 import { SnowParticles } from './particles/SnowParticles';
 import { StarParticles } from './particles/StarParticles';
+
+const TREE_PRESENTATION_SCALE = 1.24;
+const TREE_FRAME_HEADROOM = 1.2;
+const PHOTO_ORBIT_PRESENTATION_SCALE = 1.16;
 import { PhotoManager } from './photos/PhotoManager';
 import { ControlPanel } from './ui/ControlPanel';
 import { PhotoUploader } from './ui/PhotoUploader';
@@ -111,7 +115,8 @@ class ChristmasWishApp {
 
       this.sceneManager = new SceneManager(this.renderer.renderer, {
         backgroundColor: this.settings.get('backgroundColor'),
-        qualityPreset: QUALITY_PRESETS[this.settings.get('quality')]
+        qualityPreset: QUALITY_PRESETS[this.settings.get('quality')],
+        quality: this.settings.get('quality')
       });
       this.cameraManager = new CameraManager(canvas, this.width, this.height);
       this.renderer.attachScene(this.sceneManager.scene, this.cameraManager.camera);
@@ -189,6 +194,7 @@ class ChristmasWishApp {
     const settings = this.settings.current;
     const quality = QUALITY_PRESETS[settings.quality];
     this.tree = new ChristmasTree(settings);
+    this.tree.setPresentationScale(TREE_PRESENTATION_SCALE);
     this.numbers = new RomanticText(
       settings.text520,
       settings.text1314,
@@ -223,9 +229,12 @@ class ChristmasWishApp {
       beatPeriod: 2.5,
       autoCycle: false
     });
-    // The giant heart sits behind the tree as a halo, so it never blocks the
-    // core tree, gifts, photos or 520/1314 labels.
-    this.giantHeart.setPosition(3.8, 7.6, -9.5);
+    this.numbers.group.scale.setScalar(TREE_PRESENTATION_SCALE);
+    this.sceneManager.setTreeShadowScale(TREE_PRESENTATION_SCALE);
+
+    // The giant heart sits behind the enlarged tree as a halo, so it never
+    // blocks the core tree, gifts, photos or 520/1314 labels.
+    this.giantHeart.setPosition(4.2, 8.4, -9.8);
     this.giantHeart.setScale(1.4);
 
     const scene = this.sceneManager.scene;
@@ -252,7 +261,7 @@ class ChristmasWishApp {
 
     this.photos.setShowCaptions(settings.showCaptions);
     this.photos.setReveal(1);
-    this.hearts.setLayout(settings.treeHeight);
+    this.hearts.setLayout(settings.treeHeight * TREE_PRESENTATION_SCALE);
     this.hearts.setEnabled(settings.heartsOn);
     this.hearts.setOpacity(settings.heartsOn ? 1 : 0);
     this.snow.setCount(settings.snowCount);
@@ -278,7 +287,9 @@ class ChristmasWishApp {
     const settings = this.settings.current;
     this.sceneManager.setBackground(settings.backgroundColor);
     this.sceneManager.setAmbient(settings.ambientBrightness);
-    this.cameraManager.setSubjectHeight(settings.treeHeight);
+    this.cameraManager.setSubjectHeight(
+      settings.treeHeight * TREE_PRESENTATION_SCALE + TREE_FRAME_HEADROOM
+    );
     this.tree.setLightMode(settings.lightMode, settings.lightColor);
     this.tree.setLightBrightness(settings.lightBrightness);
     this.tree.setLightSpeed(settings.lightFlashSpeed);
@@ -561,7 +572,9 @@ class ChristmasWishApp {
     document.body.classList.remove('is-cinema');
     this.clearGiftTimer();
     this.cameraManager.endCinematic();
-    this.cameraManager.setSubjectHeight(settings.treeHeight);
+    this.cameraManager.setSubjectHeight(
+      settings.treeHeight * TREE_PRESENTATION_SCALE + TREE_FRAME_HEADROOM
+    );
     this.cameraManager.resetView();
 
     this.renderer.setExposure(1.08);
@@ -580,7 +593,7 @@ class ChristmasWishApp {
     this.hearts.setEnabled(settings.heartsOn);
     this.hearts.setOpacity(settings.heartsOn ? 1 : 0);
     this.hearts.setMode(settings.heartMode);
-    this.hearts.setLayout(settings.treeHeight);
+    this.hearts.setLayout(settings.treeHeight * TREE_PRESENTATION_SCALE);
     this.snow.setEnabled(settings.snowOn);
     this.snow.setOpacity(settings.snowOn ? 1 : 0);
     this.snow.setSpeed(settings.snowSpeed);
@@ -815,7 +828,7 @@ class ChristmasWishApp {
 
     if (changed.has('quality')) {
       this.renderer.setQuality(settings.quality);
-      this.sceneManager.setQuality(QUALITY_PRESETS[settings.quality]);
+      this.sceneManager.setQuality(QUALITY_PRESETS[settings.quality], settings.quality);
       this.stars.setCount(QUALITY_PRESETS[settings.quality].starCount);
       this.galaxy.setQuality(settings.quality);
       const giantCount =
@@ -860,8 +873,10 @@ class ChristmasWishApp {
       if (structural) {
         this.tree.rebuildTree(settings);
         this.numbers.setLayout(settings.treeHeight, settings.crownRadius);
-        this.hearts.setLayout(settings.treeHeight);
-        this.cameraManager.setSubjectHeight(settings.treeHeight);
+        this.hearts.setLayout(settings.treeHeight * TREE_PRESENTATION_SCALE);
+        this.cameraManager.setSubjectHeight(
+          settings.treeHeight * TREE_PRESENTATION_SCALE + TREE_FRAME_HEADROOM
+        );
       } else if (lightOnly) {
         this.tree.rebuildLights(settings);
       }
@@ -957,6 +972,7 @@ class ChristmasWishApp {
       photoSpeed: this.settings.get('photoSpeed'),
       photoRadius: this.settings.get('photoRadius'),
       photosPaused: this.settings.get('photosPaused'),
+      orbitScale: PHOTO_ORBIT_PRESENTATION_SCALE,
       cardScale: this.settings.get('cardScale'),
       showCaptions: this.settings.get('showCaptions')
     });

@@ -20,6 +20,7 @@ export interface PhotoOrbitSettings {
   photoSpeed: number;
   photoRadius: number;
   photosPaused: boolean;
+  orbitScale?: number;
 }
 
 const TRACK_CAPS = [4, 6, 8];
@@ -137,7 +138,7 @@ export class PhotoOrbit {
       const baseOffset =
         0.58 + ((item.slot + 0.5) / Math.max(1, item.sideTotal)) * 1.28;
       const angle = cameraAngle + item.side * (baseOffset + trackSway);
-      const radius = track.radius * settings.photoRadius;
+      const radius = track.radius * settings.photoRadius * (settings.orbitScale ?? 1);
       const bob = Math.sin(time * 0.58 + item.phase) * 0.055;
       this.targetPosition.set(
         Math.cos(angle) * radius,
