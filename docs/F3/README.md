@@ -107,7 +107,7 @@ npm run build:single
 - 合并提交：`248e1c8`
 - standalone SHA-256：`A443243AFA0C50D222C8728A46178551635DB838A50C0417FEFF0D7CFAE0C511`
 
-## 视觉精修 WP0–WP6（完成，等待用户最终验收）
+## 视觉精修 WP0–WP6（已通过用户验收，已合并）
 
 - [WP0 基线](WP0_BASELINE.md)
 - [WP1 星空环境升级](STARFIELD_UPGRADE.md)
@@ -123,7 +123,7 @@ npm run build:single
 - [WP6 源码复用](SOURCE_REUSE_REPORT.md)、[性能](PERFORMANCE_REPORT.md)、[回归](REGRESSION_REPORT.md)、[最终验收](FINAL_ACCEPTANCE.md)
 - 最终截图：`docs/F3/final-screenshots/`；最终录屏：`docs/F3/final-video.webm`
 - 最终 standalone SHA-256：`06F00FDDD8640A97568548F3385949751C4DD76C6CC86BECDA326ADD64F9DE49`
-- 状态：WP1–WP6 技术验收完成，等待用户最终验收；F4/F5 未开始。
+- 状态：WP1–WP6 已通过用户验收，已合并到 `feature/visual-upgrade`；F4/F5 未开始。
 
 ## 参考仓库复用文档
 
