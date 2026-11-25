@@ -113,7 +113,9 @@ npm run build:single
 - [WP1 星空环境升级](STARFIELD_UPGRADE.md)
 - 截图：`docs/F3/wp1/`
 - 数据：`qa/wp1/performance.json`
-- 状态：WP1 实现与回归完成，等待验收；WP2–WP6 未开始。
+- 状态：WP1 完成；WP2 实现与回归完成，等待验收；WP3–WP6 未开始。
+- [WP2 金色粒子光瀑重构](PARTICLE_WATERFALL.md)
+- WP2 截图/录屏：`docs/F3/wp2/`
 
 ## 参考仓库复用文档
 

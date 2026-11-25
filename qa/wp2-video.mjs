@@ -1,0 +1,10 @@
+﻿import { chromium } from 'playwright-core';
+import { writeFileSync } from 'node:fs';
+const browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:false,args:['--window-position=20,20','--window-size=1300,780']});
+const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1}); const errors=[]; page.on('pageerror',e=>errors.push(e.message)); page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+await page.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'}); await page.bringToFront(); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready,{timeout:30000}); await page.waitForTimeout(4000);
+await page.evaluate(()=>{const ui=document.querySelector('#ui'); if(ui)ui.style.display='none'; const a=window.__CHRISTMAS_WISH__.app; a.cameraManager.beginCinematic(); a.cameraManager.camera.position.set(0,6.25,20.5); a.cameraManager.controls.target.set(0,4.8,0); a.cameraManager.camera.lookAt(0,4.8,0); a.galaxy.setWaterfallPathMask(15);});
+await page.evaluate(()=>{const canvas=document.querySelector('#scene-canvas'); const stream=canvas.captureStream(30); const mime=MediaRecorder.isTypeSupported('video/webm;codecs=vp9')?'video/webm;codecs=vp9':'video/webm'; const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:4500000}); const chunks=[]; rec.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);}; window.__waterfallRec={rec,chunks}; rec.start();});
+await page.waitForTimeout(9000);
+const b64=await page.evaluate(async()=>{const {rec,chunks}=window.__waterfallRec; await new Promise(res=>{rec.onstop=res; rec.stop();}); const blob=new Blob(chunks,{type:'video/webm'}); const buf=await blob.arrayBuffer(); let bin=''; const bytes=new Uint8Array(buf); for(let i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]); return btoa(bin);});
+writeFileSync('docs/F3/wp2/waterfall-flow.webm',Buffer.from(b64,'base64')); console.log(JSON.stringify({bytes:Buffer.from(b64,'base64').length,errors},null,2)); await browser.close();

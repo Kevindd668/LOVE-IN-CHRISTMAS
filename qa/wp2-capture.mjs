@@ -1,0 +1,9 @@
+﻿import { chromium } from 'playwright-core';
+const browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:false,args:['--window-position=20,20','--window-size=1480,960']});
+const page=await browser.newPage({viewport:{width:1440,height:900},deviceScaleFactor:1}); const errors=[]; page.on('pageerror',e=>errors.push(e.message)); page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+await page.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'}); await page.bringToFront(); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready,{timeout:30000}); await page.waitForTimeout(4200);
+await page.evaluate(()=>{const ui=document.querySelector('#ui'); if(ui)ui.style.display='none'; const a=window.__CHRISTMAS_WISH__.app; a.cameraManager.beginCinematic(); a.cameraManager.camera.position.set(0,6.25,20.5); a.cameraManager.controls.target.set(0,4.8,0); a.cameraManager.camera.lookAt(0,4.8,0);}); await page.waitForTimeout(600); await page.screenshot({path:'docs/F3/wp2/00-overall.png'});
+const masks=[['01-left',1],['02-right',2],['03-rear',4],['04-crown',8],['05-all',15]];
+for(const [name,mask] of masks){await page.evaluate(mask=>window.__CHRISTMAS_WISH__.app.galaxy.setWaterfallPathMask(mask),mask); await page.waitForTimeout(700); await page.screenshot({path:`docs/F3/wp2/${name}.png`});}
+const data=await page.evaluate(()=>{const a=window.__CHRISTMAS_WISH__.app; const g=a.galaxy; const groups=g.waterfallGroups; return {count:groups.reduce((n,p)=>n+p.geometry.drawRange.count,0),groups:groups.length,pathCounts:groups.map(p=>p.userData.basePathCount),visible:groups.map(p=>p.visible),calls:a.renderer.renderer.info.render.calls,points:a.renderer.renderer.info.render.points};}); console.log(JSON.stringify({data,errors},null,2)); await browser.close();
+

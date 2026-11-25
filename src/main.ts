@@ -210,7 +210,7 @@ class ChristmasWishApp {
     this.galaxy = new GalaxyEnvironment({
       count: 8000,
       farCount: 6000,
-      waterfallCount: 5000,
+      waterfallCount: 5800,
       quality: settings.quality
     });
     this.giantHeart = new HeartParticleSystem({

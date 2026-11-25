@@ -154,52 +154,68 @@ const AURORA_FRAGMENT = /* glsl */ `
 `;
 
 const WATERFALL_VERTEX = /* glsl */ `
-  attribute float aPhase; attribute float aSpeed; attribute float aSize; attribute float aRadius;
-  uniform float uTime; uniform float uPixelRatio; uniform float uHeight;
-  varying float vY;
+  attribute float aPath;
+  attribute float aPhase;
+  attribute float aSpeed;
+  attribute float aSize;
+  attribute float aAlpha;
+  attribute vec3 aColor;
+  uniform float uTime;
+  uniform float uPixelRatio;
+  uniform float uPathMask;
+  varying vec3 vColor;
+  varying float vAlpha;
   void main(){
-    float cycle=uTime*.065*aSpeed;
-    float y=mod(position.y*3.0+cycle+aPhase*.05,1.0)*uHeight;
-    float a=aPhase*6.283+y*.62+uTime*.06;
-    vec3 p=vec3(cos(a)*aRadius, uHeight-y, sin(a)*aRadius);
-    p.x+=sin(y*.65+aPhase)*.45;
-    p.z+=cos(y*.42+aPhase)*.35;
+    float bit=mod(floor(uPathMask/pow(2.0,aPath)),2.0);
+    if(bit<0.5){
+      gl_Position=vec4(2.0,2.0,2.0,1.0);
+      gl_PointSize=0.0;
+      return;
+    }
+    float t=fract(aPhase+uTime*aSpeed*0.055);
+    float r1=fract(sin(aPhase*127.1)*43758.5453);
+    float r2=fract(sin(aPhase*311.7)*43758.5453);
+    vec3 p;
+    if(aPath<0.5){
+      // Left champagne stream: a broad veil, not a single glowing rope.
+      p.y=mix(0.35,9.2,1.0-t)+(r1-0.5)*0.55;
+      p.x=-5.0+sin(t*4.2+aPhase*6.283)*0.62+(r1-0.5)*2.4;
+      p.z=-0.8+cos(t*3.1+aPhase*5.0)*1.05+(r2-0.5)*2.1;
+    } else if(aPath<1.5){
+      // Right rose-gold stream: opposite curl and a wider drift.
+      p.y=mix(0.35,9.2,1.0-t)+(r2-0.5)*0.6;
+      p.x=5.0+sin(t*3.7+aPhase*6.283+2.0)*0.75+(r1-0.5)*2.7;
+      p.z=-0.6+cos(t*3.5+aPhase*4.0)*1.15+(r2-0.5)*2.3;
+    } else if(aPath<2.5){
+      // Sparse rear curtain: breadth without a solid golden wall.
+      p.x=(fract(aPhase*7.13)-0.5)*13.0;
+      p.y=mix(0.1,10.8,1.0-t)+(r1-0.5)*0.4;
+      p.z=-5.8+(fract(aPhase*3.71)-0.5)*3.2+(r2-0.5)*1.4;
+      p.x+=sin(t*2.0+aPhase*8.0)*0.42;
+    } else {
+      // Crown fountain: rises and opens toward the sky.
+      p.y=mix(9.35,16.8,t)+(r1-0.5)*1.1;
+      float angle=aPhase*6.283+t*4.8+(r2-0.5)*1.1;
+      float radius=0.35+t*4.4+(r1-0.5)*1.4;
+      p.x=cos(angle)*radius;
+      p.z=sin(angle)*radius*0.75;
+    }
     vec4 mv=modelViewMatrix*vec4(p,1.0);
-    gl_PointSize=clamp(aSize*uPixelRatio*(420.0/max(1.0,-mv.z)),.8,8.0);
+    gl_PointSize=clamp(aSize*uPixelRatio*(420.0/max(1.0,-mv.z)),.6,7.5);
     gl_Position=projectionMatrix*mv;
-    vY=1.0-y/max(1.0,uHeight);
+    vColor=aColor;
+    vAlpha=aAlpha*sin(3.14159265*clamp(t,0.0,1.0))*(0.7+0.3*sin(aPhase*19.0+uTime*1.5));
   }
 `;
 
 const WATERFALL_FRAGMENT = /* glsl */ `
-  uniform vec3 uColor; varying float vY;
+  varying vec3 vColor;
+  varying float vAlpha;
   void main(){
     vec2 p=gl_PointCoord-.5; float d=length(p); if(d>.5) discard;
     float core=1.0-smoothstep(0.,.18,d);
-    vec3 c=mix(vec3(1.0,.83,.47),uColor,.55);
-    gl_FragColor=vec4(c*(1.0+core*1.4),(core*.9+(1.-smoothstep(.1,.5,d))*.24)*(.45+vY*.4));
-  }
-`;
-
-const CURTAIN_VERTEX = /* glsl */ `
-  varying vec2 vUv;
-  void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }
-`;
-
-const CURTAIN_FRAGMENT = /* glsl */ `
-  uniform float uTime; uniform vec3 uColor; uniform float uOpacity;
-  varying vec2 vUv;
-  float hash(vec2 p){ return fract(sin(dot(p,vec2(91.7,271.3)))*43758.5453); }
-  float noise(vec2 p){ vec2 i=floor(p),f=fract(p); f=f*f*(3.-2.*f); return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y); }
-  void main(){
-    vec2 uv=vUv;
-    float stripes=noise(vec2(uv.x*34.0,uv.y*4.0-uTime*.55));
-    float fine=noise(vec2(uv.x*90.0,uv.y*9.0-uTime*.9));
-    float edge=smoothstep(0.,.16,uv.x)*smoothstep(1.,.84,uv.x);
-    float top=smoothstep(.78,1.,uv.y);
-    float alpha=(smoothstep(.35,.8,stripes)*.2+fine*.06)*uOpacity*edge*(.4+top*.6);
-    vec3 c=mix(uColor,vec3(1.0,.96,.8),.4);
-    gl_FragColor=vec4(c,alpha);
+    float halo=1.0-smoothstep(.12,.5,d);
+    gl_FragColor=vec4(vColor*(0.9+core*1.3),(core*.72+halo*.24)*vAlpha);
   }
 `;
 
@@ -219,8 +235,8 @@ export class GalaxyEnvironment {
   private orbitGroup = new THREE.Group();
   private meteorGroup = new THREE.Group();
   private meteorRuntime: MeteorRuntime[] = [];
-  private waterfall: THREE.Points<THREE.BufferGeometry, THREE.ShaderMaterial> | null = null;
-  private waterfallCurtain: THREE.Mesh<THREE.CylinderGeometry, THREE.ShaderMaterial> | null = null;
+  private waterfallGroups: THREE.Points<THREE.BufferGeometry, THREE.ShaderMaterial>[] = [];
+  private waterfallMask = 15;
   private baseCount: number;
   private baseFarCount: number;
   private baseWaterfall: number;
@@ -238,7 +254,7 @@ export class GalaxyEnvironment {
   constructor(options: GalaxyOptions = {}) {
     this.baseCount = 8000;
     this.baseFarCount = 6000;
-    this.baseWaterfall = 5000;
+    this.baseWaterfall = 5800;
     this.starCount = options.count ?? this.baseCount;
     this.farCount = options.farCount ?? this.baseFarCount;
     this.waterfallCount = options.waterfallCount ?? this.baseWaterfall;
@@ -471,69 +487,64 @@ export class GalaxyEnvironment {
   }
 
   private buildWaterfall(): void {
-    const n = Math.max(1, Math.round(this.waterfallCount));
-    const positions = new Float32Array(n * 3);
-    const phases = new Float32Array(n);
-    const speeds = new Float32Array(n);
-    const sizes = new Float32Array(n);
-    const radii = new Float32Array(n);
-    for (let i = 0; i < n; i += 1) {
-      positions[i * 3] = 0;
-      positions[i * 3 + 1] = this.rng();
-      positions[i * 3 + 2] = 0;
-      phases[i] = this.rng();
-      speeds[i] = 0.35 + this.rng() * 1.2;
-      sizes[i] = 0.7 + this.rng() * 1.8;
-      radii[i] = 2.6 + this.rng() * 2.2;
+    const pathCounts = [1200, 1800, 2000, 800];
+    const palette = [
+      new THREE.Color('#E8C98A'),
+      new THREE.Color('#D88978'),
+      new THREE.Color('#C9A260'),
+      new THREE.Color('#FFD7A0')
+    ];
+    for (let path = 0; path < pathCounts.length; path += 1) {
+      const count = pathCounts[path];
+      const positions = new Float32Array(count * 3);
+      const pathAttribute = new Float32Array(count).fill(path);
+      const phases = new Float32Array(count);
+      const speeds = new Float32Array(count);
+      const sizes = new Float32Array(count);
+      const alphas = new Float32Array(count);
+      const colors = new Float32Array(count * 3);
+      for (let i = 0; i < count; i += 1) {
+        phases[i] = this.rng();
+        speeds[i] = [0.42, 0.52, 0.3, 0.65][path] * (0.72 + this.rng() * 0.7);
+        sizes[i] = [0.78, 0.88, 0.92, 1.05][path] * (0.75 + this.rng() * 0.7);
+        alphas[i] = [0.82, 0.8, 0.72, 0.95][path] * (0.7 + this.rng() * 0.3);
+        const tint = palette[path].clone().lerp(new THREE.Color('#FFF4DE'), this.rng() * 0.22);
+        colors[i * 3] = tint.r;
+        colors[i * 3 + 1] = tint.g;
+        colors[i * 3 + 2] = tint.b;
+      }
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('aPath', new THREE.BufferAttribute(pathAttribute, 1));
+      geometry.setAttribute('aPhase', new THREE.BufferAttribute(phases, 1));
+      geometry.setAttribute('aSpeed', new THREE.BufferAttribute(speeds, 1));
+      geometry.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
+      geometry.setAttribute('aAlpha', new THREE.BufferAttribute(alphas, 1));
+      geometry.setAttribute('aColor', new THREE.BufferAttribute(colors, 3));
+      geometry.setDrawRange(0, count);
+      const material = new THREE.ShaderMaterial({
+        uniforms: {
+          uTime: { value: 0 },
+          uPixelRatio: { value: Math.min(window.devicePixelRatio || 1, 2) },
+          uPathMask: { value: 15 }
+        },
+        vertexShader: WATERFALL_VERTEX,
+        fragmentShader: WATERFALL_FRAGMENT,
+        transparent: true,
+        depthWrite: false,
+        depthTest: true,
+        blending: THREE.AdditiveBlending,
+        toneMapped: false
+      });
+      const points = new THREE.Points(geometry, material);
+      points.frustumCulled = false;
+      points.renderOrder = 3;
+      points.userData.path = path;
+      points.userData.baseCount = count;
+      points.userData.basePathCount = pathCounts[path];
+      this.waterfallGroups.push(points);
+      this.group.add(points);
     }
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('aPhase', new THREE.BufferAttribute(phases, 1));
-    geometry.setAttribute('aSpeed', new THREE.BufferAttribute(speeds, 1));
-    geometry.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
-    geometry.setAttribute('aRadius', new THREE.BufferAttribute(radii, 1));
-    const material = new THREE.ShaderMaterial({
-      uniforms: {
-        uTime: { value: 0 },
-        uPixelRatio: { value: Math.min(window.devicePixelRatio || 1, 2) },
-        uHeight: { value: 12 },
-        uColor: { value: new THREE.Color('#FFD58A') }
-      },
-      vertexShader: WATERFALL_VERTEX,
-      fragmentShader: WATERFALL_FRAGMENT,
-      transparent: true,
-      depthWrite: false,
-      depthTest: true,
-      blending: THREE.AdditiveBlending,
-      toneMapped: false
-    });
-    this.waterfall = new THREE.Points(geometry, material);
-    this.waterfall.frustumCulled = false;
-    this.waterfall.renderOrder = 3;
-    this.waterfall.userData.baseCount = n;
-    this.group.add(this.waterfall);
-
-    const curtainGeometry = new THREE.CylinderGeometry(4.0, 4.6, 11.5, 64, 1, true);
-    const curtainMaterial = new THREE.ShaderMaterial({
-      uniforms: {
-        uTime: { value: 0 },
-        uColor: { value: new THREE.Color('#FFD58A') },
-        uOpacity: { value: 0.9 }
-      },
-      vertexShader: CURTAIN_VERTEX,
-      fragmentShader: CURTAIN_FRAGMENT,
-      transparent: true,
-      depthWrite: false,
-      depthTest: true,
-      blending: THREE.AdditiveBlending,
-      side: THREE.DoubleSide,
-      toneMapped: false
-    });
-    this.waterfallCurtain = new THREE.Mesh(curtainGeometry, curtainMaterial);
-    this.waterfallCurtain.position.y = 5.6;
-    this.waterfallCurtain.renderOrder = 4;
-    this.waterfallCurtain.frustumCulled = false;
-    this.group.add(this.waterfallCurtain);
   }
 
   private buildOrbits(): void {
@@ -591,9 +602,15 @@ export class GalaxyEnvironment {
 
   setWaterfallEnabled(enabled: boolean): void {
     this.waterfallEnabled = enabled;
-    if (this.waterfall) this.waterfall.visible = enabled;
-    if (this.waterfallCurtain) {
-      this.waterfallCurtain.visible = enabled && this.quality !== 'performance';
+    for (const points of this.waterfallGroups) {
+      points.visible = enabled && ((this.waterfallMask >> (points.userData.path as number)) & 1) === 1;
+    }
+  }
+
+  setWaterfallPathMask(mask: number): void {
+    this.waterfallMask = mask;
+    for (const points of this.waterfallGroups) {
+      points.visible = this.waterfallEnabled && ((mask >> (points.userData.path as number)) & 1) === 1;
     }
   }
 
@@ -624,7 +641,10 @@ export class GalaxyEnvironment {
     return {
       stars: this.nearStars?.geometry.drawRange.count ?? 0,
       farStars: this.farStars?.geometry.drawRange.count ?? 0,
-      waterfall: this.waterfall?.geometry.drawRange.count ?? 0,
+      waterfall: this.waterfallGroups.reduce(
+        (sum, points) => sum + points.geometry.drawRange.count,
+        0
+      ),
       nebulaLayers: this.nebulaGroup.visible ? this.nebulaGroup.children.length : 0,
       auroraLayers: this.auroraGroup.visible ? this.auroraGroup.children.length : 0,
       meteors: this.meteorRuntime.length,
@@ -642,14 +662,14 @@ export class GalaxyEnvironment {
     if (this.farStars) {
       this.farStars.geometry.setDrawRange(0, Math.round(6000 * starScale));
     }
-    if (this.waterfall) {
-      this.waterfall.geometry.setDrawRange(0, Math.round(5000 * waterfallScale));
+    for (const points of this.waterfallGroups) {
+      points.geometry.setDrawRange(
+        0,
+        Math.round((points.userData.basePathCount as number) * waterfallScale)
+      );
     }
     this.auroraGroup.visible = this.auroraEnabled && quality !== 'performance';
     this.nebulaGroup.visible = quality !== 'performance';
-    if (this.waterfallCurtain) {
-      this.waterfallCurtain.visible = this.waterfallEnabled && quality !== 'performance';
-    }
   }
 
   update(dt: number, elapsed: number): void {
@@ -669,12 +689,9 @@ export class GalaxyEnvironment {
       const material = (mesh as THREE.Mesh).material as THREE.ShaderMaterial;
       if (material.uniforms?.uTime) material.uniforms.uTime.value = elapsed;
     }
-    if (this.waterfall) {
-      this.waterfall.material.uniforms.uTime.value = elapsed;
-      this.waterfall.material.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio || 1, 2);
-    }
-    if (this.waterfallCurtain) {
-      this.waterfallCurtain.material.uniforms.uTime.value = elapsed;
+    for (const points of this.waterfallGroups) {
+      points.material.uniforms.uTime.value = elapsed;
+      points.material.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio || 1, 2);
     }
     for (const meteor of this.meteorRuntime) {
       meteor.life += dt;
@@ -708,7 +725,6 @@ export class GalaxyEnvironment {
     this.meteorRuntime = [];
     this.nearStars = null;
     this.farStars = null;
-    this.waterfall = null;
-    this.waterfallCurtain = null;
+    this.waterfallGroups = [];
   }
 }

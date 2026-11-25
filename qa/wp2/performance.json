@@ -1,0 +1,53 @@
+{
+  "cases": [
+    {
+      "name": "wp2-1440x900",
+      "fps": 239.6,
+      "p95": 4.3,
+      "calls": 316,
+      "points": 33962,
+      "triangles": 469264,
+      "textures": 34,
+      "geometries": 216,
+      "heapMB": 34.7,
+      "pathGroups": 4,
+      "pathCounts": [
+        1200,
+        1800,
+        2000,
+        800
+      ],
+      "canvas": [
+        1440,
+        900
+      ],
+      "contextLost": 0,
+      "errors": []
+    },
+    {
+      "name": "wp2-3840x2160",
+      "fps": 148.7,
+      "p95": 12.5,
+      "calls": 316,
+      "points": 33962,
+      "triangles": 469264,
+      "textures": 34,
+      "geometries": 216,
+      "heapMB": 28,
+      "pathGroups": 4,
+      "pathCounts": [
+        1200,
+        1800,
+        2000,
+        800
+      ],
+      "canvas": [
+        3840,
+        2160
+      ],
+      "contextLost": 0,
+      "errors": []
+    }
+  ],
+  "errors": []
+}
