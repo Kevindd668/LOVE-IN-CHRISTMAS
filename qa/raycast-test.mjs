@@ -5,7 +5,7 @@ const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, dev
 const errors = [];
 page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
 page.on('pageerror', (err) => errors.push(err.stack || err.message));
-await page.goto('http://127.0.0.1:4173/', { waitUntil: 'networkidle' });
+await page.goto('http://127.0.0.1:4173/?intro=0', { waitUntil: 'networkidle' });
 await page.bringToFront();
 await page.waitForFunction(() => window.__CHRISTMAS_WISH__?.ready, null, { timeout: 30000 });
 await page.waitForTimeout(4200);

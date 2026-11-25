@@ -1,11 +1,11 @@
-﻿import { chromium } from 'playwright-core';
+import { chromium } from 'playwright-core';
 import assert from 'node:assert/strict';
 const browser = await chromium.launch({ executablePath: 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', headless: false, args: ['--window-position=20,20','--window-size=1480,960','--disable-features=RendererCodeIntegrity'] });
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 });
 const errors = [];
 page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()); });
 page.on('pageerror', (err) => errors.push(err.stack || err.message));
-await page.goto('http://127.0.0.1:4173/', { waitUntil: 'networkidle' });
+await page.goto('http://127.0.0.1:4173/?intro=0', { waitUntil: 'networkidle' });
 await page.bringToFront();
 await page.waitForFunction(() => window.__CHRISTMAS_WISH__?.ready, null, { timeout: 30000 });
 await page.waitForTimeout(3200);

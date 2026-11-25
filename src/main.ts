@@ -35,6 +35,7 @@ import { GiftExperienceViewer } from './gifts/GiftExperienceViewer';
 import { MemoryStorage } from './storage/MemoryStorage';
 import { StoryEditor, LOCAL_PHOTOS_KEY } from './ui/StoryEditor';
 import { StoryOverlay } from './ui/StoryOverlay';
+import { CinematicIntro } from './cinematic/CinematicIntro';
 
 const TREE_PRESENTATION_SCALE = 1.24;
 const TREE_FRAME_HEADROOM = 1.2;
@@ -86,6 +87,7 @@ class ChristmasWishApp {
   private giftViewer!: GiftExperienceViewer;
   private storyEditor: StoryEditor | null = null;
   private heartPickProxy: THREE.Mesh | null = null;
+  private intro!: CinematicIntro;
 
   private width = Math.max(1, window.innerWidth);
   private height = Math.max(1, window.innerHeight);
@@ -112,6 +114,11 @@ class ChristmasWishApp {
     if (typeof window === 'undefined') return true;
     const params = new URLSearchParams(window.location.search);
     return params.get('full') !== '1' && params.get('safe') !== '0';
+  })();
+  private readonly introEnabled = (() => {
+    if (typeof window === 'undefined') return true;
+    const params = new URLSearchParams(window.location.search);
+    return params.get('intro') !== '0' && params.get('edit') !== '1';
   })();
 
   constructor() {
@@ -151,6 +158,33 @@ class ChristmasWishApp {
       this.buildScene();
       this.music = new MusicEngine();
       this.music.setVolume(this.settings.get('musicVolume'));
+      this.intro = new CinematicIntro({
+        scene: this.sceneManager.scene,
+        camera: this.cameraManager,
+        renderer: this.renderer,
+        sceneManager: this.sceneManager,
+        settings: this.settings,
+        tree: this.tree,
+        galaxy: this.galaxy,
+        heart: this.giantHeart,
+        magic: this.magic,
+        numbers: this.numbers,
+        photos: this.photos,
+        gifts: this.gifts,
+        hearts: this.hearts,
+        snow: this.snow,
+        stars: this.stars,
+        aurora: this.aurora,
+        particleLoveText: this.particleLoveText,
+        heartPickProxy: this.heartPickProxy,
+        music: this.music,
+        onBeforeStart: () => {
+          this.storyOverlay.close();
+          this.giftViewer.close();
+          this.memoryViewer.close();
+          this.controlPanel?.close();
+        }
+      });
 
       try {
         const localSave =
@@ -215,7 +249,12 @@ class ChristmasWishApp {
       this.ui.scheduleHintHide(16000);
       window.setTimeout(() => {
         this.ui.hideLoader();
-        this.cameraManager.playIntro();
+        if (this.introEnabled) {
+          this.cameraManager.resetView(true);
+          this.intro.showEntry();
+        } else {
+          this.cameraManager.playIntro();
+        }
       }, 650);
 
       this.exposeDebugApi();
@@ -412,6 +451,7 @@ class ChristmasWishApp {
       ],
       isEnabled: () =>
         !this.interactionLocked &&
+        !this.intro?.isBlocking &&
         !this.romanceState.isBusy &&
         !this.ui.hasOpenOverlay &&
         !this.demo?.isActive &&
@@ -1058,6 +1098,15 @@ class ChristmasWishApp {
   private tick(delta: number, elapsed: number): void {
     if (!this.pageReady) return;
     this.elapsed = elapsed;
+    if (this.intro?.isActive) {
+      this.intro.update(delta);
+      this.renderer.render();
+      return;
+    }
+    if (this.intro?.isEntryOpen) {
+      this.renderer.render();
+      return;
+    }
     this.cameraManager.update(delta);
 
     if (this.demo.isActive) {
@@ -1158,6 +1207,9 @@ class ChristmasWishApp {
       gatherGiantHeart: () => this.giantHeart.gather(this.elapsed),
       burstGiantHeart: () => this.giantHeart.burst(this.elapsed),
       photos: () => this.photos.views,
+      intro: this.intro,
+      introSeek: (seconds: number) => this.intro.seek(seconds),
+      showIntroEntry: () => this.intro.showEntry(),
       openMemory: (id: string) => {
         if (this.memoryViewer.open(id)) this.romanceState.begin('memory');
       },
@@ -1198,6 +1250,7 @@ class ChristmasWishApp {
     this.memoryViewer?.dispose();
     this.storyEditor?.dispose();
     this.storyOverlay?.dispose();
+    this.intro?.dispose();
     if (this.heartPickProxy) {
       this.heartPickProxy.geometry.dispose();
       (this.heartPickProxy.material as THREE.Material).dispose();

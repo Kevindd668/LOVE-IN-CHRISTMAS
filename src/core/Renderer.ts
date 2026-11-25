@@ -149,6 +149,29 @@ export class Renderer {
     this.pipeline?.composer.render();
   }
 
+  /**
+   * Compile the cinematic intro and formal scene before the first visible
+   * intro frame. This is intentionally on the existing renderer; no second
+   * WebGL context or post-processing pipeline is created.
+   */
+  async warmup(scene: THREE.Scene, camera: THREE.PerspectiveCamera): Promise<void> {
+    const renderer = this.renderer as THREE.WebGLRenderer & {
+      compileAsync?: (scene: THREE.Scene, camera: THREE.Camera) => Promise<void>;
+    };
+    try {
+      if (typeof renderer.compileAsync === 'function') {
+        await renderer.compileAsync(scene, camera);
+      } else {
+        renderer.compile(scene, camera);
+      }
+      // Compile the bloom/composer programs as well. The entry overlay hides
+      // this single warm-up frame.
+      this.render();
+    } catch (error) {
+      console.warn('[ChristmasWish] intro warmup failed; continuing without prewarm', error);
+    }
+  }
+
   get info(): THREE.WebGLInfo {
     return this.renderer.info;
   }

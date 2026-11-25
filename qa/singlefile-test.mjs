@@ -1,4 +1,4 @@
-﻿import { chromium } from 'playwright-core';
+import { chromium } from 'playwright-core';
 import { pathToFileURL } from 'node:url';
 const fileUrl = pathToFileURL('C:/Users/29636/Desktop/日常交流/Christmas-Wish.html').href;
 const browser = await chromium.launch({ executablePath: 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', headless: false, args: ['--window-position=20,20','--window-size=1480,960','--disable-features=RendererCodeIntegrity'] });
@@ -10,7 +10,7 @@ page.on('console', (msg) => { if (msg.type() === 'error') errors.push(msg.text()
 page.on('pageerror', (err) => errors.push(err.stack || err.message));
 page.on('request', (req) => requests.push(req.url()));
 page.on('requestfailed', (req) => failed.push(`${req.url()} :: ${req.failure()?.errorText}`));
-await page.goto(fileUrl, { waitUntil: 'load', timeout: 60000 });
+await page.goto(`${fileUrl}?intro=0`, { waitUntil: 'load', timeout: 60000 });
 await page.waitForFunction(() => window.__CHRISTMAS_WISH__?.ready === true, null, { timeout: 30000 });
 await page.waitForTimeout(4000);
 await page.screenshot({ path: 'qa/screenshots/singlefile-initial.png' });

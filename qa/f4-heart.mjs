@@ -1,8 +1,8 @@
-﻿import { chromium } from 'playwright-core';
+import { chromium } from 'playwright-core';
 import assert from 'node:assert/strict';
 const browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:false,args:['--window-position=20,20','--window-size=1480,960']});
 const page=await browser.newPage({viewport:{width:1440,height:900}}); const errors=[]; page.on('pageerror',e=>errors.push(e.message)); page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
-await page.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'}); await page.bringToFront(); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready,{timeout:30000}); await page.waitForTimeout(5000); await page.evaluate(()=>document.querySelector('#btn-panel-close')?.click());
+await page.goto('http://127.0.0.1:4173/?intro=0',{waitUntil:'networkidle'}); await page.bringToFront(); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready,{timeout:30000}); await page.waitForTimeout(5000); await page.evaluate(()=>document.querySelector('#btn-panel-close')?.click());
 const point=await page.evaluate(()=>{const a=window.__CHRISTMAS_WISH__.app;const v=a.heartPickProxy.getWorldPosition(a.heartPickProxy.position.clone());v.project(a.cameraManager.camera);return{x:Math.round((v.x*.5+.5)*innerWidth),y:Math.round((-v.y*.5+.5)*innerHeight)};});
 await page.mouse.click(point.x,point.y); await page.waitForTimeout(900); const single=await page.evaluate(()=>window.__CHRISTMAS_WISH__.getRomanceState()); assert.equal(single,'heart'); await page.waitForTimeout(3200);
 await page.mouse.click(point.x,point.y); await page.waitForTimeout(80); await page.mouse.click(point.x,point.y); await page.waitForTimeout(700); const burst=await page.evaluate(()=>window.__CHRISTMAS_WISH__.getRomanceState()); assert.equal(burst,'heart'); await page.waitForTimeout(2800);

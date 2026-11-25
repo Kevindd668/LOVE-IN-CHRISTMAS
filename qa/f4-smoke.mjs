@@ -1,7 +1,7 @@
-﻿import { chromium } from 'playwright-core';
+import { chromium } from 'playwright-core';
 const browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:false,args:['--window-position=20,20','--window-size=1480,960']});
 const page=await browser.newPage({viewport:{width:1440,height:900},deviceScaleFactor:1}); const errors=[]; page.on('pageerror',e=>errors.push(e.message)); page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
-await page.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'}); await page.bringToFront(); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready,{timeout:30000}); await page.waitForTimeout(3000);
+await page.goto('http://127.0.0.1:4173/?intro=0',{waitUntil:'networkidle'}); await page.bringToFront(); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready,{timeout:30000}); await page.waitForTimeout(3000);
 console.log('normal', await page.evaluate(()=>({story:!!document.querySelector('#story-editor'), panel:document.querySelector('#control-panel')?.classList.contains('is-open'), photos:window.__CHRISTMAS_WISH__.app.photos.count})));
 await page.evaluate(()=>document.querySelector('#btn-panel-close')?.click()); await page.waitForTimeout(300);
 await page.evaluate(()=>window.__CHRISTMAS_WISH__.openPromise()); await page.waitForTimeout(500); await page.screenshot({path:'docs/F4/01-promise.png'});
@@ -13,6 +13,6 @@ await page.evaluate(()=>window.__CHRISTMAS_WISH__.closeMemory()); await page.wai
 await page.evaluate(()=>window.__CHRISTMAS_WISH__.openStoryGift(0)); await page.waitForTimeout(700); await page.screenshot({path:'docs/F4/03-gift-photo.png'});
 console.log('gift',await page.evaluate(()=>({overlay:document.querySelector('#story-overlay')?.classList.contains('is-open'),state:window.__CHRISTMAS_WISH__.getRomanceState(),title:document.querySelector('.story-title')?.textContent})));
 await page.locator('.story-close').click(); await page.waitForTimeout(300);
-await page.goto('http://127.0.0.1:4173/?edit=1',{waitUntil:'networkidle'}); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready); await page.waitForTimeout(2000); await page.screenshot({path:'docs/F4/04-editor.png'});
+await page.goto('http://127.0.0.1:4173/?intro=0?intro=0&edit=1',{waitUntil:'networkidle'}); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready); await page.waitForTimeout(2000); await page.screenshot({path:'docs/F4/04-editor.png'});
 console.log('editor',await page.evaluate(()=>({editor:!!document.querySelector('#story-editor'),open:document.body.classList.contains('is-story-editor-open'),fields:document.querySelectorAll('[data-story]').length,photoRows:document.querySelectorAll('.story-photo-row').length})));
 console.log('errors',errors); await browser.close();

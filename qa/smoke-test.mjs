@@ -32,7 +32,7 @@ const state = () => page.evaluate(() => {
   };
 });
 
-await page.goto('http://127.0.0.1:4173/', { waitUntil: 'networkidle' });
+await page.goto('http://127.0.0.1:4173/?intro=0', { waitUntil: 'networkidle' });
 await page.evaluate(() => localStorage.clear());
 await page.reload({ waitUntil: 'networkidle' });
 await page.waitForFunction(() => window.__CHRISTMAS_WISH__?.ready, null, { timeout: 30000 });

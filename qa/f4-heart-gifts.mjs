@@ -1,7 +1,7 @@
-﻿import { chromium } from 'playwright-core';
+import { chromium } from 'playwright-core';
 const browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:false,args:['--window-position=20,20','--window-size=1480,960']});
 const page=await browser.newPage({viewport:{width:1440,height:900},deviceScaleFactor:1}); const errors=[]; page.on('pageerror',e=>errors.push(e.message)); page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
-await page.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'}); await page.bringToFront(); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready,{timeout:30000}); await page.waitForTimeout(5000); await page.evaluate(()=>document.querySelector('#btn-panel-close')?.click());
+await page.goto('http://127.0.0.1:4173/?intro=0',{waitUntil:'networkidle'}); await page.bringToFront(); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready,{timeout:30000}); await page.waitForTimeout(5000); await page.evaluate(()=>document.querySelector('#btn-panel-close')?.click());
 await page.evaluate(()=>{document.querySelector('#ui').style.display='none'; window.__CHRISTMAS_WISH__.setLoveNumbers('love');}); await page.waitForTimeout(900); await page.screenshot({path:'docs/F4/05-love-numbers.png'});
 const heartPoint=await page.evaluate(()=>{const a=window.__CHRISTMAS_WISH__.app; const v=a.heartPickProxy.getWorldPosition(a.heartPickProxy.position.clone()); v.project(a.cameraManager.camera); return {x:Math.round((v.x*.5+.5)*innerWidth),y:Math.round((-v.y*.5+.5)*innerHeight)};});
 await page.mouse.click(heartPoint.x,heartPoint.y); await page.waitForTimeout(900); console.log('heart single',await page.evaluate(()=>({state:window.__CHRISTMAS_WISH__.getRomanceState()}))); await page.waitForTimeout(3200);

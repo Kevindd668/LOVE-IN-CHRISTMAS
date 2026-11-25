@@ -1,7 +1,7 @@
-﻿import { chromium } from 'playwright-core';
+import { chromium } from 'playwright-core';
 const browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:false,args:['--window-position=20,20','--window-size=1480,960']});
 const page=await browser.newPage({viewport:{width:1440,height:900}}); const errors=[]; page.on('pageerror',e=>errors.push(e.message)); page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
-await page.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'}); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready); await page.waitForTimeout(4500); await page.evaluate(()=>document.querySelector('#btn-panel-close')?.click());
+await page.goto('http://127.0.0.1:4173/?intro=0',{waitUntil:'networkidle'}); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready); await page.waitForTimeout(4500); await page.evaluate(()=>document.querySelector('#btn-panel-close')?.click());
 const before=await page.evaluate(()=>{const a=window.__CHRISTMAS_WISH__.app;return {pos:a.cameraManager.camera.position.toArray(),target:a.cameraManager.controls.target.toArray()};});
 await page.evaluate(async()=>{const a=window.__CHRISTMAS_WISH__.app;const files=[];for(let i=0;i<18;i++){const c=document.createElement('canvas');c.width=300;c.height=380;const x=c.getContext('2d');x.fillStyle=i%2?'#33506a':'#6b3a51';x.fillRect(0,0,300,380);const b=await new Promise(r=>c.toBlob(r,'image/png'));files.push(new File([b],`memory-${i}.png`,{type:'image/png'}));}await a.photos.addFiles(files);});
 await page.waitForTimeout(1600); const id=await page.evaluate(()=>window.__CHRISTMAS_WISH__.photos()[23].id);

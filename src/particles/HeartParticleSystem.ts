@@ -351,6 +351,15 @@ export class HeartParticleSystem {
     }
   }
 
+  /**
+   * Read-only bridge for the cinematic intro. The intro reuses the formal
+   * heart volume instead of building another heart particle system.
+   */
+  copyHeartPositions(target: Float32Array, count: number): void {
+    const amount = Math.min(count, this.maxCount, Math.floor(target.length / 3));
+    target.set(this.heartPositions.subarray(0, amount * 3), 0);
+  }
+
   setCount(count: number): void {
     this.count = clamp(Math.round(count), 1000, this.maxCount);
     this.geometry.setDrawRange(0, this.count);

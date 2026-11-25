@@ -1,0 +1,97 @@
+{
+  "cases": [
+    {
+      "name": "f5-1440-galaxy",
+      "warmupStartMs": 341,
+      "fps": 240,
+      "p50": 4.2,
+      "p95": 4.3,
+      "max": 4.6,
+      "calls": 15,
+      "triangles": 12186,
+      "points": 34000,
+      "textures": 31,
+      "geometries": 209,
+      "programs": 56,
+      "heapMB": 25.9,
+      "particles": 20000,
+      "phase": "galaxy",
+      "canvas": [
+        1440,
+        900
+      ],
+      "contextLost": 0,
+      "errors": []
+    },
+    {
+      "name": "f5-1920-galaxy",
+      "warmupStartMs": 160,
+      "fps": 240,
+      "p50": 4.2,
+      "p95": 4.3,
+      "max": 5.1,
+      "calls": 15,
+      "triangles": 12186,
+      "points": 34000,
+      "textures": 31,
+      "geometries": 209,
+      "programs": 56,
+      "heapMB": 27.3,
+      "particles": 20000,
+      "phase": "galaxy",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "contextLost": 0,
+      "errors": []
+    },
+    {
+      "name": "f5-3840-galaxy",
+      "warmupStartMs": 165,
+      "fps": 240,
+      "p50": 4.2,
+      "p95": 4.3,
+      "max": 4.4,
+      "calls": 15,
+      "triangles": 12186,
+      "points": 34000,
+      "textures": 31,
+      "geometries": 209,
+      "programs": 56,
+      "heapMB": 44.4,
+      "particles": 20000,
+      "phase": "galaxy",
+      "canvas": [
+        3840,
+        2160
+      ],
+      "contextLost": 0,
+      "errors": []
+    },
+    {
+      "name": "f5-1440-full-bloom-galaxy",
+      "warmupStartMs": 246,
+      "fps": 240,
+      "p50": 4.2,
+      "p95": 4.3,
+      "max": 4.7,
+      "calls": 29,
+      "triangles": 12200,
+      "points": 34000,
+      "textures": 44,
+      "geometries": 210,
+      "programs": 104,
+      "heapMB": 36.3,
+      "particles": 20000,
+      "phase": "galaxy",
+      "canvas": [
+        1440,
+        900
+      ],
+      "contextLost": 0,
+      "errors": []
+    }
+  ],
+  "errors": []
+}

@@ -1,4 +1,4 @@
-﻿import { chromium } from 'playwright-core';
+import { chromium } from 'playwright-core';
 const browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:false,args:['--window-position=20,20','--window-size=1480,960']});
 const page=await browser.newPage({viewport:{width:1440,height:900}}); const errors=[]; page.on('pageerror',e=>errors.push(e.message)); page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
-await page.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'}); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready); await page.waitForTimeout(4500); await page.evaluate(()=>{document.querySelector('#ui').style.display='none';window.__CHRISTMAS_WISH__.setLoveNumbers('love');}); await page.waitForTimeout(800); await page.screenshot({path:'docs/F4/05-love-numbers.png'}); console.log(errors); await browser.close();
+await page.goto('http://127.0.0.1:4173/?intro=0',{waitUntil:'networkidle'}); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready); await page.waitForTimeout(4500); await page.evaluate(()=>{document.querySelector('#ui').style.display='none';window.__CHRISTMAS_WISH__.setLoveNumbers('love');}); await page.waitForTimeout(800); await page.screenshot({path:'docs/F4/05-love-numbers.png'}); console.log(errors); await browser.close();

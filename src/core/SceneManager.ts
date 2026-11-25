@@ -46,6 +46,7 @@ export class SceneManager {
   private readonly contactShadows: THREE.Group;
   private readonly treeBase: THREE.Group;
   private readonly groundDetails: THREE.Group;
+  private readonly distantObjects: THREE.Object3D[] = [];
   private iceCrystals: THREE.InstancedMesh | null = null;
   private groundSparkles: THREE.Points<THREE.BufferGeometry, THREE.PointsMaterial> | null = null;
   private groundQuality: QualityLevel = 'ultra';
@@ -91,9 +92,11 @@ export class SceneManager {
     this.setQuality(options.qualityPreset, options.quality ?? 'ultra');
 
     this.setBackground(options.backgroundColor);
-    this.scene.add(this.createDistantHaze());
-    this.scene.add(this.createDistantRidges());
-    this.scene.add(this.createDistantPines());
+    const haze = this.createDistantHaze();
+    const ridges = this.createDistantRidges();
+    const pines = this.createDistantPines();
+    this.distantObjects.push(haze, ridges, pines);
+    this.scene.add(haze, ridges, pines);
   }
 
   private createSky(): THREE.Mesh<THREE.SphereGeometry, THREE.ShaderMaterial> {
@@ -748,6 +751,15 @@ export class SceneManager {
   setTreeShadowVisible(visible: boolean): void {
     const shadow = this.contactShadows.children[0];
     if (shadow) shadow.visible = visible;
+  }
+
+  /** Hide the formal stage during the galaxy-only cinematic intro. */
+  setCinematicSceneVisible(visible: boolean): void {
+    this.ground.visible = visible;
+    this.treeBase.visible = visible;
+    this.contactShadows.visible = visible;
+    this.groundDetails.visible = visible;
+    for (const object of this.distantObjects) object.visible = visible;
   }
 
   dispose(): void {
