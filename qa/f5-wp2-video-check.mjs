@@ -1,0 +1,2 @@
+﻿import { chromium } from 'playwright-core';
+const b=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:false});const p=await b.newPage({viewport:{width:800,height:600}});await p.goto('file:///C:/Users/29636/Desktop/%E6%97%A5%E5%B8%B8%E4%BA%A4%E6%B5%81/Christmas-Wish/docs/F5/evidence/01-intro-8s-integrated.webm',{waitUntil:'load'});await p.waitForTimeout(800);console.log(await p.evaluate(()=>({duration:document.querySelector('video')?.duration,ready:document.querySelector('video')?.readyState})));await b.close();
