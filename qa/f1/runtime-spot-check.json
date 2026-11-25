@@ -1,0 +1,43 @@
+[
+  {
+    "name": "Heart-Star",
+    "status": "ok",
+    "url": "http://127.0.0.1:8801/index.html",
+    "info": {
+      "title": "Neon Particle Heart",
+      "canvas": {
+        "width": 1440,
+        "height": 900
+      },
+      "fps": 241,
+      "bodyText": "⇄\n⏸"
+    },
+    "consoleErrors": [
+      "Failed to load resource: the server responded with a status of 404 (File not found)"
+    ],
+    "pageErrors": [],
+    "failed": []
+  },
+  {
+    "name": "Interactive-Xmas-Tree",
+    "status": "ok",
+    "url": "http://127.0.0.1:8802/index.html",
+    "info": {
+      "title": "Gesture Particle Christmas Tree",
+      "canvas": {
+        "width": 1440,
+        "height": 900
+      },
+      "fps": 240,
+      "bodyText": "✋ Gesture Instructions：\n• Distance between thumb and index finger → Controls tree scaling & particle/confetti burst intensity\n• Moving your hand left/right or up/down → The entire tree moves with your hand\n(If camera permissions are not enabled, you will only see the automatically playing animation)"
+    },
+    "consoleErrors": [
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to acquire camera feed: NotFoundError: Requested device not found"
+    ],
+    "pageErrors": [
+      "Requested device not found"
+    ],
+    "failed": []
+  }
+]
