@@ -97,7 +97,15 @@ npm run build:single
 - [F2 集成性能报告](F2_PERFORMANCE_REPORT.md)
 - 截图：`docs/F3/f2-integration-screenshots/`
 - 数据：`qa/f2-integration/performance.json`
-- 状态：F3 集成实现、截图、回归和性能完成，等待验收；未进入 F4/F5。
+- 状态：F3 集成已验收，已合并到 `feature/visual-upgrade`；未进入 F4/F5。
+
+## 巨型爱心 3D 体积升级（验收通过）
+
+- [升级说明](HEART_3D_REFINEMENT.md)
+- 真实体积：z 轴 ±1.29，总厚度约 2.58
+- 验收截图：`docs/F3/heart-look/`
+- 合并提交：`248e1c8`
+- standalone SHA-256：`A443243AFA0C50D222C8728A46178551635DB838A50C0417FEFF0D7CFAE0C511`
 
 ## 参考仓库复用文档
 

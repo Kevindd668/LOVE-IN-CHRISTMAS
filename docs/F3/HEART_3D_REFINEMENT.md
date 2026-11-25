@@ -1,8 +1,8 @@
 # 巨型爱心 3D 体积升级
 
-> 分支：`f3-heart-look`  
+> 分支：`f3-heart-look`（已 fast-forward 合并到 `feature/visual-upgrade`）  
 > 基线：已验收 F3 `18949dd`  
-> 状态：**视觉升级完成，等待验收；未合并到 feature/visual-upgrade。**  
+> 状态：**验收通过并已合并；合并提交 `248e1c8`。**  
 > standalone：`Christmas-Wish.html`，SHA-256 `A443243AFA0C50D222C8728A46178551635DB838A50C0417FEFF0D7CFAE0C511`
 
 ## 1. 改动目标
