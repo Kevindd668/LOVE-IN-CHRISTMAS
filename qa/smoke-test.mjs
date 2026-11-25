@@ -99,19 +99,24 @@ await page.waitForTimeout(180);
 // expand photos section
 await page.locator('.control-section').nth(3).locator('summary').click();
 await page.waitForTimeout(250);
+const initialPhotoCount = await page.evaluate(() => window.__CHRISTMAS_WISH__.app.photos.count);
 await page.setInputFiles('#photo-input', [
   'qa/placeholders/1.jpg',
   'qa/placeholders/2.jpg'
 ]);
-await page.waitForFunction(() => window.__CHRISTMAS_WISH__?.app.photos.count === 10, null, { timeout: 12000 });
+await page.waitForFunction(
+  (expected) => window.__CHRISTMAS_WISH__?.app.photos.count === expected,
+  initialPhotoCount + 2,
+  { timeout: 12000 }
+);
 await page.waitForTimeout(500);
 results.photoUpload = await page.evaluate(() => ({
   count: window.__CHRISTMAS_WISH__.app.photos.count,
   label: document.querySelector('#photo-count')?.textContent,
   rows: document.querySelectorAll('.photo-item').length
 }));
-assert.equal(results.photoUpload.count, 10);
-assert.equal(results.photoUpload.rows, 10);
+assert.equal(results.photoUpload.count, initialPhotoCount + 2);
+assert.equal(results.photoUpload.rows, initialPhotoCount + 2);
 await page.screenshot({ path: 'qa/screenshots/qa-panel-photos.png' });
 
 const lastPhotoInput = page.locator('.photo-item .photo-meta input').last();
@@ -133,8 +138,8 @@ await page.waitForTimeout(250);
 await page.locator('.photo-item').last().locator('.photo-actions button').nth(3).click();
 await page.waitForTimeout(250);
 results.photoAfterDelete = await page.evaluate(() => ({ count: window.__CHRISTMAS_WISH__.app.photos.count, rows: document.querySelectorAll('.photo-item').length }));
-assert.equal(results.photoAfterDelete.count, 9);
-assert.equal(results.photoAfterDelete.rows, 9);
+assert.equal(results.photoAfterDelete.count, initialPhotoCount + 1);
+assert.equal(results.photoAfterDelete.rows, initialPhotoCount + 1);
 
 // quality presets
 for (const quality of ['balanced', 'performance', 'ultra']) {
