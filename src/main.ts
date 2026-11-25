@@ -188,13 +188,34 @@ class ChristmasWishApp {
         onStart: () => this.film?.onIntroStart(),
         onSegmentComplete: () => this.film?.onIntroComplete(),
         onBeforeStart: () => {
+          this.film?.captureState();
           this.storyOverlay.close();
           this.giftViewer.close();
           this.memoryViewer.close();
           this.controlPanel?.close();
         }
       });
-      this.film = new FilmDirector({ intro: this.intro });
+      this.film = new FilmDirector({
+        intro: this.intro,
+        camera: this.cameraManager,
+        sceneManager: this.sceneManager,
+        settings: this.settings,
+        tree: this.tree,
+        galaxy: this.galaxy,
+        heart: this.giantHeart,
+        magic: this.magic,
+        numbers: this.numbers,
+        numbersController: this.numbersController,
+        particleLoveText: this.particleLoveText,
+        photos: this.photos,
+        gifts: this.gifts,
+        hearts: this.hearts,
+        snow: this.snow,
+        stars: this.stars,
+        aurora: this.aurora,
+        music: this.music,
+        heartPickProxy: this.heartPickProxy
+      });
 
       try {
         const localSave =

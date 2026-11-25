@@ -451,8 +451,11 @@ export class CinematicIntro {
   skip(): void {
     if (!this.active) return;
     if (this.options.segmentMode) {
+      const wasPaused = this.paused;
+      this.paused = false;
       this.elapsed = DURATION;
       this.update(0.0001);
+      this.paused = wasPaused;
       return;
     }
     this.elapsed = 7.95;

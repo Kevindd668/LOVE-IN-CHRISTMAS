@@ -1,0 +1,277 @@
+{
+  "cases": [
+    {
+      "name": "f5-1440-full-film",
+      "warmupMs": 390,
+      "fps": 144.4,
+      "p50": 4.3,
+      "p95": 8.5,
+      "p99": 12.5,
+      "max": 2774.9,
+      "frames": 10929,
+      "samples": [
+        {
+          "at": 23,
+          "chapter": "heart",
+          "calls": 124,
+          "triangles": 403646,
+          "points": 33792,
+          "textures": 31,
+          "geometries": 210,
+          "programs": 110
+        },
+        {
+          "at": 35,
+          "chapter": "photos",
+          "calls": 175,
+          "triangles": 415881,
+          "points": 33792,
+          "textures": 31,
+          "geometries": 210,
+          "programs": 110
+        },
+        {
+          "at": 45,
+          "chapter": "numbers",
+          "calls": 256,
+          "triangles": 440572,
+          "points": 33992,
+          "textures": 31,
+          "geometries": 210,
+          "programs": 110
+        },
+        {
+          "at": 58,
+          "chapter": "scene",
+          "calls": 303,
+          "triangles": 467100,
+          "points": 34142,
+          "textures": 31,
+          "geometries": 210,
+          "programs": 110
+        }
+      ],
+      "infoEnd": {
+        "calls": 303,
+        "triangles": 467100,
+        "points": 34142,
+        "textures": 31,
+        "geometries": 210,
+        "programs": 110
+      },
+      "state": "completed",
+      "t": 68,
+      "heapMB": 50.8,
+      "canvas": [
+        1440,
+        900
+      ],
+      "errors": []
+    },
+    {
+      "name": "f5-1920-full-film",
+      "warmupMs": 205,
+      "fps": 218.5,
+      "p50": 4.2,
+      "p95": 8.3,
+      "p99": 8.4,
+      "max": 99.9,
+      "frames": 14868,
+      "samples": [
+        {
+          "at": 23,
+          "chapter": "heart",
+          "calls": 125,
+          "triangles": 404990,
+          "points": 33792,
+          "textures": 31,
+          "geometries": 210,
+          "programs": 110
+        },
+        {
+          "at": 35,
+          "chapter": "photos",
+          "calls": 183,
+          "triangles": 416226,
+          "points": 33792,
+          "textures": 31,
+          "geometries": 210,
+          "programs": 110
+        },
+        {
+          "at": 45,
+          "chapter": "numbers",
+          "calls": 256,
+          "triangles": 440572,
+          "points": 33992,
+          "textures": 31,
+          "geometries": 210,
+          "programs": 110
+        },
+        {
+          "at": 58,
+          "chapter": "scene",
+          "calls": 303,
+          "triangles": 467100,
+          "points": 34142,
+          "textures": 31,
+          "geometries": 210,
+          "programs": 110
+        }
+      ],
+      "infoEnd": {
+        "calls": 303,
+        "triangles": 467100,
+        "points": 34142,
+        "textures": 31,
+        "geometries": 210,
+        "programs": 110
+      },
+      "state": "completed",
+      "t": 68,
+      "heapMB": 45,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "errors": []
+    },
+    {
+      "name": "f5-3840-full-film",
+      "warmupMs": 138,
+      "fps": 150,
+      "p50": 8.2,
+      "p95": 12.4,
+      "p99": 12.6,
+      "max": 95.9,
+      "frames": 10201,
+      "samples": [
+        {
+          "at": 23,
+          "chapter": "heart",
+          "calls": 125,
+          "triangles": 404990,
+          "points": 33792,
+          "textures": 31,
+          "geometries": 210,
+          "programs": 110
+        },
+        {
+          "at": 35,
+          "chapter": "photos",
+          "calls": 183,
+          "triangles": 416226,
+          "points": 33792,
+          "textures": 31,
+          "geometries": 210,
+          "programs": 110
+        },
+        {
+          "at": 45,
+          "chapter": "numbers",
+          "calls": 256,
+          "triangles": 440572,
+          "points": 33992,
+          "textures": 31,
+          "geometries": 210,
+          "programs": 110
+        },
+        {
+          "at": 58,
+          "chapter": "scene",
+          "calls": 303,
+          "triangles": 467100,
+          "points": 34142,
+          "textures": 31,
+          "geometries": 210,
+          "programs": 110
+        }
+      ],
+      "infoEnd": {
+        "calls": 303,
+        "triangles": 467100,
+        "points": 34142,
+        "textures": 31,
+        "geometries": 210,
+        "programs": 110
+      },
+      "state": "completed",
+      "t": 68,
+      "heapMB": 29.9,
+      "canvas": [
+        3840,
+        2160
+      ],
+      "errors": []
+    },
+    {
+      "name": "f5-1440-full-bloom",
+      "warmupMs": 268,
+      "fps": 173.7,
+      "p50": 4.2,
+      "p95": 8.4,
+      "p99": 8.5,
+      "max": 2004.1,
+      "frames": 12699,
+      "samples": [
+        {
+          "at": 23,
+          "chapter": "heart",
+          "calls": 138,
+          "triangles": 403660,
+          "points": 33792,
+          "textures": 44,
+          "geometries": 211,
+          "programs": 152
+        },
+        {
+          "at": 35,
+          "chapter": "photos",
+          "calls": 187,
+          "triangles": 415645,
+          "points": 33792,
+          "textures": 44,
+          "geometries": 211,
+          "programs": 152
+        },
+        {
+          "at": 45,
+          "chapter": "numbers",
+          "calls": 270,
+          "triangles": 440586,
+          "points": 33992,
+          "textures": 44,
+          "geometries": 211,
+          "programs": 152
+        },
+        {
+          "at": 58,
+          "chapter": "scene",
+          "calls": 317,
+          "triangles": 467114,
+          "points": 34142,
+          "textures": 44,
+          "geometries": 211,
+          "programs": 152
+        }
+      ],
+      "infoEnd": {
+        "calls": 317,
+        "triangles": 467114,
+        "points": 34142,
+        "textures": 44,
+        "geometries": 211,
+        "programs": 152
+      },
+      "state": "completed",
+      "t": 68,
+      "heapMB": 35.8,
+      "canvas": [
+        1440,
+        900
+      ],
+      "errors": []
+    }
+  ],
+  "errors": []
+}

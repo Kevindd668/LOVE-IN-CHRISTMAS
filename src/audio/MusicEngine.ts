@@ -192,7 +192,7 @@ export class MusicEngine {
     return buffer;
   }
 
-  private startLoop(): void {
+  private startLoop(startBar = 0): void {
     if (!this.context || !this.masterGain) return;
     const context = this.context;
     const bus = context.createGain();
@@ -201,11 +201,37 @@ export class MusicEngine {
     if (this.reverb) bus.connect(this.reverb);
     this.loopBus = bus;
     this.step = 0;
-    this.bar = 0;
+    this.bar = Math.max(0, Math.floor(startBar));
     this.nextStepTime = context.currentTime + 0.1;
     this.masterGain.gain.setTargetAtTime(this.volume * 0.85, context.currentTime, 0.15);
     this.schedulerId = window.setInterval(() => this.scheduleAhead(), 240);
     this.scheduleAhead();
+  }
+
+  async pauseFilm(): Promise<void> {
+    if (!this.context || !this.enabled) return;
+    try {
+      if (this.context.state === 'running') await this.context.suspend();
+    } catch {
+      // Audio is optional.
+    }
+  }
+
+  async resumeFilm(): Promise<void> {
+    if (!this.context || !this.enabled) return;
+    try {
+      if (this.context.state === 'suspended') await this.context.resume();
+    } catch {
+      // Audio is optional.
+    }
+  }
+
+  seekFilm(seconds: number): void {
+    if (!this.context || !this.enabled) return;
+    const definition = TRACKS[this.track];
+    const secondsPerBar = (60 / definition.bpm / 2) * 8;
+    this.stopLoop();
+    this.startLoop(Math.floor(Math.max(0, seconds) / secondsPerBar));
   }
 
   private scheduleAhead(): void {

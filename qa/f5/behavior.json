@@ -1,0 +1,239 @@
+{
+  "exits": [
+    {
+      "t": 2,
+      "before": {
+        "cam": [
+          0,
+          1.196326897214899,
+          14.24778027542307
+        ],
+        "fov": 43,
+        "tree": false,
+        "photos": false,
+        "numbers": false,
+        "music": true
+      },
+      "after": {
+        "active": false,
+        "cam": [
+          8.800000000000006,
+          7.195999999999984,
+          20.43300000000001
+        ],
+        "fov": 41,
+        "tree": true,
+        "photos": true,
+        "numbers": true,
+        "ui": "1",
+        "body": "safe-mode"
+      },
+      "ok": true
+    },
+    {
+      "t": 12,
+      "before": {
+        "cam": [
+          8.528969328703678,
+          6.382242332175919,
+          21.23551533564816
+        ],
+        "fov": 43,
+        "tree": true,
+        "photos": false,
+        "numbers": false,
+        "music": true
+      },
+      "after": {
+        "active": false,
+        "cam": [
+          8.800000000000006,
+          7.195999999999979,
+          20.43300000000001
+        ],
+        "fov": 41,
+        "tree": true,
+        "photos": true,
+        "numbers": true,
+        "ui": "1",
+        "body": "safe-mode"
+      },
+      "ok": true
+    },
+    {
+      "t": 24,
+      "before": {
+        "cam": [
+          12.771439507122816,
+          11.18571975356141,
+          1.8428407393157737
+        ],
+        "fov": 40,
+        "tree": true,
+        "photos": false,
+        "numbers": false,
+        "music": true
+      },
+      "after": {
+        "active": false,
+        "cam": [
+          8.800000000000006,
+          7.195999999999974,
+          20.43300000000001
+        ],
+        "fov": 41,
+        "tree": true,
+        "photos": true,
+        "numbers": true,
+        "ui": "1",
+        "body": "safe-mode"
+      },
+      "ok": true
+    },
+    {
+      "t": 36,
+      "before": {
+        "cam": [
+          0.011435572157908247,
+          3.2995318813360424,
+          7.231092381816953
+        ],
+        "fov": 40,
+        "tree": true,
+        "photos": true,
+        "numbers": false,
+        "music": true
+      },
+      "after": {
+        "active": false,
+        "cam": [
+          8.800000000000006,
+          7.195999999999966,
+          20.43300000000001
+        ],
+        "fov": 41,
+        "tree": true,
+        "photos": true,
+        "numbers": true,
+        "ui": "1",
+        "body": "safe-mode"
+      },
+      "ok": true
+    },
+    {
+      "t": 48,
+      "before": {
+        "cam": [
+          3.8513502103266832,
+          6.847128164436253,
+          14.925675105163341
+        ],
+        "fov": 41.847128164436256,
+        "tree": true,
+        "photos": false,
+        "numbers": true,
+        "music": true
+      },
+      "after": {
+        "active": false,
+        "cam": [
+          8.800000000000006,
+          7.195999999999977,
+          20.43300000000001
+        ],
+        "fov": 41,
+        "tree": true,
+        "photos": true,
+        "numbers": true,
+        "ui": "1",
+        "body": "safe-mode"
+      },
+      "ok": true
+    },
+    {
+      "t": 66,
+      "before": {
+        "cam": [
+          7.034148198486925,
+          5.690927423515816,
+          14.454637117579079
+        ],
+        "fov": 43,
+        "tree": true,
+        "photos": true,
+        "numbers": true,
+        "music": true
+      },
+      "after": {
+        "active": false,
+        "cam": [
+          8.800000000000006,
+          7.195999999999984,
+          20.43300000000001
+        ],
+        "fov": 41,
+        "tree": true,
+        "photos": true,
+        "numbers": true,
+        "ui": "1",
+        "body": "safe-mode"
+      },
+      "ok": true
+    }
+  ],
+  "pauses": [
+    {
+      "t": 2,
+      "a": 2.2167999999999988,
+      "b": 2.2167999999999988,
+      "ok": true
+    },
+    {
+      "t": 12,
+      "a": 12.212399999999997,
+      "b": 12.212399999999997,
+      "ok": true
+    },
+    {
+      "t": 24,
+      "a": 24.20840000000001,
+      "b": 24.20840000000001,
+      "ok": true
+    },
+    {
+      "t": 36,
+      "a": 36.2083,
+      "b": 36.2083,
+      "ok": true
+    },
+    {
+      "t": 48,
+      "a": 48.212599999999966,
+      "b": 48.212599999999966,
+      "ok": true
+    },
+    {
+      "t": 64,
+      "a": 64.2083999999999,
+      "b": 64.2083999999999,
+      "ok": true
+    }
+  ],
+  "seek": [
+    {
+      "seekTime": 22.208300000000037
+    }
+  ],
+  "resize": {
+    "canvas": [
+      1920,
+      1080
+    ],
+    "film": 22.629100000000097
+  },
+  "background": {
+    "t": 22.937500000000163,
+    "state": "playing"
+  },
+  "errors": []
+}
