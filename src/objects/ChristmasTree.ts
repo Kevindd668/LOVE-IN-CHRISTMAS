@@ -3,6 +3,8 @@ import type { LightMode, WishSettings } from '../config';
 import { TreeBranches, type TreeConfig } from './TreeBranches';
 import { TreeLights } from './TreeLights';
 import { TreeStar } from './TreeStar';
+import { TreeHelix } from './TreeHelix';
+import { TreeHeartOrnaments } from './TreeHeartOrnaments';
 
 export interface TreeVisualState {
   rotation: number;
@@ -14,6 +16,8 @@ export class ChristmasTree {
   readonly body = new THREE.Group();
   readonly branches: TreeBranches;
   readonly lights: TreeLights;
+  readonly helix: TreeHelix;
+  readonly ornaments: TreeHeartOrnaments;
   readonly star: TreeStar;
   private rotation = 0;
   private rotate = true;
@@ -37,7 +41,7 @@ export class ChristmasTree {
     this.rotate = settings.treeRotate;
     this.rotateSpeed = settings.treeRotateSpeed;
 
-    this.branches = new TreeBranches(this.treeConfig());
+    this.branches = new TreeBranches(this.treeConfig(settings));
     this.lights = new TreeLights(
       this.height,
       this.crown,
@@ -45,24 +49,38 @@ export class ChristmasTree {
       settings.lightMode,
       settings.lightColor
     );
+    this.helix = new TreeHelix({ height: this.height, crownRadius: this.crown });
+    this.ornaments = new TreeHeartOrnaments({ height: this.height, crownRadius: this.crown });
     this.star = new TreeStar(this.height);
 
     this.body.add(this.branches.group);
     this.body.add(this.lights.group);
+    this.body.add(this.helix.group);
+    this.body.add(this.ornaments.group);
     this.group.add(this.star.root);
 
     this.lights.setBrightness(settings.lightBrightness);
     this.lights.setFlashSpeed(settings.lightFlashSpeed);
     this.lights.setEnabled(settings.lightsOn);
+    this.helix.setSpeed(settings.helixSpeed);
+    this.helix.setPhase(settings.helixPhase);
+    this.helix.setEnabled(settings.helixOn);
+    this.ornaments.setEnabled(settings.ornamentsOn);
+    this.star.root.visible = settings.crownHeartOn;
   }
 
-  private treeConfig(): TreeConfig {
+  private treeConfig(settings: WishSettings): TreeConfig {
     return {
       height: this.height,
       crownRadius: this.crown,
       density: this.density,
       layers: this.layers,
-      foliageColor: this.foliageColor
+      foliageColor: this.foliageColor,
+      shadowColor: '#073D2A',
+      highlightColor: '#27A66A',
+      trunkHeight: 1,
+      trunkRadius: 0.22,
+      brightness: settings.treeBrightness
     };
   }
 
@@ -72,6 +90,8 @@ export class ChristmasTree {
       this.body.rotation.y = this.rotation;
     }
     this.lights.update(time);
+    this.helix.update(dt, time);
+    this.ornaments.update(dt, time);
     this.star.update(dt, time);
   }
 
@@ -92,12 +112,20 @@ export class ChristmasTree {
     this.rotateSpeed = settings.treeRotateSpeed;
 
     if (shapeChanged) {
-      this.branches.build(this.treeConfig());
+      this.branches.build(this.treeConfig(settings));
       this.lights.configure(this.height, this.crown, settings.lightCount, settings.lightMode, settings.lightColor);
+      this.helix.build({ height: this.height, crownRadius: this.crown });
+      this.ornaments.build({ height: this.height, crownRadius: this.crown });
       this.star.setHeight(this.height);
     } else if (paletteChanged) {
       this.branches.updatePalette(this.foliageColor);
     }
+    this.helix.setSpeed(settings.helixSpeed);
+    this.helix.setPhase(settings.helixPhase);
+    this.helix.setEnabled(settings.helixOn);
+    this.ornaments.setEnabled(settings.ornamentsOn);
+    this.star.root.visible = settings.crownHeartOn;
+    this.branches.setBrightness(settings.treeBrightness);
   }
 
   rebuildLights(settings: WishSettings): void {
@@ -142,10 +170,32 @@ export class ChristmasTree {
     this.rotate = enabled;
   }
 
+  setHelixEnabled(enabled: boolean): void {
+    this.helix.setEnabled(enabled);
+  }
+
+  setHelixSpeed(speed: number): void {
+    this.helix.setSpeed(speed);
+  }
+
+  setHelixPhase(phase: number): void {
+    this.helix.setPhase(phase);
+  }
+
+  setOrnamentsEnabled(enabled: boolean): void {
+    this.ornaments.setEnabled(enabled);
+  }
+
+  setOverallBrightness(brightness: number): void {
+    this.branches.setBrightness(brightness);
+  }
+
   resetPresentation(): void {
     this.body.visible = true;
     this.body.scale.setScalar(1);
     this.star.root.visible = true;
+    this.helix.setEnabled(true);
+    this.ornaments.setEnabled(true);
     this.lights.setReveal(1);
     this.lights.setEnabled(true);
   }
@@ -166,11 +216,14 @@ export class ChristmasTree {
   }
 
   getPickMeshes(): THREE.Object3D[] {
-    return [...this.branches.getInteractiveMeshes(), ...this.star.getPickMeshes()];
+    return [
+      ...this.branches.getInteractiveMeshes(),
+      ...(this.star.root.visible ? this.star.getPickMeshes() : [])
+    ];
   }
 
   getTopY(): number {
-    return this.height + 0.2;
+    return this.height + 0.55;
   }
 
   get treeHeight(): number {
@@ -188,6 +241,8 @@ export class ChristmasTree {
   dispose(): void {
     this.branches.dispose();
     this.lights.dispose();
+    this.helix.dispose();
+    this.ornaments.dispose();
     this.star.dispose();
   }
 }

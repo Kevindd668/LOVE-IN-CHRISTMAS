@@ -52,17 +52,21 @@ export class CameraManager {
     let target: THREE.Vector3;
     let fov: number;
 
+    // F3's 9.5m tree + crystal heart needs a slightly higher/farther home
+    // framing than the original 8m tree. The extra distance is tiny, but it
+    // prevents the topper from being cropped on 16:9 screens.
+    const lift = Math.max(0, this.subjectHeight - 8) * 0.55;
     if (aspect < 0.72) {
-      position = new THREE.Vector3(10.4, 7.8, 26.4);
-      target = new THREE.Vector3(0, 4.35, 0);
+      position = new THREE.Vector3(10.4, 7.8 + lift * 0.35, 26.4 + lift * 0.9);
+      target = new THREE.Vector3(0, 4.35 + lift, 0);
       fov = 45;
     } else if (aspect < 1.15) {
-      position = new THREE.Vector3(10.2, 6.8, 19.2);
-      target = new THREE.Vector3(0, 4.1, 0);
+      position = new THREE.Vector3(10.2, 6.8 + lift * 0.35, 19.2 + lift * 0.95);
+      target = new THREE.Vector3(0, 4.1 + lift, 0);
       fov = 43;
     } else {
-      position = new THREE.Vector3(8.8, 6.2, 16.2);
-      target = new THREE.Vector3(0, 3.9, 0);
+      position = new THREE.Vector3(8.8, 6.2 + lift * 0.35, 16.2 + lift * 1.15);
+      target = new THREE.Vector3(0, 3.9 + lift, 0);
       fov = 39;
     }
 
@@ -107,6 +111,8 @@ export class CameraManager {
   /** Slowly nudges the orbit focus when the user makes the tree taller. */
   setSubjectHeight(height: number): void {
     this.subjectHeight = height;
+    // Recompute the home pose only; the user's current orbit is left intact.
+    this.applyHomeFraming(this.camera.aspect, false);
   }
 
   setSize(width: number, height: number): void {

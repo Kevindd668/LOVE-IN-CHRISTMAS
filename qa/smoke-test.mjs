@@ -68,12 +68,12 @@ assert.equal(lightState.color, '#9DE6FF');
 results.lightMode = lightState;
 
 await page.locator('[data-setting="lightCount"]').evaluate((el) => {
-  el.value = '180';
+  el.value = '360';
   el.dispatchEvent(new Event('input', { bubbles: true }));
 });
 await page.waitForTimeout(360);
 const lightCount = await page.evaluate(() => window.__CHRISTMAS_WISH__.app.tree.lights.count);
-assert.equal(lightCount, 180);
+assert.equal(lightCount, 360);
 results.lightCount = lightCount;
 
 await page.locator('.control-section').nth(2).locator('summary').click();
@@ -154,7 +154,7 @@ results.reset = await page.evaluate(() => {
   const a = window.__CHRISTMAS_WISH__;
   return { settings: a.getSettings(), activeQuality: document.querySelector('.quality-switch .is-active')?.dataset.quality, photoCount: a.app.photos.count };
 });
-assert.equal(results.reset.settings.treeHeight, 8);
+assert.equal(results.reset.settings.treeHeight, 9.5);
 assert.equal(results.reset.settings.lightMode, 'warm');
 assert.equal(results.reset.activeQuality, 'ultra');
 await page.locator('#btn-panel-close').click();

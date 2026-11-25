@@ -43,6 +43,7 @@ export class SceneManager {
   private readonly sky: THREE.Mesh<THREE.SphereGeometry, THREE.ShaderMaterial>;
   private readonly ground: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshStandardMaterial>;
   private readonly contactShadows: THREE.Group;
+  private readonly treeBase: THREE.Group;
   private readonly pmrem: THREE.PMREMGenerator;
   private readonly backgroundColor = new THREE.Color('#061522');
 
@@ -76,6 +77,9 @@ export class SceneManager {
 
     this.contactShadows = this.createContactShadows();
     this.scene.add(this.contactShadows);
+
+    this.treeBase = this.createTreeBase();
+    this.scene.add(this.treeBase);
 
     this.setBackground(options.backgroundColor);
     this.scene.add(this.createDistantHaze());
@@ -351,7 +355,7 @@ export class SceneManager {
       ctx.fillRect(0, 0, 512, 512);
     });
     const treeShadow = new THREE.Mesh(
-      new THREE.PlaneGeometry(8.2, 7.2),
+      new THREE.PlaneGeometry(9.6, 8.2),
       new THREE.MeshBasicMaterial({
         map: treeShadowTexture,
         transparent: true,
@@ -381,6 +385,153 @@ export class SceneManager {
       shadow.visible = false;
       group.add(shadow);
     }
+    return group;
+  }
+
+  /**
+   * A low snow/stone presentation plinth plus a deliberately simulated warm
+   * reflection. The reflection is a CanvasTexture on a plane, not a planar
+   * mirror or SSR pass; docs/F3/MATERIAL_LIGHTING.md calls this out explicitly.
+   */
+  private createTreeBase(): THREE.Group {
+    const group = new THREE.Group();
+    group.name = 'tree-presentation-base';
+
+    const stone = new THREE.MeshStandardMaterial({
+      color: '#374241',
+      roughness: 0.82,
+      metalness: 0.16,
+      envMapIntensity: 0.7
+    });
+    const plinth = new THREE.Mesh(new THREE.CylinderGeometry(2.3, 2.5, 0.16, 64, 1), stone);
+    plinth.position.y = 0.08;
+    plinth.receiveShadow = true;
+    plinth.castShadow = true;
+    group.add(plinth);
+
+    const snowCap = new THREE.Mesh(
+      new THREE.CylinderGeometry(2.2, 2.3, 0.055, 64, 1),
+      new THREE.MeshStandardMaterial({
+        color: '#dfe9e5',
+        roughness: 0.9,
+        metalness: 0.01,
+        envMapIntensity: 0.42
+      })
+    );
+    snowCap.position.y = 0.18;
+    snowCap.receiveShadow = true;
+    group.add(snowCap);
+
+    const rim = new THREE.Mesh(
+      new THREE.TorusGeometry(2.34, 0.026, 7, 72),
+      new THREE.MeshStandardMaterial({
+        color: '#d5ad69',
+        roughness: 0.27,
+        metalness: 0.7,
+        emissive: '#2e1c0b',
+        emissiveIntensity: 0.28,
+        envMapIntensity: 1.25
+      })
+    );
+    rim.rotation.x = Math.PI / 2;
+    rim.position.y = 0.175;
+    group.add(rim);
+
+    // A wide, near-flush presentation ring keeps the five gifts and the tree
+    // shadow readable while still giving the hero tree a deliberate stage.
+    const stage = new THREE.Mesh(
+      new THREE.RingGeometry(2.62, 3.48, 80),
+      new THREE.MeshStandardMaterial({
+        color: '#aebbb5',
+        roughness: 0.86,
+        metalness: 0.1,
+        envMapIntensity: 0.32,
+        side: THREE.DoubleSide
+      })
+    );
+    stage.rotation.x = -Math.PI / 2;
+    stage.position.y = 0.012;
+    stage.receiveShadow = true;
+    group.add(stage);
+
+    const stageRim = new THREE.Mesh(
+      new THREE.TorusGeometry(3.455, 0.018, 6, 80),
+      new THREE.MeshStandardMaterial({
+        color: '#e3bc75',
+        roughness: 0.28,
+        metalness: 0.78,
+        emissive: '#3b260d',
+        emissiveIntensity: 0.3,
+        envMapIntensity: 1.2
+      })
+    );
+    stageRim.rotation.x = Math.PI / 2;
+    stageRim.position.y = 0.02;
+    group.add(stageRim);
+
+    const glowTexture = makeCanvasTexture(512, 512, (ctx) => {
+      const gradient = ctx.createRadialGradient(256, 256, 20, 256, 256, 256);
+      gradient.addColorStop(0, 'rgba(255, 210, 139, 0.32)');
+      gradient.addColorStop(0.28, 'rgba(255, 172, 99, 0.15)');
+      gradient.addColorStop(0.68, 'rgba(255, 148, 104, 0.035)');
+      gradient.addColorStop(1, 'rgba(255, 148, 104, 0)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 512, 512);
+      ctx.globalAlpha = 0.22;
+      ctx.strokeStyle = '#ffd58a';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(256, 256, 176, 0, Math.PI * 2);
+      ctx.stroke();
+    });
+    const glow = new THREE.Mesh(
+      new THREE.PlaneGeometry(7.2, 7.2),
+      new THREE.MeshBasicMaterial({
+        map: glowTexture,
+        transparent: true,
+        opacity: 0.78,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        toneMapped: false
+      })
+    );
+    glow.rotation.x = -Math.PI / 2;
+    glow.position.y = 0.014;
+    glow.renderOrder = -1;
+    group.add(glow);
+
+    const reflectionTexture = makeCanvasTexture(256, 512, (ctx) => {
+      const gradient = ctx.createLinearGradient(0, 0, 0, 512);
+      gradient.addColorStop(0, 'rgba(255, 197, 139, 0.25)');
+      gradient.addColorStop(0.3, 'rgba(255, 154, 112, 0.11)');
+      gradient.addColorStop(0.72, 'rgba(255, 126, 130, 0.025)');
+      gradient.addColorStop(1, 'rgba(255, 126, 130, 0)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 256, 512);
+      for (let i = 0; i < 34; i += 1) {
+        const x = Math.random() * 256;
+        const alpha = 0.02 + Math.random() * 0.055;
+        ctx.fillStyle = `rgba(255, 210, 150, ${alpha})`;
+        ctx.fillRect(x, 0, 1 + Math.random() * 2, 512);
+      }
+    });
+    const reflection = new THREE.Mesh(
+      new THREE.PlaneGeometry(3.4, 5.6),
+      new THREE.MeshBasicMaterial({
+        map: reflectionTexture,
+        transparent: true,
+        opacity: 0.42,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        toneMapped: false
+      })
+    );
+    reflection.name = 'simulated-ground-reflection';
+    reflection.rotation.x = -Math.PI / 2;
+    reflection.position.set(0, 0.022, 3.15);
+    reflection.renderOrder = 0;
+    group.add(reflection);
+
     return group;
   }
 
@@ -454,5 +605,19 @@ export class SceneManager {
     this.ground.material.dispose();
     this.sky.geometry.dispose();
     this.sky.material.dispose();
+    this.treeBase.traverse((child) => {
+      const mesh = child as THREE.Mesh;
+      if (mesh.geometry) mesh.geometry.dispose();
+      if (mesh.material) {
+        const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+        materials.forEach((material) => {
+          if ('map' in material && material.map instanceof THREE.Texture) {
+            material.map.dispose();
+          }
+          material.dispose();
+        });
+      }
+    });
   }
 }
+

@@ -7,6 +7,12 @@ export interface TreeConfig {
   density: number;
   layers: number;
   foliageColor: string;
+  shadowColor?: string;
+  highlightColor?: string;
+  /** F3 hero-tree proportions: kept fixed while the artistic sliders move. */
+  trunkHeight?: number;
+  trunkRadius?: number;
+  brightness?: number;
 }
 
 interface SprigInstance {
@@ -34,21 +40,29 @@ interface TreePalette {
 const SPRIG_VARIANTS = 3;
 const SPRIG_TRIANGLES = 44;
 
-const createTreePalette = (hex: string): TreePalette => {
+const createTreePalette = (
+  hex: string,
+  shadowHex?: string,
+  highlightHex?: string
+): TreePalette => {
   const main = new THREE.Color(hex);
   const hsl = { h: 0, s: 0, l: 0 };
   main.getHSL(hsl);
 
-  const shadow = new THREE.Color().setHSL(
-    hsl.h,
-    clamp(hsl.s * 0.92, 0, 1),
-    Math.max(0.05, hsl.l * 0.44)
-  );
-  const highlight = new THREE.Color().setHSL(
-    (hsl.h + 0.012) % 1,
-    clamp(hsl.s * 1.02, 0, 1),
-    clamp(hsl.l * 0.56 + 0.17, 0, 0.52)
-  );
+  const shadow = shadowHex
+    ? new THREE.Color(shadowHex)
+    : new THREE.Color().setHSL(
+        hsl.h,
+        clamp(hsl.s * 0.92, 0, 1),
+        Math.max(0.05, hsl.l * 0.44)
+      );
+  const highlight = highlightHex
+    ? new THREE.Color(highlightHex)
+    : new THREE.Color().setHSL(
+        (hsl.h + 0.012) % 1,
+        clamp(hsl.s * 1.02, 0, 1),
+        clamp(hsl.l * 0.56 + 0.17, 0, 0.52)
+      );
   const frost = main.clone().lerp(new THREE.Color('#bccfbe'), 0.44);
   frost.offsetHSL(0, -0.04, 0.025);
   const core = new THREE.Color().setHSL(
@@ -293,6 +307,8 @@ export class TreeBranches {
   private proxy: THREE.Mesh | null = null;
   private currentConfig: TreeConfig | null = null;
   private readonly barkTexture = makeBarkTexture();
+  private trunkMaterial: THREE.MeshStandardMaterial | null = null;
+  private brightness = 1;
   private readonly snowMaterial = new THREE.MeshStandardMaterial({
     color: 0xe9f1f1,
     roughness: 0.88,
@@ -315,7 +331,12 @@ export class TreeBranches {
 
   build(config: TreeConfig): void {
     this.currentConfig = config;
-    this.palette = createTreePalette(config.foliageColor);
+    this.palette = createTreePalette(
+      config.foliageColor,
+      config.shadowColor,
+      config.highlightColor
+    );
+    this.brightness = clamp(config.brightness ?? 1, 0.6, 1.5);
     this.clear();
     this.group.rotation.set(0, 0, 0);
 
@@ -323,16 +344,18 @@ export class TreeBranches {
     const crown = config.crownRadius;
     const layers = clamp(Math.round(config.layers), 4, 12);
     const density = clamp(Math.round(config.density), 50, 400);
-    const trunkHeight = clamp(height * 0.135, 0.75, 1.35);
-    const trunkRadius = clamp(0.14 + crown * 0.032, 0.18, 0.3);
+    const trunkHeight = clamp(config.trunkHeight ?? height * 0.135, 0.75, 1.35);
+    const trunkRadius = clamp(config.trunkRadius ?? 0.14 + crown * 0.032, 0.18, 0.3);
     const foliageBottom = trunkHeight * 0.91;
 
     this.buildTrunk(trunkHeight, trunkRadius, crown);
     this.buildTierCores(height, crown, layers, foliageBottom);
     this.buildSprigs(height, crown, layers, density, foliageBottom);
-    this.buildOrnaments(height, crown, foliageBottom);
+    // The 34 generic baubles are intentionally replaced by the 48 jewel hearts
+    // in TreeHeartOrnaments. Keeping both made the new decoration read as noise.
     this.buildSnowMounds(crown);
     this.buildProxy(height, crown);
+    this.applyBrightness();
   }
 
   private buildOrnaments(height: number, crown: number, foliageBottom: number): void {
@@ -400,6 +423,7 @@ export class TreeBranches {
     this.coreMeshes = [];
     this.branchArmMaterial = null;
     this.proxy = null;
+    this.trunkMaterial = null;
   }
 
   private buildTrunk(trunkHeight: number, trunkRadius: number, crown: number): void {
@@ -410,6 +434,7 @@ export class TreeBranches {
       metalness: 0,
       envMapIntensity: 0.08
     });
+    this.trunkMaterial = barkMaterial;
     const trunk = new THREE.Mesh(
       new THREE.CylinderGeometry(trunkRadius * 0.62, trunkRadius, trunkHeight, 12, 5),
       barkMaterial
@@ -746,16 +771,44 @@ export class TreeBranches {
     this.proxy = proxy;
   }
 
+  private applyBrightness(): void {
+    const factor = this.brightness;
+    for (const mesh of this.coreMeshes) {
+      mesh.material.color.copy(this.palette.core).multiplyScalar(factor);
+    }
+    if (this.branchArmMaterial) {
+      this.branchArmMaterial.color.copy(this.palette.arm).multiplyScalar(factor);
+    }
+    if (this.trunkMaterial) {
+      this.trunkMaterial.color.set('#9b7558').multiplyScalar(factor);
+    }
+    for (const batch of this.sprigBatches) {
+      batch.material.color.setScalar(factor);
+    }
+  }
+
+  setBrightness(brightness: number): void {
+    this.brightness = clamp(brightness, 0.6, 1.5);
+    if (this.currentConfig) {
+      this.currentConfig = { ...this.currentConfig, brightness: this.brightness };
+    }
+    this.applyBrightness();
+  }
+
   updatePalette(hex: string): void {
-    this.palette = createTreePalette(hex);
+    this.palette = createTreePalette(
+      hex,
+      this.currentConfig?.shadowColor,
+      this.currentConfig?.highlightColor
+    );
     if (this.currentConfig) {
       this.currentConfig = { ...this.currentConfig, foliageColor: hex };
     }
     for (const mesh of this.coreMeshes) {
-      mesh.material.color.copy(this.palette.core);
+      mesh.material.color.copy(this.palette.core).multiplyScalar(this.brightness);
     }
     if (this.branchArmMaterial) {
-      this.branchArmMaterial.color.copy(this.palette.arm);
+      this.branchArmMaterial.color.copy(this.palette.arm).multiplyScalar(this.brightness);
     }
     for (const batch of this.sprigBatches) {
       for (let i = 0; i < batch.instances.length; i += 1) {
@@ -764,6 +817,7 @@ export class TreeBranches {
       if (batch.mesh.instanceColor) batch.mesh.instanceColor.needsUpdate = true;
     }
     this.snowMaterial.envMapIntensity = 0.24;
+    this.applyBrightness();
   }
 
   getInteractiveMeshes(): THREE.Object3D[] {

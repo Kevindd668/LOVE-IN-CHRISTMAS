@@ -12,6 +12,14 @@ export interface WishSettings {
   foliageColor: string;
   treeRotate: boolean;
   treeRotateSpeed: number;
+  treeBrightness: number;
+
+  // Double helix / ornaments
+  helixOn: boolean;
+  helixSpeed: number;
+  helixPhase: number;
+  ornamentsOn: boolean;
+  crownHeartOn: boolean;
 
   // Lights
   lightsOn: boolean;
@@ -63,18 +71,24 @@ export interface WishSettings {
 }
 
 export const DEFAULT_SETTINGS: WishSettings = {
-  treeHeight: 8,
-  crownRadius: 2.5,
-  density: 180,
-  layers: 7,
+  treeHeight: 9.5,
+  crownRadius: 3,
+  density: 210,
+  layers: 9,
   foliageColor: '#0B5D3B',
   treeRotate: true,
-  treeRotateSpeed: 0.3,
+  treeRotateSpeed: 0.28,
+  treeBrightness: 1,
+  helixOn: true,
+  helixSpeed: 0.32,
+  helixPhase: 0,
+  ornamentsOn: true,
+  crownHeartOn: true,
 
   lightsOn: true,
   lightColor: '#FFD9A4',
-  lightCount: 220,
-  lightBrightness: 1.25,
+  lightCount: 360,
+  lightBrightness: 1.45,
   lightFlashSpeed: 1,
   lightMode: 'warm',
 
@@ -140,7 +154,7 @@ export const QUALITY_PRESETS: Record<QualityLevel, QualityPreset> = {
     shadowMapSize: 2048,
     samples: 4,
     snowCount: 1800,
-    lightCount: 220,
+    lightCount: 360,
     heartCount: 600,
     starCount: 1200
   },
@@ -154,7 +168,7 @@ export const QUALITY_PRESETS: Record<QualityLevel, QualityPreset> = {
     shadowMapSize: 1024,
     samples: 2,
     snowCount: 1300,
-    lightCount: 180,
+    lightCount: 360,
     heartCount: 500,
     starCount: 920
   },
@@ -168,7 +182,7 @@ export const QUALITY_PRESETS: Record<QualityLevel, QualityPreset> = {
     shadowMapSize: 512,
     samples: 0,
     snowCount: 720,
-    lightCount: 110,
+    lightCount: 360,
     heartCount: 300,
     starCount: 540
   }
@@ -218,7 +232,7 @@ export const MUSIC_LABELS: Record<MusicTrack, string> = {
 export const CINEMA_CHAPTERS = [
   { time: 0, act: '第一幕 · 星河落雪', line: 'The night begins for you.' },
   { time: 5, act: '第二幕 · 树影成形', line: 'Every branch grows toward you.' },
-  { time: 10, act: '第三幕 · 点亮心愿', line: 'Two hundred and twenty lights. One wish.' },
+  { time: 10, act: '第三幕 · 点亮心愿', line: 'Three hundred and sixty lights. One wish.' },
   { time: 15, act: '第四幕 · 520', line: 'Five hundred and twenty ways to love you.' },
   { time: 20, act: '第五幕 · 1314', line: 'One life, three lives, four seasons.' },
   { time: 25, act: '第六幕 · 我们的冬天', line: 'Every photograph, a moment we keep.' },

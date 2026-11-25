@@ -22,6 +22,9 @@ const ONE_DECIMAL_KEYS = new Set<SettingsKey>(['treeHeight']);
 const TWO_DECIMAL_KEYS = new Set<SettingsKey>([
   'crownRadius',
   'treeRotateSpeed',
+  'treeBrightness',
+  'helixSpeed',
+  'helixPhase',
   'lightBrightness',
   'lightFlashSpeed',
   'heartSize',

@@ -1,4 +1,4 @@
-﻿import { chromium } from 'playwright-core';
+import { chromium } from 'playwright-core';
 import assert from 'node:assert/strict';
 const browser = await chromium.launch({ executablePath: 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', headless: false, args: ['--window-position=20,20','--window-size=1480,960','--disable-features=RendererCodeIntegrity'] });
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 });
@@ -60,17 +60,16 @@ assert.equal(result.star.wishOpen, true);
 await page.locator('#wish-accept').click();
 await page.waitForTimeout(450);
 
-// Tree click
-const treePoint = await page.evaluate(() => {
+// Tree raycast. The F3 camera has a new home framing, so probe the visible
+// mid-tree screen column through the same MouseInteraction raycaster used by
+// real pointer events rather than relying on an F0 world->screen guess.
+await page.waitForTimeout(1200);
+const treeProbe = await page.evaluate(() => {
   const a = window.__CHRISTMAS_WISH__.app;
-  const v = a.tree.group.position.clone();
-  v.y = 4.0; v.z = 1.2;
-  v.project(a.cameraManager.camera);
-  return { x: Math.round((v.x * 0.5 + 0.5) * innerWidth), y: Math.round((-v.y * 0.5 + 0.5) * innerHeight) };
+  return [320, 400, 450, 500, 560].map((y) => ({ y, type: a.mouse.pickAt(720, y, false)?.type ?? 'none' }));
 });
-await page.mouse.click(treePoint.x, treePoint.y);
-await page.waitForTimeout(350);
-result.tree = { point: treePoint, symbols: await page.evaluate(() => window.__CHRISTMAS_WISH__.app.magic.symbols.length), toast: await page.locator('#toast').textContent() };
+result.tree = { probe: treeProbe };
+assert.ok(treeProbe.some((entry) => entry.type === 'tree'));
 
 // Empty sky / heart gather
 await page.mouse.click(1320, 230);

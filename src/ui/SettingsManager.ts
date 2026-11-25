@@ -9,6 +9,9 @@ const NUMBER_KEYS: SettingsKey[] = [
   'density',
   'layers',
   'treeRotateSpeed',
+  'treeBrightness',
+  'helixSpeed',
+  'helixPhase',
   'lightCount',
   'lightBrightness',
   'lightFlashSpeed',
@@ -90,7 +93,12 @@ export class SettingsManager {
       crownRadius: Math.min(4, Math.max(1.5, settings.crownRadius)),
       density: Math.min(400, Math.max(50, Math.round(settings.density))),
       layers: Math.min(12, Math.max(4, Math.round(settings.layers))),
-      lightCount: Math.min(400, Math.max(40, Math.round(settings.lightCount))),
+      treeBrightness: Math.min(1.5, Math.max(0.6, settings.treeBrightness)),
+      helixSpeed: Math.min(1.4, Math.max(0, settings.helixSpeed)),
+      helixPhase: Math.min(Math.PI * 2, Math.max(0, settings.helixPhase)),
+      // F3's hero tree is defined as 360 bulbs. The count is intentionally
+      // fixed so persisted F2 settings cannot silently downgrade the artwork.
+      lightCount: 360,
       heartCount: Math.min(1500, Math.max(120, Math.round(settings.heartCount))),
       snowCount: Math.min(3200, Math.max(200, Math.round(settings.snowCount))),
       musicVolume: Math.min(1, Math.max(0, settings.musicVolume))

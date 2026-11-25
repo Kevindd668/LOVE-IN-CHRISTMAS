@@ -1,0 +1,272 @@
+{
+  "generatedAt": "2026-11-25T09:53:56.113Z",
+  "browser": "158.0.4370.33",
+  "cases": [
+    {
+      "name": "safe-1440x900",
+      "options": {
+        "name": "safe-1440x900",
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "query": ""
+      },
+      "metrics": {
+        "frames": 382,
+        "measuredSeconds": 4.003999999999998,
+        "fpsMean": 95.40459540459545,
+        "fpsMedian": 119.04761904759843,
+        "appFps": 89,
+        "frameMsMean": 10.481675392670152,
+        "frameMsP50": 8.400000000001455,
+        "frameMsP95": 16.900000000001455,
+        "frameMsP99": 25,
+        "frameMsMax": 58.29999999999927,
+        "over33": 3,
+        "over50": 1,
+        "over100": 0,
+        "drawCalls": 291,
+        "triangles": 461210,
+        "points": 4822,
+        "textures": 33,
+        "geometries": 195,
+        "programs": 38,
+        "pixelRatio": 1.0000000298023224,
+        "canvas": [
+          1440,
+          900
+        ],
+        "viewport": [
+          1440,
+          900
+        ],
+        "dpr": 1.0000000298023224,
+        "heapBytes": 27816095,
+        "contextLost": 0,
+        "directRendering": true,
+        "pipeline": false,
+        "mode": "compatible",
+        "quality": "ultra",
+        "gpu": {
+          "vendor": "Google Inc. (NVIDIA)",
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Ti Laptop GPU (0x000024A0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "safe-1920x1080",
+      "options": {
+        "name": "safe-1920x1080",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1,
+        "query": ""
+      },
+      "metrics": {
+        "frames": 453,
+        "measuredSeconds": 4.000000000000001,
+        "fpsMean": 113.24999999999997,
+        "fpsMedian": 120.48192771082753,
+        "appFps": 105,
+        "frameMsMean": 8.83002207505519,
+        "frameMsP50": 8.300000000001091,
+        "frameMsP95": 16.599999999999454,
+        "frameMsP99": 21,
+        "frameMsMax": 37.70000000000073,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0,
+        "drawCalls": 291,
+        "triangles": 461210,
+        "points": 4822,
+        "textures": 33,
+        "geometries": 196,
+        "programs": 39,
+        "pixelRatio": 1.0000000298023224,
+        "canvas": [
+          1920,
+          1080
+        ],
+        "viewport": [
+          1920,
+          1080
+        ],
+        "dpr": 1.0000000298023224,
+        "heapBytes": 27402580,
+        "contextLost": 0,
+        "directRendering": true,
+        "pipeline": false,
+        "mode": "compatible",
+        "quality": "ultra",
+        "gpu": {
+          "vendor": "Google Inc. (NVIDIA)",
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Ti Laptop GPU (0x000024A0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "safe-4k-equivalent",
+      "options": {
+        "name": "safe-4k-equivalent",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 2,
+        "query": ""
+      },
+      "metrics": {
+        "frames": 323,
+        "measuredSeconds": 4.008100000000001,
+        "fpsMean": 80.58681170629474,
+        "fpsMedian": 82.64462809918349,
+        "appFps": 80,
+        "frameMsMean": 12.408978328173376,
+        "frameMsP50": 12.099999999998545,
+        "frameMsP95": 25,
+        "frameMsP99": 37.5,
+        "frameMsMax": 108.70000000000073,
+        "over33": 4,
+        "over50": 2,
+        "over100": 1,
+        "drawCalls": 291,
+        "triangles": 461210,
+        "points": 4822,
+        "textures": 33,
+        "geometries": 196,
+        "programs": 39,
+        "pixelRatio": 2,
+        "canvas": [
+          3840,
+          2160
+        ],
+        "viewport": [
+          1920,
+          1080
+        ],
+        "dpr": 2.0000000596046448,
+        "heapBytes": 21701938,
+        "contextLost": 0,
+        "directRendering": true,
+        "pipeline": false,
+        "mode": "compatible",
+        "quality": "ultra",
+        "gpu": {
+          "vendor": "Google Inc. (NVIDIA)",
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Ti Laptop GPU (0x000024A0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "full-bloom-1440x900",
+      "options": {
+        "name": "full-bloom-1440x900",
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "query": "?full=1"
+      },
+      "metrics": {
+        "frames": 401,
+        "measuredSeconds": 4.000000000000002,
+        "fpsMean": 100.24999999999996,
+        "fpsMedian": 119.04761904764999,
+        "appFps": 99,
+        "frameMsMean": 9.975062344139655,
+        "frameMsP50": 8.399999999997817,
+        "frameMsP95": 16.599999999998545,
+        "frameMsP99": 25,
+        "frameMsMax": 41.60000000000218,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0,
+        "drawCalls": 305,
+        "triangles": 461224,
+        "points": 4822,
+        "textures": 46,
+        "geometries": 197,
+        "programs": 46,
+        "pixelRatio": 1.0000000298023224,
+        "canvas": [
+          1440,
+          900
+        ],
+        "viewport": [
+          1440,
+          900
+        ],
+        "dpr": 1.0000000298023224,
+        "heapBytes": 24158417,
+        "contextLost": 0,
+        "directRendering": false,
+        "pipeline": true,
+        "mode": "full",
+        "quality": "ultra",
+        "gpu": {
+          "vendor": "Google Inc. (NVIDIA)",
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Ti Laptop GPU (0x000024A0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "full-bloom-1920x1080",
+      "options": {
+        "name": "full-bloom-1920x1080",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1,
+        "query": "?full=1"
+      },
+      "metrics": {
+        "frames": 358,
+        "measuredSeconds": 4.0125,
+        "fpsMean": 89.22118380062305,
+        "fpsMedian": 81.30081300812287,
+        "appFps": 93,
+        "frameMsMean": 11.208100558659218,
+        "frameMsP50": 12.300000000001091,
+        "frameMsP95": 16.899999999999636,
+        "frameMsP99": 25.099999999998545,
+        "frameMsMax": 37.5,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0,
+        "drawCalls": 305,
+        "triangles": 461224,
+        "points": 4822,
+        "textures": 46,
+        "geometries": 197,
+        "programs": 46,
+        "pixelRatio": 1.0000000298023224,
+        "canvas": [
+          1920,
+          1080
+        ],
+        "viewport": [
+          1920,
+          1080
+        ],
+        "dpr": 1.0000000298023224,
+        "heapBytes": 32068169,
+        "contextLost": 0,
+        "directRendering": false,
+        "pipeline": true,
+        "mode": "full",
+        "quality": "ultra",
+        "gpu": {
+          "vendor": "Google Inc. (NVIDIA)",
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Ti Laptop GPU (0x000024A0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+        }
+      },
+      "errors": []
+    }
+  ],
+  "errors": []
+}

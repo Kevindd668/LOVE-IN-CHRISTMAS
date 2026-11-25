@@ -112,21 +112,21 @@
               </summary>
               <div class="section-body">
                 <label class="field">
-                  <span class="field-head"><span>圣诞树高度</span><output data-for="treeHeight">8.0</output></span>
-                  <input type="range" data-setting="treeHeight" min="4" max="12" step="0.1" value="8" />
+                  <span class="field-head"><span>圣诞树高度</span><output data-for="treeHeight">9.5</output></span>
+                  <input type="range" data-setting="treeHeight" min="4" max="12" step="0.1" value="9.5" />
                 </label>
                 <label class="field">
-                  <span class="field-head"><span>树冠大小</span><output data-for="crownRadius">2.5</output></span>
-                  <input type="range" data-setting="crownRadius" min="1.5" max="4" step="0.05" value="2.5" />
+                  <span class="field-head"><span>树冠大小</span><output data-for="crownRadius">3.00</output></span>
+                  <input type="range" data-setting="crownRadius" min="1.5" max="4" step="0.05" value="3" />
                 </label>
                 <label class="field">
-                  <span class="field-head"><span>每层枝叶密度</span><output data-for="density">180</output></span>
-                  <input type="range" data-setting="density" min="50" max="400" step="5" value="180" />
+                  <span class="field-head"><span>每层枝叶密度</span><output data-for="density">210</output></span>
+                  <input type="range" data-setting="density" min="50" max="400" step="5" value="210" />
                 </label>
                 <div class="field-row">
                   <label class="field field--compact">
                     <span class="field-head"><span>枝叶层数</span></span>
-                    <input class="number-input" type="number" data-setting="layers" min="4" max="12" step="1" value="7" />
+                    <input class="number-input" type="number" data-setting="layers" min="4" max="12" step="1" value="9" />
                   </label>
                   <label class="color-field">
                     <span class="field-head"><span>树叶颜色</span></span>
@@ -142,8 +142,22 @@
                   <span class="switch-track" aria-hidden="true"></span>
                 </label>
                 <label class="field">
-                  <span class="field-head"><span>旋转速度</span><output data-for="treeRotateSpeed">0.30</output></span>
-                  <input type="range" data-setting="treeRotateSpeed" min="0.02" max="1.4" step="0.01" value="0.3" />
+                  <span class="field-head"><span>旋转速度</span><output data-for="treeRotateSpeed">0.28</output></span>
+                  <input type="range" data-setting="treeRotateSpeed" min="0.02" max="1.4" step="0.01" value="0.28" />
+                </label>
+                <label class="field">
+                  <span class="field-head"><span>树体整体亮度</span><output data-for="treeBrightness">1.00</output></span>
+                  <input type="range" data-setting="treeBrightness" min="0.6" max="1.5" step="0.01" value="1" />
+                </label>
+                <label class="switch-row">
+                  <span><strong>48 颗爱心装饰</strong><small>玫瑰金 / 粉水晶 / 香槟玻璃 / 珍珠白</small></span>
+                  <input type="checkbox" data-setting="ornamentsOn" checked />
+                  <span class="switch-track" aria-hidden="true"></span>
+                </label>
+                <label class="switch-row">
+                  <span><strong>树顶水晶爱心</strong><small>可点击，收下一颗星的心愿</small></span>
+                  <input type="checkbox" data-setting="crownHeartOn" checked />
+                  <span class="switch-track" aria-hidden="true"></span>
                 </label>
               </div>
             </details>
@@ -151,8 +165,8 @@
             <details class="control-section">
               <summary>
                 <span class="section-number">02</span>
-                <span class="section-title">树体灯光</span>
-                <span class="section-hint">220 颗小星星</span>
+                <span class="section-title">树体灯光与双螺旋</span>
+                <span class="section-hint">360 颗小星星 · 两条反向光带</span>
                 <span class="section-chevron" aria-hidden="true"></span>
               </summary>
               <div class="section-body">
@@ -171,12 +185,12 @@
                   </label>
                   <label class="field field--compact">
                     <span class="field-head"><span>灯泡数量</span></span>
-                    <input class="number-input" type="number" data-setting="lightCount" min="40" max="400" step="1" value="220" />
+                    <input class="number-input" type="number" data-setting="lightCount" min="360" max="360" step="1" value="360" />
                   </label>
                 </div>
                 <label class="field">
-                  <span class="field-head"><span>灯光亮度</span><output data-for="lightBrightness">1.25</output></span>
-                  <input type="range" data-setting="lightBrightness" min="0.35" max="2.5" step="0.05" value="1.25" />
+                  <span class="field-head"><span>灯光亮度</span><output data-for="lightBrightness">1.45</output></span>
+                  <input type="range" data-setting="lightBrightness" min="0.35" max="2.5" step="0.05" value="1.45" />
                 </label>
                 <label class="field">
                   <span class="field-head"><span>闪烁速度</span><output data-for="lightFlashSpeed">1.00</output></span>
@@ -185,12 +199,25 @@
                 <label class="select-field">
                   <span class="field-head"><span>灯光模式</span></span>
                   <select data-setting="lightMode">
-                    <option value="warm">暖白浪漫</option>
+                    <option value="warm">暖金 / 玫瑰 / 冰蓝 / 珍珠</option>
                     <option value="gold">金色璀璨</option>
                     <option value="ice">冰蓝梦幻</option>
                     <option value="rainbow">七彩圣诞</option>
                     <option value="pink">粉色爱心</option>
                   </select>
+                </label>
+                <label class="switch-row">
+                  <span><strong>双螺旋光带</strong><small>金色 #FFD58A × 玫瑰 #FF75A9</small></span>
+                  <input type="checkbox" data-setting="helixOn" checked />
+                  <span class="switch-track" aria-hidden="true"></span>
+                </label>
+                <label class="field">
+                  <span class="field-head"><span>螺旋旋转速度</span><output data-for="helixSpeed">0.32</output></span>
+                  <input type="range" data-setting="helixSpeed" min="0" max="1.4" step="0.01" value="0.32" />
+                </label>
+                <label class="field">
+                  <span class="field-head"><span>螺旋相位</span><output data-for="helixPhase">0.00</output></span>
+                  <input type="range" data-setting="helixPhase" min="0" max="6.283" step="0.01" value="0" />
                 </label>
               </div>
             </details>

@@ -248,6 +248,12 @@ class ChristmasWishApp {
     this.tree.setLightsEnabled(settings.lightsOn);
     this.tree.setRotationEnabled(settings.treeRotate);
     this.tree.setRotationSpeed(settings.treeRotateSpeed);
+    this.tree.setOverallBrightness(settings.treeBrightness);
+    this.tree.setHelixEnabled(settings.helixOn);
+    this.tree.setHelixSpeed(settings.helixSpeed);
+    this.tree.setHelixPhase(settings.helixPhase);
+    this.tree.setOrnamentsEnabled(settings.ornamentsOn);
+    this.tree.setStarVisible(settings.crownHeartOn);
     this.updateLightSpill();
     this.snow.setSpeed(settings.snowSpeed);
     this.hearts.setCount(settings.heartCount);
@@ -516,7 +522,12 @@ class ChristmasWishApp {
     this.tree.setLightsEnabled(settings.lightsOn);
     this.tree.setLightsReveal(1);
     this.tree.star.root.scale.setScalar(1);
-    this.tree.setStarVisible(true);
+    this.tree.setStarVisible(settings.crownHeartOn);
+    this.tree.setHelixEnabled(settings.helixOn);
+    this.tree.setHelixSpeed(settings.helixSpeed);
+    this.tree.setHelixPhase(settings.helixPhase);
+    this.tree.setOrnamentsEnabled(settings.ornamentsOn);
+    this.tree.setOverallBrightness(settings.treeBrightness);
     this.numbers.setAllReveal(1);
     this.photos.setReveal(1);
     this.hearts.setEnabled(settings.heartsOn);
@@ -685,6 +696,12 @@ class ChristmasWishApp {
     }
     if (changed.has('treeRotate')) this.tree.setRotationEnabled(settings.treeRotate);
     if (changed.has('treeRotateSpeed')) this.tree.setRotationSpeed(settings.treeRotateSpeed);
+    if (changed.has('treeBrightness')) this.tree.setOverallBrightness(settings.treeBrightness);
+    if (changed.has('helixOn')) this.tree.setHelixEnabled(settings.helixOn);
+    if (changed.has('helixSpeed')) this.tree.setHelixSpeed(settings.helixSpeed);
+    if (changed.has('helixPhase')) this.tree.setHelixPhase(settings.helixPhase);
+    if (changed.has('ornamentsOn')) this.tree.setOrnamentsEnabled(settings.ornamentsOn);
+    if (changed.has('crownHeartOn')) this.tree.setStarVisible(settings.crownHeartOn);
 
     if (changed.has('lightMode') || changed.has('lightColor')) {
       this.tree.setLightMode(settings.lightMode, settings.lightColor);
@@ -971,6 +988,7 @@ class ChristmasWishApp {
     this.aurora?.dispose();
     this.magic?.dispose();
     this.music?.dispose();
+    this.sceneManager?.dispose();
     this.renderer?.dispose();
   }
 }
