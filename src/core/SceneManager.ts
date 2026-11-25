@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import type { QualityPreset } from '../config';
+import type { QualityLevel, QualityPreset } from '../config';
 import { LightEffect } from '../effects/LightEffect';
-import { makeCanvasTexture, makeRadialTexture } from './utils';
+import { makeCanvasTexture, makeRadialTexture, mulberry32 } from './utils';
 
 const SKY_VERTEX = /* glsl */ `
   varying vec3 vWorldPos;
@@ -34,6 +34,7 @@ const SKY_FRAGMENT = /* glsl */ `
 interface SceneManagerOptions {
   backgroundColor: string;
   qualityPreset: QualityPreset;
+  quality?: QualityLevel;
 }
 
 export class SceneManager {
@@ -44,6 +45,10 @@ export class SceneManager {
   private readonly ground: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshStandardMaterial>;
   private readonly contactShadows: THREE.Group;
   private readonly treeBase: THREE.Group;
+  private readonly groundDetails: THREE.Group;
+  private iceCrystals: THREE.InstancedMesh | null = null;
+  private groundSparkles: THREE.Points<THREE.BufferGeometry, THREE.PointsMaterial> | null = null;
+  private groundQuality: QualityLevel = 'ultra';
   private readonly pmrem: THREE.PMREMGenerator;
   private readonly backgroundColor = new THREE.Color('#080E20');
 
@@ -81,6 +86,10 @@ export class SceneManager {
     this.treeBase = this.createTreeBase();
     this.scene.add(this.treeBase);
 
+    this.groundDetails = this.createGroundDetails();
+    this.scene.add(this.groundDetails);
+    this.setQuality(options.qualityPreset, options.quality ?? 'ultra');
+
     this.setBackground(options.backgroundColor);
     this.scene.add(this.createDistantHaze());
     this.scene.add(this.createDistantRidges());
@@ -113,9 +122,9 @@ export class SceneManager {
 
     const positions = geometry.attributes.position as THREE.BufferAttribute;
     const colors: number[] = [];
-    const nearWhite = new THREE.Color('#d6e2e3');
-    const nearBlue = new THREE.Color('#a9bec2');
-    const farNight = new THREE.Color('#1a2b32');
+    const nearWhite = new THREE.Color('#A8BBC8');
+    const nearBlue = new THREE.Color('#263B4C');
+    const farNight = new THREE.Color('#15232E');
     const rng = Math.random;
 
     for (let i = 0; i < positions.count; i += 1) {
@@ -132,7 +141,7 @@ export class SceneManager {
         0.008 + ripple * falloff + edgeMound * THREE.MathUtils.smoothstep(radius, 18, 54)
       );
 
-      const shade = 0.4 + rng() * 0.36;
+      const shade = 0.18 + rng() * 0.26;
       const color = nearBlue.clone().lerp(nearWhite, shade);
       color.lerp(farNight, THREE.MathUtils.smoothstep(radius, 18, 68) * 0.92);
       colors.push(color.r, color.g, color.b);
@@ -143,7 +152,7 @@ export class SceneManager {
 
     const snowTexture = this.createSnowTexture();
     const material = new THREE.MeshStandardMaterial({
-      color: 0xaec2c5,
+      color: 0xffffff,
       map: snowTexture,
       vertexColors: true,
       roughness: 0.94,
@@ -158,7 +167,7 @@ export class SceneManager {
 
   private createSnowTexture(): THREE.CanvasTexture {
     const texture = makeCanvasTexture(512, 512, (ctx) => {
-      ctx.fillStyle = 'rgba(191, 208, 211, 1)';
+      ctx.fillStyle = 'rgba(110, 135, 148, 1)';
       ctx.fillRect(0, 0, 512, 512);
       const rng = (() => {
         let seed = 87731;
@@ -535,6 +544,134 @@ export class SceneManager {
     return group;
   }
 
+  private createGroundDetails(): THREE.Group {
+    const group = new THREE.Group();
+    group.name = 'winter-ground-details';
+    const rng = mulberry32(31804);
+
+    // Irregular, nearly flush snow patches. They interrupt the large dark
+    // ground plane without reading as white discs or hiding the gifts.
+    const patchGeometry = new THREE.CircleGeometry(1, 28);
+    const patchPositions = patchGeometry.attributes.position as THREE.BufferAttribute;
+    for (let i = 1; i < patchPositions.count; i += 1) {
+      const x = patchPositions.getX(i);
+      const y = patchPositions.getY(i);
+      const angle = Math.atan2(y, x);
+      const radius = Math.sqrt(x * x + y * y);
+      const jitter = 0.78 + Math.sin(angle * 3.1 + 0.8) * 0.09 + Math.sin(angle * 7.7) * 0.06;
+      patchPositions.setXY(i, Math.cos(angle) * radius * jitter, Math.sin(angle) * radius * jitter);
+    }
+    patchPositions.needsUpdate = true;
+    patchGeometry.computeVertexNormals();
+    const patchMaterial = new THREE.MeshBasicMaterial({
+      color: '#A8BBC8',
+      transparent: true,
+      opacity: 0.24,
+      depthWrite: false,
+      toneMapped: false,
+      side: THREE.DoubleSide
+    });
+    for (let i = 0; i < 9; i += 1) {
+      const angle = -1.3 + i * 0.6 + rng() * 0.2;
+      const radius = 3.8 + rng() * 2.8;
+      const patch = new THREE.Mesh(patchGeometry, patchMaterial);
+      patch.rotation.x = -Math.PI / 2;
+      patch.rotation.z = rng() * Math.PI;
+      patch.position.set(Math.cos(angle) * radius, 0.007, Math.sin(angle) * radius);
+      patch.scale.set(0.45 + rng() * 0.9, 0.3 + rng() * 0.55, 1);
+      patch.renderOrder = 1;
+      group.add(patch);
+    }
+
+    const crystalGeometry = new THREE.ConeGeometry(0.028, 0.22, 4);
+    const crystalMaterial = new THREE.MeshStandardMaterial({
+      color: '#BED8E2',
+      roughness: 0.2,
+      metalness: 0.06,
+      transparent: true,
+      opacity: 0.64,
+      emissive: new THREE.Color('#123D4A'),
+      emissiveIntensity: 0.12
+    });
+    const crystals = new THREE.InstancedMesh(crystalGeometry, crystalMaterial, 48);
+    crystals.name = 'ice-crystals';
+    const dummy = new THREE.Object3D();
+    for (let i = 0; i < 48; i += 1) {
+      const angle = rng() * Math.PI * 2;
+      const radius = 5.2 + rng() * 4.2;
+      dummy.position.set(
+        Math.cos(angle) * radius,
+        0.02 + rng() * 0.05,
+        Math.sin(angle) * radius
+      );
+      dummy.rotation.set((rng() - 0.5) * 0.35, rng() * Math.PI, (rng() - 0.5) * 0.35);
+      const scale = 0.65 + rng() * 1.05;
+      dummy.scale.set(scale, scale * (0.8 + rng() * 0.6), scale);
+      dummy.updateMatrix();
+      crystals.setMatrixAt(i, dummy.matrix);
+    }
+    crystals.instanceMatrix.needsUpdate = true;
+    crystals.frustumCulled = false;
+    group.add(crystals);
+    this.iceCrystals = crystals;
+
+    const sparkleCount = 180;
+    const positions = new Float32Array(sparkleCount * 3);
+    const colors = new Float32Array(sparkleCount * 3);
+    const cool = new THREE.Color('#A8BBC8');
+    const warm = new THREE.Color('#FFD58A');
+    for (let i = 0; i < sparkleCount; i += 1) {
+      const angle = rng() * Math.PI * 2;
+      const radius = 3.8 + rng() * 7.2;
+      positions[i * 3] = Math.cos(angle) * radius;
+      positions[i * 3 + 1] = 0.025 + rng() * 0.05;
+      positions[i * 3 + 2] = Math.sin(angle) * radius;
+      const tint = cool.clone().lerp(warm, rng() * 0.28);
+      colors[i * 3] = tint.r;
+      colors[i * 3 + 1] = tint.g;
+      colors[i * 3 + 2] = tint.b;
+    }
+    const sparkleGeometry = new THREE.BufferGeometry();
+    sparkleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    sparkleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    sparkleGeometry.setDrawRange(0, sparkleCount);
+    const sparkles = new THREE.Points(
+      sparkleGeometry,
+      new THREE.PointsMaterial({
+        size: 0.045,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.7,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+      })
+    );
+    sparkles.name = 'ground-sparkles';
+    sparkles.frustumCulled = false;
+    group.add(sparkles);
+    this.groundSparkles = sparkles;
+
+    const ring = new THREE.Mesh(
+      new THREE.RingGeometry(3.55, 4.12, 128),
+      new THREE.MeshBasicMaterial({
+        color: '#FFD58A',
+        transparent: true,
+        opacity: 0.14,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        toneMapped: false,
+        side: THREE.DoubleSide
+      })
+    );
+    ring.name = 'champagne-stage-ring';
+    ring.rotation.x = -Math.PI / 2;
+    ring.position.y = 0.019;
+    ring.renderOrder = 1;
+    group.add(ring);
+
+    return group;
+  }
+
   private createDistantHaze(): THREE.Mesh {
     const geometry = new THREE.PlaneGeometry(80, 22);
     const texture = makeCanvasTexture(1024, 256, (ctx) => {
@@ -580,8 +717,23 @@ export class SceneManager {
     this.lights.setAmbient(multiplier);
   }
 
-  setQuality(preset: QualityPreset): void {
+  setQuality(preset: QualityPreset, quality: QualityLevel = this.groundQuality): void {
+    this.groundQuality = quality;
     this.lights.setQuality(preset);
+    if (this.iceCrystals) {
+      this.iceCrystals.count = quality === 'ultra' ? 48 : quality === 'balanced' ? 24 : 0;
+      this.iceCrystals.visible = this.iceCrystals.count > 0;
+    }
+    if (this.groundSparkles) {
+      const sparkleCount = quality === 'ultra' ? 180 : quality === 'balanced' ? 90 : 0;
+      this.groundSparkles.geometry.setDrawRange(0, sparkleCount);
+      this.groundSparkles.visible = sparkleCount > 0;
+    }
+  }
+
+  setTreeShadowScale(scale: number): void {
+    const shadow = this.contactShadows.children[0];
+    if (shadow) shadow.scale.set(scale, scale, 1);
   }
 
   getContactShadow(index: number): THREE.Object3D | undefined {
@@ -606,6 +758,19 @@ export class SceneManager {
     this.sky.geometry.dispose();
     this.sky.material.dispose();
     this.treeBase.traverse((child) => {
+      const mesh = child as THREE.Mesh;
+      if (mesh.geometry) mesh.geometry.dispose();
+      if (mesh.material) {
+        const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+        materials.forEach((material) => {
+          if ('map' in material && material.map instanceof THREE.Texture) {
+            material.map.dispose();
+          }
+          material.dispose();
+        });
+      }
+    });
+    this.groundDetails.traverse((child) => {
       const mesh = child as THREE.Mesh;
       if (mesh.geometry) mesh.geometry.dispose();
       if (mesh.material) {
