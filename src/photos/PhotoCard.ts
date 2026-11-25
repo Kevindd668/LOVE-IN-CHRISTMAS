@@ -28,7 +28,11 @@ export class PhotoCard {
   private captionTexture: THREE.CanvasTexture;
   private sourceTexture: THREE.Texture;
   private hovered = false;
+  private focused = false;
+  private dimmed = false;
   private currentHover = 0;
+  private currentFocus = 0;
+  private currentDim = 0;
   private readonly pickMeshes: THREE.Object3D[] = [];
   private readonly goldRingMaterial: THREE.MeshStandardMaterial;
   private readonly captionRule: THREE.Mesh;
@@ -225,10 +229,24 @@ export class PhotoCard {
     this.hovered = hovered;
   }
 
+  setFocus(focused: boolean, dimmed: boolean): void {
+    this.focused = focused;
+    this.dimmed = dimmed;
+  }
+
   update(dt: number): void {
     this.currentHover = damp(this.currentHover, this.hovered ? 1 : 0, 7, dt);
-    this.frameMaterial.emissiveIntensity = 0.18 + this.currentHover * 0.34;
-    this.goldRingMaterial.emissiveIntensity = 0.2 + this.currentHover * 0.6;
+    this.currentFocus = damp(this.currentFocus, this.focused ? 1 : 0, 7, dt);
+    this.currentDim = damp(this.currentDim, this.dimmed ? 1 : 0, 6, dt);
+
+    const brightness = 1 - this.currentDim * 0.58;
+    this.imageMaterial.color.setScalar(brightness);
+    const captionMaterial = this.captionMesh.material as THREE.MeshBasicMaterial;
+    captionMaterial.opacity = 1 - this.currentDim * 0.62;
+    this.frameMaterial.emissiveIntensity =
+      0.18 + this.currentHover * 0.34 + this.currentFocus * 0.16;
+    this.goldRingMaterial.emissiveIntensity =
+      0.2 + this.currentHover * 0.6 + this.currentFocus * 0.24;
   }
 
   getScaleBoost(): number {

@@ -607,6 +607,7 @@ class ChristmasWishApp {
       case 'photo': {
         const photo = this.photos.getPhotoById(target.id);
         if (photo) {
+          this.photos.setSelected(target.id);
           this.ui.showLightbox(photo);
           this.music.playEffect('photo');
         }
@@ -617,6 +618,7 @@ class ChristmasWishApp {
         this.music.playEffect('tap');
         break;
       case 'empty':
+        this.photos.setSelected(null);
         this.hearts.pulseGather(3.6);
         this.music.playEffect('tap');
         if (!this.heartHintShown) {

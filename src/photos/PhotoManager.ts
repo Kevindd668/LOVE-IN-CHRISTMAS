@@ -49,6 +49,7 @@ export class PhotoManager {
   private reveal = 1;
   private showCaptions = true;
   private hoveredId: string | null = null;
+  private selectedId: string | null = null;
   private lastCaptionState = true;
   onChange: (() => void) | null = null;
 
@@ -264,6 +265,10 @@ export class PhotoManager {
     }
   }
 
+  setSelected(id: string | null): void {
+    this.selectedId = id;
+  }
+
   setReveal(progress: number): void {
     this.reveal = Math.min(1, Math.max(0, progress));
   }
@@ -298,10 +303,16 @@ export class PhotoManager {
     this.orbit.update(dt, time, camera, settings);
 
     const orderedIds = this.records.map((record) => record.id);
+    const densityScale =
+      this.records.length > 18 ? 0.74 : this.records.length > 12 ? 0.88 : 1;
+    const focusedId = this.selectedId ?? this.hoveredId;
     for (let index = 0; index < orderedIds.length; index += 1) {
       const id = orderedIds[index];
       const card = this.cards.get(id);
       if (!card) continue;
+      const focused = focusedId === id;
+      const dimmed = Boolean(focusedId) && !focused;
+      card.setFocus(focused, dimmed);
       const staggerStart = index * 0.014;
       const rawReveal =
         this.reveal >= 1
@@ -311,7 +322,10 @@ export class PhotoManager {
       card.group.visible = rawReveal > 0.002;
       let targetScale =
         settings.cardScale *
+        densityScale *
         card.getScaleBoost() *
+        (focused ? 1.3 : 1) *
+        (dimmed ? 0.94 : 1) *
         (this.reveal >= 1 ? 1 : 0.08 + 0.92 * appear);
       if (camera instanceof THREE.PerspectiveCamera) {
         // Safety net: a photo card must never balloon over the lens if the

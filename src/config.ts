@@ -214,9 +214,9 @@ export const LIGHT_PALETTES: Record<LightMode, string[]> = {
 };
 
 export const PHOTO_TRACKS = [
-  { radius: 3.15, minHeight: 1.75, maxHeight: 4.15, speed: 0.18 },
-  { radius: 3.82, minHeight: 2.75, maxHeight: 5.65, speed: -0.125 },
-  { radius: 4.5, minHeight: 1.5, maxHeight: 6.05, speed: 0.09 }
+  { radius: 4.5, minHeight: 1.6, maxHeight: 3.0, speed: 0.18 },
+  { radius: 5.8, minHeight: 3.2, maxHeight: 4.6, speed: -0.125 },
+  { radius: 7.2, minHeight: 4.6, maxHeight: 6.1, speed: 0.09 }
 ] as const;
 
 export const DEFAULT_CAPTIONS = [

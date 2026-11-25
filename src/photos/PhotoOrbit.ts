@@ -6,15 +6,14 @@ import type { PhotoCard } from './PhotoCard';
 interface OrbitItem {
   card: PhotoCard;
   track: number;
-  angle: number;
+  side: -1 | 1;
+  slot: number;
+  sideTotal: number;
   height: number;
   heightTarget: number;
   phase: number;
-  side: -1 | 1;
-  relativeBase: number;
-  motionTime: number;
-  initialised: boolean;
   currentPosition: THREE.Vector3;
+  initialised: boolean;
 }
 
 export interface PhotoOrbitSettings {
@@ -23,75 +22,93 @@ export interface PhotoOrbitSettings {
   photosPaused: boolean;
 }
 
+const TRACK_CAPS = [4, 6, 8];
+const TRACK_WEIGHTS = [4, 6, 8];
+
+/**
+ * Distributes cards over the three rings.
+ * Up to 4: one inner ring. 5–18: proportional 4:6:8. 19–24: outer capacity
+ * expands to 10 so the three-layer structure is preserved (6/8/10).
+ */
+export function allocatePhotoTracks(count: number): [number, number, number] {
+  if (count <= 4) return [Math.max(0, count), 0, 0];
+  if (count >= 19) return [6, 8, Math.max(0, count - 14)];
+  const totalWeight = TRACK_WEIGHTS.reduce((sum, value) => sum + value, 0);
+  const raw = TRACK_WEIGHTS.map((weight) => (count * weight) / totalWeight);
+  const result = raw.map((value) => Math.floor(value));
+  let remainder = count - result.reduce((sum, value) => sum + value, 0);
+  const fractions = raw
+    .map((value, index) => ({ index, fraction: value - result[index] }))
+    .sort((a, b) => b.fraction - a.fraction);
+  let cursor = 0;
+  while (remainder > 0) {
+    result[fractions[cursor % 3].index] += 1;
+    remainder -= 1;
+    cursor += 1;
+  }
+  for (let i = 0; i < 3; i += 1) result[i] = Math.min(TRACK_CAPS[i], result[i]);
+  return [result[0], result[1], result[2]];
+}
+
 export class PhotoOrbit {
   private readonly items = new Map<string, OrbitItem>();
   private readonly tempQuaternion = new THREE.Quaternion();
   private readonly rollQuaternion = new THREE.Quaternion();
   private readonly zAxis = new THREE.Vector3(0, 0, 1);
   private readonly targetPosition = new THREE.Vector3();
+  private readonly trackPhases = [0, 0, 0];
 
   sync(cards: PhotoCard[]): void {
-    const totals = [0, 0, 0];
-    let leftCount = 0;
-    let rightCount = 0;
-    cards.forEach((_, index) => {
-      totals[index % 3] += 1;
-      if (index % 2 === 0) leftCount += 1;
-      else rightCount += 1;
-    });
     const nextIds = new Set(cards.map((card) => card.id));
-
     for (const id of [...this.items.keys()]) {
       if (!nextIds.has(id)) this.items.delete(id);
     }
 
-    const cursors = [0, 0, 0];
-    const sideCursors = { left: 0, right: 0 };
-    cards.forEach((card, index) => {
-      const track = index % 3;
-      const slot = cursors[track];
-      cursors[track] += 1;
-      const side: -1 | 1 = index % 2 === 0 ? -1 : 1;
-      const sideIndex = side === -1 ? sideCursors.left++ : sideCursors.right++;
-      const sideTotal = side === -1 ? leftCount : rightCount;
+    const allocation = allocatePhotoTracks(cards.length);
+    let cursor = 0;
+    for (let track = 0; track < 3; track += 1) {
+      const trackCards = cards.slice(cursor, cursor + allocation[track]);
+      cursor += allocation[track];
       const trackConfig = PHOTO_TRACKS[track];
-      const heightPatterns = [
-        [0.12, 0.55, 0.86, 0.32, 0.68, 0.96, 0.4, 0.74],
-        [0.7, 0.26, 0.57, 0.9, 0.38, 0.8, 0.1, 0.48],
-        [0.36, 0.76, 0.14, 0.6, 0.95, 0.44, 0.82, 0.24]
-      ];
-      const fraction =
-        totals[track] <= 1
-          ? 0.5
-          : heightPatterns[track][slot % heightPatterns[track].length];
-      const targetHeight = lerp(trackConfig.minHeight, trackConfig.maxHeight, fraction);
-      const relativeBase =
-        0.98 + (sideIndex / Math.max(1, sideTotal - 1)) * (sideTotal <= 2 ? 1.02 : 1.25);
-      let item = this.items.get(card.id);
-      if (!item) {
-        item = {
-          card,
-          track,
-          angle: 0,
-          height: targetHeight,
-          heightTarget: targetHeight,
-          phase: Math.random() * Math.PI * 2,
-          side,
-          relativeBase,
-          motionTime: Math.random() * 20,
-          initialised: false,
-          currentPosition: new THREE.Vector3()
-        };
-        this.items.set(card.id, item);
-      } else {
-        item.card = card;
-        item.track = track;
-        item.heightTarget = targetHeight;
-        item.side = side;
-        item.relativeBase = relativeBase;
-      }
-    });
+      const leftTotal = Math.ceil(trackCards.length / 2);
+      const rightTotal = Math.floor(trackCards.length / 2);
+      let left = 0;
+      let right = 0;
 
+      trackCards.forEach((card, index) => {
+        // Alternate left/right. Keeping a clear central corridor prevents
+        // photos from covering the tree or intercepting its pick target.
+        const side: -1 | 1 = index % 2 === 0 ? -1 : 1;
+        const sideIndex = side === -1 ? left++ : right++;
+        const sideTotal = side === -1 ? leftTotal : rightTotal;
+        const fraction = sideTotal <= 1 ? 0.5 : (sideIndex + 0.5) / sideTotal;
+        const heightTarget = lerp(trackConfig.minHeight, trackConfig.maxHeight, fraction);
+
+        let item = this.items.get(card.id);
+        if (!item) {
+          item = {
+            card,
+            track,
+            side,
+            slot: sideIndex,
+            sideTotal,
+            height: heightTarget,
+            heightTarget,
+            phase: Math.random() * Math.PI * 2,
+            currentPosition: new THREE.Vector3(),
+            initialised: false
+          };
+          this.items.set(card.id, item);
+        } else {
+          item.card = card;
+          item.track = track;
+          item.side = side;
+          item.slot = sideIndex;
+          item.sideTotal = sideTotal;
+          item.heightTarget = heightTarget;
+        }
+      });
+    }
   }
 
   update(
@@ -101,23 +118,26 @@ export class PhotoOrbit {
     settings: PhotoOrbitSettings
   ): void {
     const cameraAngle = Math.atan2(camera.position.z, camera.position.x);
+
+    for (let track = 0; track < 3; track += 1) {
+      if (!settings.photosPaused) {
+        this.trackPhases[track] +=
+          dt * settings.photoSpeed * Math.abs(PHOTO_TRACKS[track].speed) * 0.42;
+      }
+    }
+
     for (const item of this.items.values()) {
       const track = PHOTO_TRACKS[item.track];
-      if (!settings.photosPaused) {
-        item.motionTime +=
-          dt * settings.photoSpeed * (0.45 + Math.abs(track.speed) * 4.2);
-      }
-      const sway =
-        Math.sin(item.motionTime * (0.82 + Math.abs(track.speed)) + item.phase) * 0.18 +
-        Math.sin(item.motionTime * 0.31 + item.phase * 1.9) * 0.06;
-      item.angle = cameraAngle + item.side * (item.relativeBase + sway);
-
+      const trackSway = Math.sin(this.trackPhases[item.track]) * 0.12;
+      const baseOffset =
+        0.58 + ((item.slot + 0.5) / Math.max(1, item.sideTotal)) * 1.28;
+      const angle = cameraAngle + item.side * (baseOffset + trackSway);
       const radius = track.radius * settings.photoRadius;
-      const bob = Math.sin(time * 0.58 + item.phase) * 0.065;
+      const bob = Math.sin(time * 0.58 + item.phase) * 0.055;
       this.targetPosition.set(
-        Math.cos(item.angle) * radius,
+        Math.cos(angle) * radius,
         item.heightTarget + bob,
-        Math.sin(item.angle) * radius
+        Math.sin(angle) * radius
       );
 
       if (!item.initialised) {
@@ -133,7 +153,7 @@ export class PhotoOrbit {
       item.card.group.position.copy(item.currentPosition);
 
       const targetQuaternion = this.tempQuaternion.copy(camera.quaternion);
-      const roll = Math.sin(time * 0.22 + item.phase) * 0.018 + Math.sin(item.phase) * 0.012;
+      const roll = Math.sin(time * 0.22 + item.phase) * 0.016;
       this.rollQuaternion.setFromAxisAngle(this.zAxis, roll);
       targetQuaternion.multiply(this.rollQuaternion);
       const blend = item.initialised ? 1 - Math.exp(-7 * dt) : 1;
