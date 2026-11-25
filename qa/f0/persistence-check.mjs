@@ -1,0 +1,21 @@
+﻿import { chromium } from 'playwright-core';
+import { pathToFileURL } from 'node:url';
+import path from 'node:path';
+import { writeFileSync } from 'node:fs';
+const url=pathToFileURL(path.resolve(process.cwd(),'Christmas-Wish.html')).href;
+const browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:false,args:['--window-position=20,20','--window-size=1480,960','--disable-features=RendererCodeIntegrity']});
+const context=await browser.newContext({viewport:{width:1440,height:900},deviceScaleFactor:1});
+const page=await context.newPage(); const errors=[]; page.on('console',m=>{if(m.type()==='error')errors.push(m.text());}); page.on('pageerror',e=>errors.push(e.message));
+await page.goto(url,{waitUntil:'load',timeout:60000}); await page.bringToFront(); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready===true,null,{timeout:30000}); await page.waitForTimeout(2000);
+await page.evaluate(()=>{const el=document.querySelector('[data-setting="treeHeight"]'); el.value='9.2'; el.dispatchEvent(new Event('input',{bubbles:true})); const input=document.querySelector('#photo-input');});
+await page.waitForTimeout(600);
+// Upload one extra photo so the before-reload count is 9.
+await page.locator('#photo-input').setInputFiles(path.resolve(process.cwd(),'qa/placeholders/1.jpg'));
+await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.photos().length===9,null,{timeout:15000});
+await page.waitForTimeout(600);
+const beforeReload=await page.evaluate(()=>({treeHeight:window.__CHRISTMAS_WISH__.getSettings().treeHeight,photoCount:window.__CHRISTMAS_WISH__.app.photos.count,stored:localStorage.getItem('a-christmas-wish.settings.v1')}));
+await page.reload({waitUntil:'load'}); await page.bringToFront(); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready===true,null,{timeout:30000}); await page.waitForTimeout(1800);
+const afterReload=await page.evaluate(()=>({treeHeight:window.__CHRISTMAS_WISH__.getSettings().treeHeight,photoCount:window.__CHRISTMAS_WISH__.app.photos.count,body:document.body.className,stored:localStorage.getItem('a-christmas-wish.settings.v1')}));
+console.log(JSON.stringify({beforeReload,afterReload,errors},null,2));
+writeFileSync(path.resolve(process.cwd(),'qa/f0/persistence-check.json'),JSON.stringify({beforeReload,afterReload,errors},null,2)+'\n','utf8');
+await context.close(); await browser.close();

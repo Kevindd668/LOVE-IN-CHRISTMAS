@@ -1,0 +1,30 @@
+﻿[
+    {
+        "Test":  "typecheck",
+        "Exit":  0
+    },
+    {
+        "Test":  "smoke-test.mjs",
+        "Exit":  0
+    },
+    {
+        "Test":  "raycast-test.mjs",
+        "Exit":  0
+    },
+    {
+        "Test":  "qa2.mjs",
+        "Exit":  0
+    },
+    {
+        "Test":  "qa3.mjs",
+        "Exit":  0
+    },
+    {
+        "Test":  "mobile-test.mjs",
+        "Exit":  0
+    },
+    {
+        "Test":  "singlefile-test.mjs",
+        "Exit":  0
+    }
+]

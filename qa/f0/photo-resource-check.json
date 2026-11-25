@@ -1,0 +1,22 @@
+{
+  "before": {
+    "photoCount": 8,
+    "textures": 31,
+    "geometries": 181,
+    "drawCalls": 271
+  },
+  "afterUpload": {
+    "photoCount": 24,
+    "textures": 63,
+    "geometries": 293,
+    "drawCalls": 399
+  },
+  "afterDelete": {
+    "photoCount": 8,
+    "textures": 31,
+    "geometries": 181,
+    "drawCalls": 271
+  },
+  "removed": 16,
+  "errors": []
+}

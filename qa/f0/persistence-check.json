@@ -1,0 +1,14 @@
+{
+  "beforeReload": {
+    "treeHeight": 9.2,
+    "photoCount": 9,
+    "stored": "{\"treeHeight\":9.2,\"crownRadius\":2.5,\"density\":180,\"layers\":7,\"foliageColor\":\"#0B5D3B\",\"treeRotate\":true,\"treeRotateSpeed\":0.3,\"lightsOn\":true,\"lightColor\":\"#FFD9A4\",\"lightCount\":220,\"lightBrightness\":1.25,\"lightFlashSpeed\":1,\"lightMode\":\"warm\",\"heartsOn\":true,\"heartCount\":600,\"heartColor\":\"#FF5F91\",\"heartSize\":1,\"heartSpeed\":0.7,\"heartMode\":\"orbit\",\"photoRadius\":1,\"photoSpeed\":0.58,\"cardScale\":1,\"showCaptions\":true,\"photosPaused\":false,\"snowOn\":true,\"snowCount\":1800,\"snowSpeed\":1,\"starsOn\":true,\"auroraOn\":true,\"backgroundColor\":\"#061522\",\"ambientBrightness\":1,\"text520\":\"520\",\"text1314\":\"1314\",\"blessingTitle\":\"Merry Christmas\",\"blessingMessage\":\"希望未来的每一个圣诞节，都有你。愿我们的爱，从 520 走到 1314。\",\"signature\":\"永远爱你的我 · 2026\",\"giftMessage0\":\"今年的圣诞礼物，是希望未来每一个冬天都有你。\",\"giftMessage1\":\"和你在一起以后，连冬天都开始变得温柔。\",\"giftMessage2\":\"圣诞快乐，我最喜欢的女孩。以后每一场雪，都想和你一起看。\",\"musicTrack\":\"starlight\",\"musicVolume\":0.45,\"musicOn\":false,\"quality\":\"ultra\"}"
+  },
+  "afterReload": {
+    "treeHeight": 9.2,
+    "photoCount": 8,
+    "body": "safe-mode",
+    "stored": "{\"treeHeight\":9.2,\"crownRadius\":2.5,\"density\":180,\"layers\":7,\"foliageColor\":\"#0B5D3B\",\"treeRotate\":true,\"treeRotateSpeed\":0.3,\"lightsOn\":true,\"lightColor\":\"#FFD9A4\",\"lightCount\":220,\"lightBrightness\":1.25,\"lightFlashSpeed\":1,\"lightMode\":\"warm\",\"heartsOn\":true,\"heartCount\":600,\"heartColor\":\"#FF5F91\",\"heartSize\":1,\"heartSpeed\":0.7,\"heartMode\":\"orbit\",\"photoRadius\":1,\"photoSpeed\":0.58,\"cardScale\":1,\"showCaptions\":true,\"photosPaused\":false,\"snowOn\":true,\"snowCount\":1800,\"snowSpeed\":1,\"starsOn\":true,\"auroraOn\":true,\"backgroundColor\":\"#061522\",\"ambientBrightness\":1,\"text520\":\"520\",\"text1314\":\"1314\",\"blessingTitle\":\"Merry Christmas\",\"blessingMessage\":\"希望未来的每一个圣诞节，都有你。愿我们的爱，从 520 走到 1314。\",\"signature\":\"永远爱你的我 · 2026\",\"giftMessage0\":\"今年的圣诞礼物，是希望未来每一个冬天都有你。\",\"giftMessage1\":\"和你在一起以后，连冬天都开始变得温柔。\",\"giftMessage2\":\"圣诞快乐，我最喜欢的女孩。以后每一场雪，都想和你一起看。\",\"musicTrack\":\"starlight\",\"musicVolume\":0.45,\"musicOn\":false,\"quality\":\"ultra\"}"
+  },
+  "errors": []
+}
