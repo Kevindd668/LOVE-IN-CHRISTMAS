@@ -53,7 +53,7 @@ npm run build:single
 
 ## 交付
 
-- `docs/F3/` 七份文档 + `DIRECT_REUSE_INVENTORY.md`（五仓库逐模块直接复用清单，尚未整合）
+- `docs/F3/` 七份文档 + `DIRECT_REUSE_INVENTORY.md`（五仓库逐模块清单）+ `REUSE_INTEGRATION_PLAN.md`（按 F3 组件的复用方案，尚未整合）
 - `docs/F3/screenshots/` 13 张真实浏览器截图（10 项验收截图 + 参数面板 + F0 并排对比）
 - `qa/f3/performance.json`、`qa/f3/control-results.json`
 - `qa/f3-performance.mjs`、`qa/f3-visual-capture.mjs`、`qa/f3-controls.mjs`、`qa/f3-comparison.py`
