@@ -107,15 +107,16 @@ npm run build:single
 - 合并提交：`248e1c8`
 - standalone SHA-256：`A443243AFA0C50D222C8728A46178551635DB838A50C0417FEFF0D7CFAE0C511`
 
-## 视觉精修 WP0 / WP1（进行中）
+## 视觉精修 WP0–WP3（进行中）
 
 - [WP0 基线](WP0_BASELINE.md)
 - [WP1 星空环境升级](STARFIELD_UPGRADE.md)
-- 截图：`docs/F3/wp1/`
-- 数据：`qa/wp1/performance.json`
-- 状态：WP1 完成；WP2 实现与回归完成，等待验收；WP3–WP6 未开始。
+- WP1 截图：`docs/F3/wp1/`；数据：`qa/wp1/performance.json`
 - [WP2 金色粒子光瀑重构](PARTICLE_WATERFALL.md)
 - WP2 截图/录屏：`docs/F3/wp2/`
+- [WP3 照片三层轨道布局](PHOTO_LAYOUT.md)
+- WP3 截图：`docs/F3/wp3/`
+- 状态：WP1/WP2 已确认；WP3 实现与 8/12/24 张验证完成，等待验收；WP4–WP6 未开始。
 
 ## 参考仓库复用文档
 
