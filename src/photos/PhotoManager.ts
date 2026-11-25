@@ -50,6 +50,7 @@ export class PhotoManager {
   private showCaptions = true;
   private hoveredId: string | null = null;
   private selectedId: string | null = null;
+  private readonly displayLimit = 6;
   private lastCaptionState = true;
   onChange: (() => void) | null = null;
 
@@ -84,7 +85,10 @@ export class PhotoManager {
   }
 
   private syncOrbit(): void {
+    // All uploaded photos remain available in the management panel. The 3D
+    // showcase deliberately shows only six cards: three on each side.
     const ordered = this.records
+      .slice(0, this.displayLimit)
       .map((record) => this.cards.get(record.id))
       .filter((card): card is PhotoCard => Boolean(card));
     this.orbit.sync(ordered);
@@ -302,6 +306,12 @@ export class PhotoManager {
 
     this.orbit.update(dt, time, camera, settings);
 
+    if (
+      this.selectedId &&
+      !this.records.slice(0, this.displayLimit).some((record) => record.id === this.selectedId)
+    ) {
+      this.selectedId = null;
+    }
     const orderedIds = this.records.map((record) => record.id);
     const densityScale =
       this.records.length > 18 ? 0.74 : this.records.length > 12 ? 0.88 : 1;
@@ -310,6 +320,10 @@ export class PhotoManager {
       const id = orderedIds[index];
       const card = this.cards.get(id);
       if (!card) continue;
+      if (index >= this.displayLimit) {
+        card.group.visible = false;
+        continue;
+      }
       const focused = focusedId === id;
       const dimmed = Boolean(focusedId) && !focused;
       card.setFocus(focused, dimmed);
@@ -344,7 +358,11 @@ export class PhotoManager {
   }
 
   getPickMeshes(): THREE.Object3D[] {
-    return [...this.cards.values()].flatMap((card) => card.getPickMeshes());
+    return this.records
+      .slice(0, this.displayLimit)
+      .map((record) => this.cards.get(record.id))
+      .filter((card): card is PhotoCard => Boolean(card))
+      .flatMap((card) => card.getPickMeshes());
   }
 
   get views(): PhotoListItem[] {

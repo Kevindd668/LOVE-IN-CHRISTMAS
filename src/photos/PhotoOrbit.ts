@@ -31,6 +31,8 @@ const TRACK_WEIGHTS = [4, 6, 8];
  * expands to 10 so the three-layer structure is preserved (6/8/10).
  */
 export function allocatePhotoTracks(count: number): [number, number, number] {
+  // The showcase displays six cards: one left and one right on each ring.
+  if (count === 6) return [2, 2, 2];
   if (count <= 4) return [Math.max(0, count), 0, 0];
   if (count >= 19) return [6, 8, Math.max(0, count - 14)];
   const totalWeight = TRACK_WEIGHTS.reduce((sum, value) => sum + value, 0);

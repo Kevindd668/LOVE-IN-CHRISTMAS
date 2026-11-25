@@ -59,8 +59,8 @@
       "musicOn": false,
       "quality": "ultra"
     },
-    "fps": 240,
-    "drawCalls": 316,
+    "fps": 1,
+    "drawCalls": 300,
     "panelOpen": true,
     "photoCount": 8,
     "photoDomCount": 8,
@@ -102,21 +102,21 @@
     "snow": 1300,
     "lights": 360,
     "hearts": 500,
-    "fps": 197
+    "fps": 1
   },
   "quality_performance": {
     "quality": "performance",
     "snow": 720,
     "lights": 360,
     "hearts": 300,
-    "fps": 226
+    "fps": 1
   },
   "quality_ultra": {
     "quality": "ultra",
     "snow": 1800,
     "lights": 360,
     "hearts": 600,
-    "fps": 226
+    "fps": 1
   },
   "reset": {
     "settings": {
@@ -240,8 +240,8 @@
       "musicOn": false,
       "quality": "ultra"
     },
-    "fps": 186,
-    "drawCalls": 327,
+    "fps": 1,
+    "drawCalls": 303,
     "panelOpen": false,
     "photoCount": 9,
     "photoDomCount": 9,
@@ -312,8 +312,8 @@
       "musicOn": false,
       "quality": "ultra"
     },
-    "fps": 166,
-    "drawCalls": 325,
+    "fps": 1,
+    "drawCalls": 303,
     "panelOpen": false,
     "photoCount": 9,
     "photoDomCount": 9,
@@ -384,8 +384,8 @@
       "musicOn": false,
       "quality": "ultra"
     },
-    "fps": 240,
-    "drawCalls": 169,
+    "fps": 1,
+    "drawCalls": 305,
     "panelOpen": false,
     "photoCount": 9,
     "photoDomCount": 9,
@@ -456,8 +456,8 @@
       "musicOn": false,
       "quality": "ultra"
     },
-    "fps": 240,
-    "drawCalls": 179,
+    "fps": 1,
+    "drawCalls": 305,
     "panelOpen": false,
     "photoCount": 9,
     "photoDomCount": 9,
@@ -528,8 +528,8 @@
       "musicOn": true,
       "quality": "ultra"
     },
-    "fps": 91,
-    "drawCalls": 57,
+    "fps": 1,
+    "drawCalls": 59,
     "panelOpen": false,
     "photoCount": 9,
     "photoDomCount": 9,
@@ -600,8 +600,8 @@
       "musicOn": true,
       "quality": "ultra"
     },
-    "fps": 152,
-    "drawCalls": 316,
+    "fps": 1,
+    "drawCalls": 288,
     "panelOpen": false,
     "photoCount": 9,
     "photoDomCount": 9,
@@ -672,8 +672,8 @@
       "musicOn": true,
       "quality": "ultra"
     },
-    "fps": 208,
-    "drawCalls": 327,
+    "fps": 1,
+    "drawCalls": 288,
     "panelOpen": false,
     "photoCount": 9,
     "photoDomCount": 9,
@@ -749,8 +749,8 @@
       "musicOn": false,
       "quality": "ultra"
     },
-    "fps": 223,
-    "drawCalls": 325,
+    "fps": 1,
+    "drawCalls": 292,
     "panelOpen": false,
     "photoCount": 9,
     "photoDomCount": 9,
