@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>Christmas-Wish · F2 Visual Labs</title>
+  <link rel="icon" href="data:," />
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: #05070e; color: #f8efe3; font-family: "Segoe UI", "Microsoft YaHei", sans-serif; }
+    body { background: radial-gradient(ellipse at 50% 0%, #1c1530 0%, #080a14 45%, #030409 100%); padding: 8vh 6vw; }
+    .head { max-width: 1060px; margin: 0 auto; }
+    .kicker { color: #ffd58a; font-size: 10px; letter-spacing: .3em; }
+    h1 { margin: 18px 0 12px; font-family: Georgia, serif; font-weight: 400; font-size: clamp(42px, 7vw, 92px); line-height: .92; letter-spacing: -.04em; }
+    .sub { max-width: 640px; margin: 0 0 58px; color: rgba(232,220,202,.62); font-size: 13px; line-height: 1.9; }
+    .grid { max-width: 1060px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 13px; }
+    a.card { display: block; min-height: 210px; padding: 22px; border: 1px solid rgba(255,213,138,.16); border-radius: 16px; background: linear-gradient(145deg, rgba(18,32,37,.74), rgba(8,13,21,.88)); color: inherit; text-decoration: none; transition: .3s cubic-bezier(.22,1,.36,1); }
+    a.card:hover { transform: translateY(-4px); border-color: rgba(255,213,138,.55); background: linear-gradient(145deg, rgba(27,48,52,.85), rgba(12,20,32,.92)); }
+    .no { color: rgba(255,213,138,.62); font-size: 10px; letter-spacing: .18em; }
+    h2 { margin: 48px 0 12px; font-family: Georgia, serif; font-weight: 400; font-size: 28px; }
+    p { margin: 0; color: rgba(232,220,202,.56); font-size: 11px; line-height: 1.75; }
+    .go { margin-top: 22px; color: #ffd58a; font-size: 10px; letter-spacing: .16em; }
+    .foot { max-width: 1060px; margin: 62px auto 0; padding-top: 18px; border-top: 1px solid rgba(255,213,138,.1); color: rgba(232,220,202,.36); font-size: 10px; line-height: 1.8; }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="head">
+      <div class="kicker">LOVE IN CHRISTMAS · F2 VISUAL LABS</div>
+      <h1>Five ways<br />to say it.</h1>
+      <p class="sub">五个彼此独立的 Three.js 视觉实验。每个实验都能单独启动、独立调参、独立截图与测量；这里只是一个入口，不是合并演示。</p>
+    </header>
+    <section class="grid">
+      <a class="card" href="./01-heart-particles/"><div class="no">LAB 01 · HEART-STAR</div><h2>十万次心跳</h2><p>3D 爱心 / 星形 / 聚合 / 爆散 / 心跳。10000 颗粒子，实时参数。</p><div class="go">OPEN LAB 01 →</div></a>
+      <a class="card" href="./02-double-helix-tree/"><div class="no">LAB 02 · DOUBLE HELIX</div><h2>双螺旋圣诞树</h2><p>9 层树冠、两条反向光带、360 灯泡、48 爱心球、水晶爱心。</p><div class="go">OPEN LAB 02 →</div></a>
+      <a class="card" href="./03-galaxy-nebula/"><div class="no">LAB 03 · DEEP SPACE</div><h2>星河为你亮起</h2><p>三层星云、四层极光、流星、金色光瀑与三层发光轨道。</p><div class="go">OPEN LAB 03 →</div></a>
+      <a class="card" href="./04-photo-memory/"><div class="no">LAB 04 · PHOTO MEMORY</div><h2>我们的照片记忆</h2><p>本地照片上传、替换、删除、排序、日期与 3D 轨道聚焦。</p><div class="go">OPEN LAB 04 →</div></a>
+      <a class="card" href="./05-cinematic-effects/"><div class="no">LAB 05 · CINEMATIC</div><h2>把这句话写进星河</h2><p>镜头穿越星河、爱心聚合与 520 / 1314 / LOVE 粒子文字。</p><div class="go">OPEN LAB 05 →</div></a>
+    </section>
+    <div class="foot">F2 · 独立视觉实验室 · Three.js 0.160.0 · 无正式项目集成<br />Run: node experiments/serve.mjs → http://127.0.0.1:8787/</div>
+  </main>
+</body>
+</html>

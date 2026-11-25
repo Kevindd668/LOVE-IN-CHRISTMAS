@@ -1,0 +1,18 @@
+﻿{
+  "testedAt": "2026-11-25T16:40:00+08:00",
+  "browser": "Edge 158",
+  "viewport": "1440x900",
+  "uploaded": 8,
+  "initialPhotos": 12,
+  "afterUpload": 20,
+  "replaceFrom": "1.jpg",
+  "replaceTo": "3.jpg",
+  "afterDelete": 19,
+  "sortBefore": ["memory-01.jpg","memory-02.jpg"],
+  "sortAfter": ["memory-02.jpg","memory-01.jpg"],
+  "focusOpened": true,
+  "maxPhotos": 24,
+  "afterMax": 24,
+  "drawCallsAt24": 116,
+  "consoleErrors": []
+}

@@ -1,0 +1,8 @@
+﻿{
+  "testedAt": "2026-11-25T16:45:00+08:00",
+  "mode": "experimental IndexedDB save + reload + load",
+  "beforeReloadPhotos": 13,
+  "afterReloadInitialPhotos": 12,
+  "afterLoadPhotos": 13,
+  "consoleErrors": []
+}

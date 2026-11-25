@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>F2 · 04 3D 爱情照片记忆空间</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../shared/lab.css" />
+  <style>
+    body { background: radial-gradient(ellipse at 48% 45%, #1b1226 0%, #0d0a18 45%, #050711 100%); }
+    #lab-canvas { position: fixed; inset: 0; }
+    .lab-copy { max-width: 500px; }
+    .photo-detail {
+      position: fixed; left: 50%; bottom: 48px; transform: translate(-50%, 22px);
+      z-index: 24; width: min(430px, calc(100vw - 36px)); padding: 18px 20px 16px;
+      border: 1px solid rgba(255,213,138,.28); border-radius: 14px;
+      background: linear-gradient(145deg, rgba(24,15,25,.95), rgba(8,10,18,.97));
+      box-shadow: 0 24px 70px rgba(0,0,0,.55); opacity: 0; visibility: hidden;
+      transition: .4s var(--ease); pointer-events: auto;
+    }
+    .photo-detail.is-open { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+    .photo-detail-kicker { color: var(--gold); font-size: 8px; letter-spacing: .24em; margin-bottom: 6px; }
+    .photo-detail h3 { margin: 0; font-family: Georgia, serif; font-weight: 400; font-size: 22px; }
+    .photo-detail p { margin: 7px 0 15px; color: var(--dim); font-size: 11px; line-height: 1.6; }
+    .photo-detail button {
+      border: 1px solid rgba(255,213,138,.32); border-radius: 999px; padding: 8px 15px;
+      background: transparent; color: var(--gold); font-size: 10px; cursor: pointer;
+    }
+    .photo-upload-zone {
+      border: 1px dashed rgba(255,213,138,.3); border-radius: 9px; padding: 13px;
+      text-align: center; color: var(--dim); font-size: 10px; cursor: pointer;
+      transition: .25s ease; margin: 0 0 8px;
+    }
+    .photo-upload-zone:hover { border-color: rgba(255,213,138,.7); background: rgba(255,213,138,.05); }
+    .photo-count { display: flex; justify-content: space-between; color: var(--muted); font-size: 8px; letter-spacing: .12em; margin: 7px 2px 12px; }
+    .photo-list { display: grid; gap: 8px; padding-bottom: 16px; }
+    .photo-row {
+      display: grid; grid-template-columns: 34px 1fr; gap: 9px; align-items: start;
+      padding: 7px; border: 1px solid rgba(255,244,220,.08); border-radius: 8px;
+      background: rgba(255,255,255,.025);
+    }
+    .photo-row img { width: 34px; height: 42px; object-fit: cover; border-radius: 4px; border: 1px solid rgba(255,213,138,.28); }
+    .photo-row-main { min-width: 0; }
+    .photo-row input[type="text"], .photo-row input[type="date"] {
+      width: 100%; background: rgba(0,0,0,.22); border: 1px solid rgba(255,244,220,.1);
+      color: var(--ink); border-radius: 4px; padding: 4px 5px; font: inherit; font-size: 9px; margin-bottom: 3px;
+    }
+    .photo-row-actions { display: flex; gap: 3px; margin-top: 3px; }
+    .photo-row-actions button {
+      border: 1px solid rgba(255,244,220,.13); background: transparent; color: var(--dim);
+      border-radius: 3px; width: 21px; height: 18px; cursor: pointer; font-size: 9px; padding: 0;
+    }
+    .photo-row-actions button:hover { color: var(--gold); border-color: rgba(255,213,138,.55); }
+    .photo-db { display: flex; gap: 6px; padding: 0 0 14px; }
+    .photo-db button { flex: 1; border: 1px solid rgba(255,213,138,.16); border-radius: 5px; background: transparent; color: var(--muted); font-size: 8px; padding: 6px; cursor: pointer; }
+    .photo-db button:hover { color: var(--gold); border-color: rgba(255,213,138,.5); }
+    .photo-empty { color: var(--muted); font-size: 9px; padding: 12px 0; }
+    .lab-panel { width: min(390px, calc(100vw - 40px)); }
+    @media (max-width: 760px) { .photo-detail { bottom: 14px; } }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "../vendor/three/three.module.js",
+        "three/addons/": "../vendor/three/addons/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <canvas id="lab-canvas"></canvas>
+  <div class="photo-detail" id="photo-detail" aria-hidden="true">
+    <div class="photo-detail-kicker">A MOMENT WE KEEP</div>
+    <h3 data-detail-caption></h3>
+    <p data-detail-date></p>
+    <button type="button" id="photo-detail-close">回到照片轨道</button>
+  </div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

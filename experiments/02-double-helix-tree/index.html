@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>F2 · 02 双螺旋爱情圣诞树</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../shared/lab.css" />
+  <style>
+    body { background: radial-gradient(ellipse at 48% 46%, #0b211a 0%, #07131a 42%, #03070d 100%); }
+    #lab-canvas { position: fixed; inset: 0; }
+    .tree-badge { position: fixed; left: 50%; top: 26px; transform: translateX(-50%); z-index: 9; color: rgba(255,213,138,.5); font-size: 8px; letter-spacing: .32em; pointer-events: none; }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "../vendor/three/three.module.js",
+        "three/addons/": "../vendor/three/addons/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <canvas id="lab-canvas"></canvas>
+  <div class="tree-badge">LOVE IN CHRISTMAS · 9 LAYERS / 2 HELICES / 360 LIGHTS</div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

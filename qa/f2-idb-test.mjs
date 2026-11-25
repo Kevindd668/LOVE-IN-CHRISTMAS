@@ -1,0 +1,12 @@
+﻿import { chromium } from 'playwright-core';
+import path from 'node:path';
+const browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:false,args:['--window-position=20,20','--window-size=1480,960']});
+const context=await browser.newContext({viewport:{width:1440,height:900}}); const page=await context.newPage(); const errors=[];
+page.on('console',m=>{if(m.type()==='error')errors.push(m.text());}); page.on('pageerror',e=>errors.push(e.message));
+await page.goto('http://127.0.0.1:8787/04-photo-memory/',{waitUntil:'networkidle'}); await page.waitForFunction(()=>window.__LAB__?.records?.length===12);
+await page.locator('#photo-upload-input').setInputFiles(path.resolve('qa/placeholders/2.jpg')); await page.waitForFunction(()=>window.__LAB__.records.length===13); await page.waitForTimeout(600);
+await page.evaluate(()=>window.__LAB__.ui.setOpen(true)); await page.locator('#photo-db-save').click(); await page.waitForTimeout(1200);
+const saveStatus=await page.locator('.lab-status').innerText().catch(()=>null);
+await page.reload({waitUntil:'networkidle'}); await page.waitForFunction(()=>window.__LAB__?.records?.length===12); await page.evaluate(()=>window.__LAB__.ui.setOpen(true)); await page.locator('#photo-db-load').click(); await page.waitForTimeout(1600);
+const loaded=await page.evaluate(()=>({n:__LAB__.records.length, status:document.querySelector('.lab-status')?.innerText, errors:[]}));
+console.log(JSON.stringify({saveStatus,loaded,errors},null,2)); await browser.close();

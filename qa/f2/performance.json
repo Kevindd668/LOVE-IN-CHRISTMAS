@@ -1,0 +1,137 @@
+{
+  "generatedAt": "2026-11-25T08:52:28.644Z",
+  "browser": "158.0.4370.33",
+  "labs": [
+    {
+      "id": "01-heart-particles",
+      "metrics": {
+        "fps": 240,
+        "fpsP50": 238,
+        "frameMsP95": 4.3,
+        "drawCalls": 17,
+        "triangles": 16,
+        "points": 11400,
+        "textures": 14,
+        "geometries": 4,
+        "heapBytes": 10489103,
+        "canvas": [
+          1440,
+          900
+        ],
+        "lab": {
+          "fps": 240,
+          "calls": 17,
+          "count": 10000,
+          "mode": "heart"
+        }
+      },
+      "errors": []
+    },
+    {
+      "id": "02-double-helix-tree",
+      "metrics": {
+        "fps": 240,
+        "fpsP50": 238,
+        "frameMsP95": 4.3,
+        "drawCalls": 70,
+        "triangles": 356508,
+        "points": 2760,
+        "textures": 18,
+        "geometries": 55,
+        "heapBytes": 14881580,
+        "canvas": [
+          1440,
+          900
+        ],
+        "lab": {
+          "fps": 240,
+          "calls": 70,
+          "mode": "lights",
+          "layers": 9,
+          "bulbs": 360,
+          "hearts": 48
+        }
+      },
+      "errors": []
+    },
+    {
+      "id": "03-galaxy-nebula",
+      "metrics": {
+        "fps": 240,
+        "fpsP50": 238,
+        "frameMsP95": 4.3,
+        "drawCalls": 36,
+        "triangles": 11540,
+        "points": 23860,
+        "textures": 13,
+        "geometries": 23,
+        "heapBytes": 10436339,
+        "canvas": [
+          1440,
+          900
+        ],
+        "lab": {
+          "fps": 240,
+          "calls": 36,
+          "stars": 12000,
+          "farStars": 6000,
+          "waterfall": 5000,
+          "view": "meteor"
+        }
+      },
+      "errors": []
+    },
+    {
+      "id": "04-photo-memory",
+      "metrics": {
+        "fps": 240,
+        "fpsP50": 238,
+        "frameMsP95": 4.3,
+        "drawCalls": 116,
+        "triangles": 5180,
+        "points": 1200,
+        "textures": 87,
+        "geometries": 103,
+        "heapBytes": 12821835,
+        "canvas": [
+          1440,
+          900
+        ],
+        "lab": {
+          "fps": 240,
+          "calls": 116,
+          "photos": 24,
+          "focused": null
+        }
+      },
+      "errors": []
+    },
+    {
+      "id": "05-cinematic-effects",
+      "metrics": {
+        "fps": 240,
+        "fpsP50": 238,
+        "frameMsP95": 4.3,
+        "drawCalls": 17,
+        "triangles": 16,
+        "points": 10600,
+        "textures": 14,
+        "geometries": 4,
+        "heapBytes": 8148497,
+        "canvas": [
+          1440,
+          900
+        ],
+        "lab": {
+          "fps": 240,
+          "calls": 17,
+          "count": 8000,
+          "mode": "free",
+          "label": ""
+        }
+      },
+      "errors": []
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>F2 · 05 电影级镜头与粒子文字</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../shared/lab.css" />
+  <style>
+    body { background: radial-gradient(ellipse at 50% 50%, #171225 0%, #0a0914 46%, #030409 100%); }
+    #lab-canvas { position: fixed; inset: 0; }
+    .lab-copy { max-width: 520px; }
+    .lab-copy h1 { color: #fff3e4; }
+    .sequence-readout {
+      position: fixed; left: 50%; top: 84px; transform: translateX(-50%);
+      z-index: 8; color: rgba(255,213,138,.6); font-size: 8px; letter-spacing: .28em;
+      pointer-events: none; transition: opacity .4s ease;
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "../vendor/three/three.module.js",
+        "three/addons/": "../vendor/three/addons/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <canvas id="lab-canvas"></canvas>
+  <div class="sequence-readout" id="sequence-readout">A CHRISTMAS WISH · CINEMATIC LAB / 05</div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
