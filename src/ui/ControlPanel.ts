@@ -17,7 +17,7 @@ interface ControlPanelOptions {
   onNotify: (message: string) => void;
 }
 
-const INTEGER_KEYS = new Set<SettingsKey>(['density', 'layers', 'lightCount', 'heartCount', 'snowCount']);
+const INTEGER_KEYS = new Set<SettingsKey>(['density', 'layers', 'lightCount', 'heartCount', 'giantHeartCount', 'snowCount']);
 const ONE_DECIMAL_KEYS = new Set<SettingsKey>(['treeHeight']);
 const TWO_DECIMAL_KEYS = new Set<SettingsKey>([
   'crownRadius',

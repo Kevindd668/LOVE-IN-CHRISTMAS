@@ -18,6 +18,7 @@ const NUMBER_KEYS: SettingsKey[] = [
   'heartCount',
   'heartSize',
   'heartSpeed',
+  'giantHeartCount',
   'photoRadius',
   'photoSpeed',
   'cardScale',
@@ -100,6 +101,7 @@ export class SettingsManager {
       // fixed so persisted F2 settings cannot silently downgrade the artwork.
       lightCount: 360,
       heartCount: Math.min(1500, Math.max(120, Math.round(settings.heartCount))),
+      giantHeartCount: Math.min(20000, Math.max(2000, Math.round(settings.giantHeartCount))),
       snowCount: Math.min(3200, Math.max(200, Math.round(settings.snowCount))),
       musicVolume: Math.min(1, Math.max(0, settings.musicVolume))
     };

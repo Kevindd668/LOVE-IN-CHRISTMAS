@@ -17,7 +17,9 @@ import { ChristmasTree } from './objects/ChristmasTree';
 import { GiftBoxes } from './objects/GiftBoxes';
 import { RomanticText } from './objects/RomanticText';
 import { AuroraEffect } from './effects/AuroraEffect';
+import { GalaxyEnvironment } from './effects/GalaxyEnvironment';
 import { HeartParticles } from './particles/HeartParticles';
+import { HeartParticleSystem } from './particles/HeartParticleSystem';
 import { MagicParticles } from './particles/MagicParticles';
 import { SnowParticles } from './particles/SnowParticles';
 import { StarParticles } from './particles/StarParticles';
@@ -43,6 +45,8 @@ class ChristmasWishApp {
   private gifts!: GiftBoxes;
   private photos!: PhotoManager;
   private hearts!: HeartParticles;
+  private giantHeart!: HeartParticleSystem;
+  private galaxy!: GalaxyEnvironment;
   private snow!: SnowParticles;
   private stars!: StarParticles;
   private aurora!: AuroraEffect;
@@ -58,6 +62,7 @@ class ChristmasWishApp {
   private width = Math.max(1, window.innerWidth);
   private height = Math.max(1, window.innerHeight);
   private lastFps = 60;
+  private elapsed = 0;
   private lastStatsAt = 0;
   private treeRefreshTimer = 0;
   private textRefreshTimer = 0;
@@ -202,8 +207,29 @@ class ChristmasWishApp {
     this.stars = new StarParticles(quality.starCount);
     this.aurora = new AuroraEffect();
     this.magic = new MagicParticles();
+    this.galaxy = new GalaxyEnvironment({
+      count: 12000,
+      farCount: 6000,
+      waterfallCount: 5000,
+      quality: settings.quality
+    });
+    this.giantHeart = new HeartParticleSystem({
+      count: settings.giantHeartCount,
+      size: 0.05,
+      heartColor: settings.giantHeartColor,
+      starColor: '#FFD58A',
+      gatherTime: 2.5,
+      burstTime: 1.8,
+      beatPeriod: 2.5,
+      autoCycle: false
+    });
+    // The giant heart sits behind the tree as a halo, so it never blocks the
+    // core tree, gifts, photos or 520/1314 labels.
+    this.giantHeart.setPosition(3.8, 7.6, -9.5);
+    this.giantHeart.setScale(1.4);
 
     const scene = this.sceneManager.scene;
+    scene.add(this.galaxy.group);
     scene.add(
       this.tree.group,
       this.numbers.group,
@@ -213,7 +239,8 @@ class ChristmasWishApp {
       this.snow.points,
       this.stars.group,
       this.aurora.group,
-      this.magic.group
+      this.magic.group,
+      this.giantHeart.group
     );
 
     const giftShadows: THREE.Object3D[] = [];
@@ -235,6 +262,16 @@ class ChristmasWishApp {
     this.stars.setOpacity(settings.starsOn ? 1 : 0);
     this.aurora.setEnabled(settings.auroraOn);
     this.aurora.setOpacity(settings.auroraOn ? 0.65 : 0);
+    this.galaxy.setStarsEnabled(settings.starsOn);
+    this.galaxy.setAuroraEnabled(settings.auroraOn);
+    this.galaxy.setMeteorsEnabled(settings.meteorsOn);
+    this.galaxy.setWaterfallEnabled(settings.waterfallOn);
+    this.galaxy.setOrbitsEnabled(settings.orbitsOn);
+    this.galaxy.setQuality(settings.quality);
+    this.giantHeart.setCount(settings.giantHeartCount);
+    this.giantHeart.setColors(settings.giantHeartColor, '#FFD58A');
+    this.giantHeart.setVisible(settings.giantHeartOn);
+    this.giantHeart.setPaused(settings.giantHeartPaused);
   }
 
   private applyInitialSettings(): void {
@@ -408,6 +445,16 @@ class ChristmasWishApp {
     document.querySelector<HTMLButtonElement>('#btn-reset-view')?.addEventListener('click', () => {
       this.cameraManager.resetView();
       this.ui.toast('镜头已经回到最初看圣诞树的位置');
+      this.ui.registerInteraction();
+    });
+    document.querySelector<HTMLButtonElement>('#btn-giant-heart-gather')?.addEventListener('click', () => {
+      this.giantHeart.gather(this.elapsed);
+      this.ui.toast('一万颗粒子正在向爱心聚合');
+      this.ui.registerInteraction();
+    });
+    document.querySelector<HTMLButtonElement>('#btn-giant-heart-burst')?.addEventListener('click', () => {
+      this.giantHeart.burst(this.elapsed);
+      this.ui.toast('让这束光先替我们心动一次');
       this.ui.registerInteraction();
     });
 
@@ -740,8 +787,21 @@ class ChristmasWishApp {
     if (changed.has('starsOn')) {
       this.stars.setEnabled(settings.starsOn);
       this.stars.setOpacity(settings.starsOn ? 1 : 0);
+      this.galaxy.setStarsEnabled(settings.starsOn);
     }
-    if (changed.has('auroraOn')) this.aurora.setEnabled(settings.auroraOn);
+    if (changed.has('auroraOn')) {
+      this.aurora.setEnabled(settings.auroraOn);
+      this.galaxy.setAuroraEnabled(settings.auroraOn);
+    }
+    if (changed.has('meteorsOn')) this.galaxy.setMeteorsEnabled(settings.meteorsOn);
+    if (changed.has('waterfallOn')) this.galaxy.setWaterfallEnabled(settings.waterfallOn);
+    if (changed.has('orbitsOn')) this.galaxy.setOrbitsEnabled(settings.orbitsOn);
+    if (changed.has('giantHeartOn')) this.giantHeart.setVisible(settings.giantHeartOn);
+    if (changed.has('giantHeartPaused')) this.giantHeart.setPaused(settings.giantHeartPaused);
+    if (changed.has('giantHeartCount')) this.giantHeart.setCount(settings.giantHeartCount);
+    if (changed.has('giantHeartColor')) {
+      this.giantHeart.setColors(settings.giantHeartColor, '#FFD58A');
+    }
     if (changed.has('backgroundColor')) this.sceneManager.setBackground(settings.backgroundColor);
     if (changed.has('ambientBrightness')) this.sceneManager.setAmbient(settings.ambientBrightness);
 
@@ -755,6 +815,14 @@ class ChristmasWishApp {
       this.renderer.setQuality(settings.quality);
       this.sceneManager.setQuality(QUALITY_PRESETS[settings.quality]);
       this.stars.setCount(QUALITY_PRESETS[settings.quality].starCount);
+      this.galaxy.setQuality(settings.quality);
+      const giantCount =
+        settings.quality === 'performance'
+          ? Math.min(6000, settings.giantHeartCount)
+          : settings.quality === 'balanced'
+            ? Math.min(8000, settings.giantHeartCount)
+            : settings.giantHeartCount;
+      this.giantHeart.setCount(giantCount);
     }
 
     if (changed.has('musicTrack')) {
@@ -858,6 +926,7 @@ class ChristmasWishApp {
       lightCount: preset.lightCount,
       heartCount: preset.heartCount
     });
+    this.galaxy?.setQuality(quality);
     this.controlPanel.refresh();
     this.ui.toast(`已切换至 ${preset.label} 画质 · 让每一帧都恰到好处`);
   }
@@ -871,6 +940,7 @@ class ChristmasWishApp {
 
   private tick(delta: number, elapsed: number): void {
     if (!this.pageReady) return;
+    this.elapsed = elapsed;
     this.cameraManager.update(delta);
 
     if (this.demo.isActive) {
@@ -892,6 +962,8 @@ class ChristmasWishApp {
     this.snow.update(delta, elapsed);
     this.stars.update(delta, elapsed);
     this.aurora.update(delta, elapsed);
+    this.galaxy.update(delta, elapsed);
+    this.giantHeart.update(delta, elapsed);
     this.gifts.update(delta, elapsed, this.cameraManager.camera);
     this.magic.update(delta, elapsed);
 
@@ -956,6 +1028,10 @@ class ChristmasWishApp {
       getSettings: () => this.settings.current,
       setQuality: (quality: QualityLevel) => this.setQuality(quality),
       toggleStarBlessing: () => this.startStarBlessing(),
+      giantHeart: this.giantHeart,
+      galaxy: this.galaxy,
+      gatherGiantHeart: () => this.giantHeart.gather(this.elapsed),
+      burstGiantHeart: () => this.giantHeart.burst(this.elapsed),
       photos: () => this.photos.views
     };
     document.body.dataset.ready = 'true';
@@ -983,6 +1059,8 @@ class ChristmasWishApp {
     this.gifts?.dispose();
     this.photos?.dispose();
     this.hearts?.dispose();
+    this.giantHeart?.dispose();
+    this.galaxy?.dispose();
     this.snow?.dispose();
     this.stars?.dispose();
     this.aurora?.dispose();

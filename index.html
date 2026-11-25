@@ -329,12 +329,12 @@
                   <input type="range" data-setting="snowSpeed" min="0.2" max="2.5" step="0.05" value="1" />
                 </label>
                 <label class="switch-row">
-                  <span><strong>星空</strong><small>1200 颗远处的祝福</small></span>
+                  <span><strong>星空</strong><small>F2 星河 · 18000 颗星点</small></span>
                   <input type="checkbox" data-setting="starsOn" checked />
                   <span class="switch-track" aria-hidden="true"></span>
                 </label>
                 <label class="switch-row">
-                  <span><strong>极光</strong><small>很远、很轻的蓝绿色</small></span>
+                  <span><strong>极光</strong><small>F2 四层极光与蓝绿帘幕</small></span>
                   <input type="checkbox" data-setting="auroraOn" checked />
                   <span class="switch-track" aria-hidden="true"></span>
                 </label>
@@ -419,6 +419,57 @@
                   <span class="panel-primary-star" aria-hidden="true">✦</span>
                   <span><strong>只属于我们的圣诞节</strong><small>一键进入浪漫时刻</small></span>
                 </button>
+              </div>
+            </details>
+
+            <details class="control-section">
+              <summary>
+                <span class="section-number">07</span>
+                <span class="section-title">F2 星河与巨型爱心</span>
+                <span class="section-hint">实验 01 / 03 正式集成</span>
+                <span class="section-chevron" aria-hidden="true"></span>
+              </summary>
+              <div class="section-body">
+                <label class="switch-row">
+                  <span><strong>巨型 3D 爱心</strong><small>10000 颗粒子的聚合与呼吸</small></span>
+                  <input type="checkbox" data-setting="giantHeartOn" checked />
+                  <span class="switch-track" aria-hidden="true"></span>
+                </label>
+                <label class="switch-row">
+                  <span><strong>暂停巨型爱心</strong><small>停住这一秒的心动</small></span>
+                  <input type="checkbox" data-setting="giantHeartPaused" />
+                  <span class="switch-track" aria-hidden="true"></span>
+                </label>
+                <label class="field">
+                  <span class="field-head"><span>爱心粒子数量</span><output data-for="giantHeartCount">10000</output></span>
+                  <input type="range" data-setting="giantHeartCount" min="2000" max="16000" step="500" value="10000" />
+                </label>
+                <label class="color-field">
+                  <span class="field-head"><span>巨型爱心主色</span></span>
+                  <span class="color-control">
+                    <input type="color" data-setting="giantHeartColor" value="#FF75A9" aria-label="巨型爱心主色" />
+                    <span data-color-for="giantHeartColor">#FF75A9</span>
+                  </span>
+                </label>
+                <div class="field-row" style="gap:8px; margin-top:13px;">
+                  <button id="btn-giant-heart-gather" class="panel-primary" type="button" style="flex:1; min-height:38px; margin-top:0; padding:0 10px;"><strong>爱心聚合</strong></button>
+                  <button id="btn-giant-heart-burst" class="panel-primary" type="button" style="flex:1; min-height:38px; margin-top:0; padding:0 10px;"><strong>爱心爆散</strong></button>
+                </div>
+                <label class="switch-row">
+                  <span><strong>F2 流星</strong><small>远景中偶尔划过的光</small></span>
+                  <input type="checkbox" data-setting="meteorsOn" checked />
+                  <span class="switch-track" aria-hidden="true"></span>
+                </label>
+                <label class="switch-row">
+                  <span><strong>金色光瀑</strong><small>围绕树体流动的金色粒子</small></span>
+                  <input type="checkbox" data-setting="waterfallOn" checked />
+                  <span class="switch-track" aria-hidden="true"></span>
+                </label>
+                <label class="switch-row">
+                  <span><strong>三层发光轨道</strong><small>三组独立速度的星轨</small></span>
+                  <input type="checkbox" data-setting="orbitsOn" checked />
+                  <span class="switch-track" aria-hidden="true"></span>
+                </label>
               </div>
             </details>
           </div>

@@ -1,0 +1,567 @@
+{
+  "generatedAt": "2026-11-25T11:13:34.686Z",
+  "browser": "158.0.4370.33",
+  "cases": [
+    {
+      "name": "full-1440x900",
+      "options": {
+        "name": "full-1440x900",
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "partial": false,
+        "performance": false,
+        "query": ""
+      },
+      "metrics": {
+        "frames": 715,
+        "measuredSeconds": 3.004,
+        "fpsMean": 238.01597869507324,
+        "fpsMedian": 238.09523809524842,
+        "appFps": 239,
+        "frameMsMean": 4.201398601398601,
+        "frameMsP50": 4.199999999999818,
+        "frameMsP95": 4.300000000000182,
+        "frameMsP99": 4.399999999999636,
+        "frameMsMax": 16.699999999999818,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0,
+        "drawCalls": 314,
+        "triangles": 468252,
+        "points": 38362,
+        "textures": 33,
+        "geometries": 215,
+        "programs": 45,
+        "pixelRatio": 1.0000000298023224,
+        "canvas": [
+          1440,
+          900
+        ],
+        "viewport": [
+          1440,
+          900
+        ],
+        "dpr": 1.0000000298023224,
+        "heapBytes": 28319261,
+        "heapTotalBytes": 55864541,
+        "contextLost": 0,
+        "directRendering": true,
+        "pipeline": false,
+        "mode": "compatible",
+        "quality": "ultra",
+        "particles": {
+          "giantHeart": 10000,
+          "giantHeartMode": "heart",
+          "galaxy": {
+            "stars": 12000,
+            "farStars": 6000,
+            "waterfall": 5000,
+            "nebulaLayers": 3,
+            "auroraLayers": 4,
+            "meteors": 5,
+            "orbits": 3,
+            "quality": "ultra"
+          }
+        },
+        "gpu": {
+          "vendor": "Google Inc. (NVIDIA)",
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Ti Laptop GPU (0x000024A0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "full-bloom-1440x900",
+      "options": {
+        "name": "full-bloom-1440x900",
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "partial": false,
+        "performance": false,
+        "query": "?full=1"
+      },
+      "metrics": {
+        "frames": 708,
+        "measuredSeconds": 3.004,
+        "fpsMean": 235.6857523302264,
+        "fpsMedian": 238.09523809529998,
+        "appFps": 222,
+        "frameMsMean": 4.242937853107344,
+        "frameMsP50": 4.199999999998909,
+        "frameMsP95": 4.300000000001091,
+        "frameMsP99": 8.299999999999272,
+        "frameMsMax": 8.399999999999636,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0,
+        "drawCalls": 329,
+        "triangles": 468266,
+        "points": 38362,
+        "textures": 46,
+        "geometries": 217,
+        "programs": 53,
+        "pixelRatio": 1.0000000298023224,
+        "canvas": [
+          1440,
+          900
+        ],
+        "viewport": [
+          1440,
+          900
+        ],
+        "dpr": 1.0000000298023224,
+        "heapBytes": 36672781,
+        "heapTotalBytes": 57175409,
+        "contextLost": 0,
+        "directRendering": false,
+        "pipeline": true,
+        "mode": "full",
+        "quality": "ultra",
+        "particles": {
+          "giantHeart": 10000,
+          "giantHeartMode": "heart",
+          "galaxy": {
+            "stars": 12000,
+            "farStars": 6000,
+            "waterfall": 5000,
+            "nebulaLayers": 3,
+            "auroraLayers": 4,
+            "meteors": 5,
+            "orbits": 3,
+            "quality": "ultra"
+          }
+        },
+        "gpu": {
+          "vendor": "Google Inc. (NVIDIA)",
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Ti Laptop GPU (0x000024A0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "full-bloom-1920x1080",
+      "options": {
+        "name": "full-bloom-1920x1080",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1,
+        "partial": false,
+        "performance": false,
+        "query": "?full=1"
+      },
+      "metrics": {
+        "frames": 719,
+        "measuredSeconds": 3,
+        "fpsMean": 239.66666666666669,
+        "fpsMedian": 238.09523809524842,
+        "appFps": 240,
+        "frameMsMean": 4.172461752433936,
+        "frameMsP50": 4.199999999999818,
+        "frameMsP95": 4.300000000000182,
+        "frameMsP99": 4.399999999999636,
+        "frameMsMax": 8.300000000000182,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0,
+        "drawCalls": 329,
+        "triangles": 468266,
+        "points": 38362,
+        "textures": 46,
+        "geometries": 217,
+        "programs": 53,
+        "pixelRatio": 1.0000000298023224,
+        "canvas": [
+          1920,
+          1080
+        ],
+        "viewport": [
+          1920,
+          1080
+        ],
+        "dpr": 1.0000000298023224,
+        "heapBytes": 31583527,
+        "heapTotalBytes": 57697879,
+        "contextLost": 0,
+        "directRendering": false,
+        "pipeline": true,
+        "mode": "full",
+        "quality": "ultra",
+        "particles": {
+          "giantHeart": 10000,
+          "giantHeartMode": "heart",
+          "galaxy": {
+            "stars": 12000,
+            "farStars": 6000,
+            "waterfall": 5000,
+            "nebulaLayers": 3,
+            "auroraLayers": 4,
+            "meteors": 5,
+            "orbits": 3,
+            "quality": "ultra"
+          }
+        },
+        "gpu": {
+          "vendor": "Google Inc. (NVIDIA)",
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Ti Laptop GPU (0x000024A0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "full-bloom-3840x2160",
+      "options": {
+        "name": "full-bloom-3840x2160",
+        "width": 3840,
+        "height": 2160,
+        "dpr": 1,
+        "partial": false,
+        "performance": false,
+        "query": "?full=1"
+      },
+      "metrics": {
+        "frames": 422,
+        "measuredSeconds": 3.0040999999999993,
+        "fpsMean": 140.47468459771648,
+        "fpsMedian": 120.48192771084074,
+        "appFps": 142,
+        "frameMsMean": 7.118720379146918,
+        "frameMsP50": 8.300000000000182,
+        "frameMsP95": 8.5,
+        "frameMsP99": 8.5,
+        "frameMsMax": 12.5,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0,
+        "drawCalls": 329,
+        "triangles": 468266,
+        "points": 38362,
+        "textures": 46,
+        "geometries": 217,
+        "programs": 53,
+        "pixelRatio": 1.0000000298023224,
+        "canvas": [
+          3840,
+          2160
+        ],
+        "viewport": [
+          3840,
+          2160
+        ],
+        "dpr": 1.0000000298023224,
+        "heapBytes": 32734672,
+        "heapTotalBytes": 54552172,
+        "contextLost": 0,
+        "directRendering": false,
+        "pipeline": true,
+        "mode": "full",
+        "quality": "ultra",
+        "particles": {
+          "giantHeart": 10000,
+          "giantHeartMode": "heart",
+          "galaxy": {
+            "stars": 12000,
+            "farStars": 6000,
+            "waterfall": 5000,
+            "nebulaLayers": 3,
+            "auroraLayers": 4,
+            "meteors": 5,
+            "orbits": 3,
+            "quality": "ultra"
+          }
+        },
+        "gpu": {
+          "vendor": "Google Inc. (NVIDIA)",
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Ti Laptop GPU (0x000024A0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "full-1920x1080",
+      "options": {
+        "name": "full-1920x1080",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1,
+        "partial": false,
+        "performance": false,
+        "query": ""
+      },
+      "metrics": {
+        "frames": 720,
+        "measuredSeconds": 3.0040999999999993,
+        "fpsMean": 239.67244765487175,
+        "fpsMedian": 238.09523809524842,
+        "appFps": 239,
+        "frameMsMean": 4.17236111111111,
+        "frameMsP50": 4.199999999999818,
+        "frameMsP95": 4.300000000000182,
+        "frameMsP99": 4.300000000001091,
+        "frameMsMax": 8.300000000000182,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0,
+        "drawCalls": 315,
+        "triangles": 468252,
+        "points": 38362,
+        "textures": 33,
+        "geometries": 216,
+        "programs": 46,
+        "pixelRatio": 1.0000000298023224,
+        "canvas": [
+          1920,
+          1080
+        ],
+        "viewport": [
+          1920,
+          1080
+        ],
+        "dpr": 1.0000000298023224,
+        "heapBytes": 33345792,
+        "heapTotalBytes": 53241372,
+        "contextLost": 0,
+        "directRendering": true,
+        "pipeline": false,
+        "mode": "compatible",
+        "quality": "ultra",
+        "particles": {
+          "giantHeart": 10000,
+          "giantHeartMode": "heart",
+          "galaxy": {
+            "stars": 12000,
+            "farStars": 6000,
+            "waterfall": 5000,
+            "nebulaLayers": 3,
+            "auroraLayers": 4,
+            "meteors": 5,
+            "orbits": 3,
+            "quality": "ultra"
+          }
+        },
+        "gpu": {
+          "vendor": "Google Inc. (NVIDIA)",
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Ti Laptop GPU (0x000024A0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "full-3840x2160",
+      "options": {
+        "name": "full-3840x2160",
+        "width": 3840,
+        "height": 2160,
+        "dpr": 1,
+        "partial": false,
+        "performance": false,
+        "query": ""
+      },
+      "metrics": {
+        "frames": 593,
+        "measuredSeconds": 3.0041,
+        "fpsMean": 197.39689091574846,
+        "fpsMedian": 238.09523809524842,
+        "appFps": 199,
+        "frameMsMean": 5.06593591905565,
+        "frameMsP50": 4.199999999999818,
+        "frameMsP95": 8.400000000000546,
+        "frameMsP99": 8.5,
+        "frameMsMax": 8.600000000000364,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0,
+        "drawCalls": 315,
+        "triangles": 468252,
+        "points": 38362,
+        "textures": 33,
+        "geometries": 216,
+        "programs": 46,
+        "pixelRatio": 1.0000000298023224,
+        "canvas": [
+          3840,
+          2160
+        ],
+        "viewport": [
+          3840,
+          2160
+        ],
+        "dpr": 1.0000000298023224,
+        "heapBytes": 30492602,
+        "heapTotalBytes": 56124958,
+        "contextLost": 0,
+        "directRendering": true,
+        "pipeline": false,
+        "mode": "compatible",
+        "quality": "ultra",
+        "particles": {
+          "giantHeart": 10000,
+          "giantHeartMode": "heart",
+          "galaxy": {
+            "stars": 12000,
+            "farStars": 6000,
+            "waterfall": 5000,
+            "nebulaLayers": 3,
+            "auroraLayers": 4,
+            "meteors": 5,
+            "orbits": 3,
+            "quality": "ultra"
+          }
+        },
+        "gpu": {
+          "vendor": "Google Inc. (NVIDIA)",
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Ti Laptop GPU (0x000024A0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "partial-1440x900",
+      "options": {
+        "name": "partial-1440x900",
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "partial": true,
+        "performance": false,
+        "query": ""
+      },
+      "metrics": {
+        "frames": 711,
+        "measuredSeconds": 3,
+        "fpsMean": 237,
+        "fpsMedian": 238.09523809524842,
+        "appFps": 240,
+        "frameMsMean": 4.219409282700422,
+        "frameMsP50": 4.199999999999818,
+        "frameMsP95": 4.300000000000182,
+        "frameMsP99": 8.299999999999272,
+        "frameMsMax": 8.400000000000546,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0,
+        "drawCalls": 293,
+        "triangles": 460438,
+        "points": 14822,
+        "textures": 33,
+        "geometries": 216,
+        "programs": 46,
+        "pixelRatio": 1.0000000298023224,
+        "canvas": [
+          1440,
+          900
+        ],
+        "viewport": [
+          1440,
+          900
+        ],
+        "dpr": 1.0000000298023224,
+        "heapBytes": 24780996,
+        "heapTotalBytes": 58223820,
+        "contextLost": 0,
+        "directRendering": true,
+        "pipeline": false,
+        "mode": "compatible",
+        "quality": "ultra",
+        "particles": {
+          "giantHeart": 10000,
+          "giantHeartMode": "heart",
+          "galaxy": {
+            "stars": 12000,
+            "farStars": 6000,
+            "waterfall": 5000,
+            "nebulaLayers": 3,
+            "auroraLayers": 4,
+            "meteors": 5,
+            "orbits": 3,
+            "quality": "ultra"
+          }
+        },
+        "gpu": {
+          "vendor": "Google Inc. (NVIDIA)",
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Ti Laptop GPU (0x000024A0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "performance-1440x900",
+      "options": {
+        "name": "performance-1440x900",
+        "width": 1440,
+        "height": 900,
+        "dpr": 1,
+        "partial": false,
+        "performance": true,
+        "query": ""
+      },
+      "metrics": {
+        "frames": 716,
+        "measuredSeconds": 3.004,
+        "fpsMean": 238.34886817576566,
+        "fpsMedian": 238.09523809524842,
+        "appFps": 240,
+        "frameMsMean": 4.195530726256983,
+        "frameMsP50": 4.199999999999818,
+        "frameMsP95": 4.300000000000182,
+        "frameMsP99": 4.399999999999636,
+        "frameMsMax": 8.5,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0,
+        "drawCalls": 307,
+        "triangles": 460438,
+        "points": 16472,
+        "textures": 33,
+        "geometries": 216,
+        "programs": 46,
+        "pixelRatio": 0.8200000244379043,
+        "canvas": [
+          1180,
+          738
+        ],
+        "viewport": [
+          1440,
+          900
+        ],
+        "dpr": 1.0000000298023224,
+        "heapBytes": 24902782,
+        "heapTotalBytes": 55600686,
+        "contextLost": 0,
+        "directRendering": true,
+        "pipeline": false,
+        "mode": "compatible",
+        "quality": "performance",
+        "particles": {
+          "giantHeart": 6000,
+          "giantHeartMode": "heart",
+          "galaxy": {
+            "stars": 3600,
+            "farStars": 1800,
+            "waterfall": 1750,
+            "nebulaLayers": 0,
+            "auroraLayers": 0,
+            "meteors": 5,
+            "orbits": 3,
+            "quality": "performance"
+          }
+        },
+        "gpu": {
+          "vendor": "Google Inc. (NVIDIA)",
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3070 Ti Laptop GPU (0x000024A0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+        }
+      },
+      "errors": []
+    }
+  ],
+  "errors": []
+}

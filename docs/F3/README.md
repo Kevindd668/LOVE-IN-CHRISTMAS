@@ -85,14 +85,22 @@ npm run build:single
 
 ## 已知限制
 
-- 4K 等效分辨率下 95 分位帧时间约 25ms，平均约 80.6 FPS；4K 是记录项，默认主目标是 1440×900/1920×1080 的 60 FPS 以上。
+- F3 树体阶段的 4K 等效记录为 95 分位约 25ms、平均约 80.6 FPS；F2 集成后的 3840×2160 记录见 `F2_PERFORMANCE_REPORT.md`（兼容 197.4 FPS / Bloom 140.5 FPS）。
 - 水晶爱心为低多边形切面 + 半透明清漆材质，不使用真实折射/透射 pass。
 - 游戏/移动端 GPU 未测。
 - F3 不改变 F2 五个独立实验；F2 仍可单独运行。
 
-## 复用文档（计划阶段，未整合代码）
+## F2 视觉成果集成（F3 扩展）
+
+- [F2 正式场景集成报告](F2_INTEGRATION_REPORT.md)
+- [F2 源码复用对照](F2_SOURCE_COMPARISON.md)
+- [F2 集成性能报告](F2_PERFORMANCE_REPORT.md)
+- 截图：`docs/F3/f2-integration-screenshots/`
+- 数据：`qa/f2-integration/performance.json`
+- 状态：F3 集成实现、截图、回归和性能完成，等待验收；未进入 F4/F5。
+
+## 参考仓库复用文档
 
 - [五仓库逐模块直接复用清单](DIRECT_REUSE_INVENTORY.md)
 - [参考仓库复用整合计划](REUSE_INTEGRATION_PLAN.md)
-- 当前状态：清单/计划已完成；`f3-reuse` 分支已实现 **WP1**（Heart-Star 心形几何），A/B 与回归完成，尚未合并。
-- [WP1 复用报告](REUSE_WP1_REPORT.md)
+- [`f3-reuse` WP1 报告](REUSE_WP1_REPORT.md)（Heart-Star 48 爱心 + 水晶心轮廓，已接受并合入正式分支）

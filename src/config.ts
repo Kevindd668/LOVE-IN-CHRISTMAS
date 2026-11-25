@@ -37,6 +37,15 @@ export interface WishSettings {
   heartSpeed: number;
   heartMode: HeartMode;
 
+  // F2 giant heart / galaxy integration
+  giantHeartOn: boolean;
+  giantHeartPaused: boolean;
+  giantHeartCount: number;
+  giantHeartColor: string;
+  meteorsOn: boolean;
+  waterfallOn: boolean;
+  orbitsOn: boolean;
+
   // Photos
   photoRadius: number;
   photoSpeed: number;
@@ -98,6 +107,14 @@ export const DEFAULT_SETTINGS: WishSettings = {
   heartSize: 1,
   heartSpeed: 0.7,
   heartMode: 'orbit',
+
+  giantHeartOn: true,
+  giantHeartPaused: false,
+  giantHeartCount: 10000,
+  giantHeartColor: '#FF75A9',
+  meteorsOn: true,
+  waterfallOn: true,
+  orbitsOn: true,
 
   photoRadius: 1,
   photoSpeed: 0.58,
