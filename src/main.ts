@@ -27,6 +27,7 @@ import { StarParticles } from './particles/StarParticles';
 const TREE_PRESENTATION_SCALE = 1.24;
 const TREE_FRAME_HEADROOM = 1.2;
 const PHOTO_ORBIT_PRESENTATION_SCALE = 1.16;
+const GIFT_PRESENTATION_SCALE = 1.2;
 import { PhotoManager } from './photos/PhotoManager';
 import { ControlPanel } from './ui/ControlPanel';
 import { PhotoUploader } from './ui/PhotoUploader';
@@ -202,6 +203,7 @@ class ChristmasWishApp {
       settings.crownRadius
     );
     this.gifts = new GiftBoxes();
+    this.gifts.setPresentationScale(GIFT_PRESENTATION_SCALE);
     this.photos = new PhotoManager();
     this.hearts = new HeartParticles(
       settings.heartCount,

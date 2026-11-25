@@ -49,7 +49,7 @@ await page.waitForTimeout(350);
 // Star click
 const starPoint = await page.evaluate(() => {
   const a = window.__CHRISTMAS_WISH__.app;
-  const v = a.tree.star.root.position.clone();
+  const v = a.tree.star.root.getWorldPosition(a.tree.star.root.position.clone());
   v.project(a.cameraManager.camera);
   return { x: Math.round((v.x * 0.5 + 0.5) * innerWidth), y: Math.round((-v.y * 0.5 + 0.5) * innerHeight) };
 });

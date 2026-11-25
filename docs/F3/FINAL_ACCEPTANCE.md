@@ -1,160 +1,159 @@
 # F3 最终自检与验收清单
 
-> 状态：**F3 实现、真实截图、回归与性能记录完成，等待用户验收。**  
-> F4 / F5 未开始；F3 不提供“提前进入 F4”的接口或页面。
+> 状态：**F3 WP1–WP6 实现、真实截图、录屏、性能与回归完成，等待用户最终验收。**  
+> F4 / F5 未开始。  
+> 最终 standalone SHA-256：`06F00FDDD8640A97568548F3385949751C4DD76C6CC86BECDA326ADD64F9DE49`
 
 ## 1. 阶段门禁
 
 | 检查项 | 结果 | 证据 |
 | --- | --- | --- |
-| 只在 F3 工作 | 通过 | 没有 F4/F5 文件或功能 |
-| 修改前可恢复 | 通过 | 标注标签 `f3-pre-visual-reconstruction`（标签对象 `f3cf963`，目标 `4d33116`） |
-| 不修改 main | 通过 | main 仍为 `c9e3d02` |
+| 只在 F3 工作 | 通过 | 没有 F4/F5 功能文件 |
+| 不修改 main | 通过 | `main` 仍为 `c9e3d02` |
 | 不修改 v1.0.0-baseline | 通过 | 标签目标仍为 `c9e3d02` |
-| 不覆盖 F0/F1/F2 报告 | 通过 | 无 docs/F0、docs/F1、docs/F2 改动 |
+| 不覆盖 F0/F1/F2 报告 | 通过 | 只更新 `docs/F3/` |
 | F2 五个实验保留 | 通过 | `experiments/01…05` 未删改 |
-| 不引入生产依赖/GSAP | 通过 | package.json 未新增依赖 |
-| Three.js 版本 | 通过 | 仍为 0.160.0 |
+| 不引入生产依赖/GSAP | 通过 | `package.json` 未新增依赖 |
+| Three.js 版本 | 通过 | 0.160.0 |
 | 单一渲染循环 | 通过 | 仍由 `AnimationManager` 驱动 |
-| 不修改照片存储机制 | 通过 | PhotoManager/IndexedDB 未改 |
-| 礼物数量不变 | 通过 | 仍为 5 个 |
-| 45 秒演示不变 | 通过 | `CINEMA_DURATION=45`；仅第三幕文案 220→360 |
+| 礼物数量 | 通过 | 仍为 5 个 |
+| 45 秒演示 | 通过 | `CINEMA_DURATION=45` |
 
-## 2. 树体验收
+## 2. WP1–WP6 完成度
 
-### 参数
+| 工作包 | 内容 | 结果 |
+| --- | --- | --- |
+| WP0 | 视觉基线冻结 | 完成 |
+| WP1 | 五层星空、银河带、星云、极光、流星 | 完成 |
+| WP2 | 四条独立金色光瀑，5800 粒子 | 完成 |
+| WP3 | 三层照片轨道，初始 6 → 最大 24 | 完成 |
+| WP4 | 冬日地面、雪斑、冰晶、环形光、展示台 | 完成 |
+| WP5 | 树体 1.24 倍、相机/照片/爱心构图 | 完成 |
+| WP6 | 性能、回归、截图、录屏、最终文档 | 完成 |
 
-- 高度 9.5，最大半径 3.0，9 层，树干 1.0 / 0.22。
-- 主色 `#0B5D3B`，阴影 `#073D2A`，高光 `#27A66A`。
+## 3. 视觉验收
 
-### 双螺旋
+### 3.1 星空
 
-- 两条独立 TubeGeometry，9 圈，宽度 0.035，金 `#FFD58A` / 玫瑰 `#FF75A9`；
-- 交错上升、连续、带流光；
-- 开关、速度、相位均为真实控件；
-- 实拍见 `05-helix-close.png`。
+- 6000 远景恒星 + 8000 银河星尘；
+- 3 层星云、4 层极光、5 条流星；
+- 旧 StarParticles/AuroraEffect 只在 45 秒演示/浪漫模式可见；
+- 截图：`final-screenshots/02-starfield.png`、`03-nebula-aurora.png`。
 
-### 360 灯泡
+### 3.2 光瀑
 
-- 精确 162 / 90 / 54 / 54（45/25/15/15）；
-- 单一 Points Shader；不是 360 个真实光源；
-- 随机闪烁 + 高度波浪 + 分组呼吸；
-- 关闭、亮度、闪烁速度、灯光模式均真实生效；
-- 实拍见 `06-bulbs-close.png`。
+- 四条路径 1200 / 1800 / 2000 / 800，总计 5800；
+- 无圆柱光帘；
+- 截图：`final-screenshots/04-waterfall.png`；录屏：`wp2/waterfall-flow.webm`。
 
-### 48 爱心装饰
+### 3.3 照片
 
-- 48 颗真正 3D ExtrudeGeometry 爱心；
-- 玫瑰金 / 粉水晶 / 香槟玻璃 / 珍珠白各 12；
-- 4 个 InstancedMesh；轻微悬浮/自转；真实开关；
-- 实拍见 `07-heart-ornaments-close.png`。
+| 照片数 | 左 | 右 | 轨道 |
+| ---: | ---: | ---: | --- |
+| 6（初始） | 3 | 3 | 2/2/2 |
+| 8 | 4 | 4 | 2/2/4 |
+| 12 | 6 | 6 | 4/4/4 |
+| 24（最终） | 12 | 12 | 6/8/10 |
 
-### 水晶树顶
+- 上传、替换、删除、排序保留；
+- 选中放大、其他变暗保留；
+- 截图：`final-screenshots/05-photo-6.png`、`06-photo-24.png`。
 
-- 低多边形切面心形，目标 0.95 × 0.85 × 0.22；
-- `#FFB6D0`、透明、clearcoat、halo、sparkles、自转/浮动；
-- 仍可点击触发原 star blessing；
-- 实拍见 `04-crown-close.png`、`08-crystal-heart-close.png`。
+### 3.4 地面
 
-### 地面
+- 地面 `#263B4C` / 雪高光 `#A8BBC8`；
+- 不规则雪斑、冰晶、低空微光、香槟金环光；
+- 石台/雪盖/金圈/展示环、接触阴影、模拟反射；
+- 三档画质：冰晶 48/24/0，低空微光 180/90/0；
+- 截图：`final-screenshots/07-ground.png`、`docs/F3/wp4/`。
 
-- 树底石台/雪盖/金色内圈/展示环/金色外圈；
-- 接地阴影、环境光、地面光晕；
-- 金色环境反射来自 PMREM；
-- 地面“反射”是明确标注的 **simulated-ground-reflection**（CanvasTexture 平面），不是真实镜面/SSR；
-- 实拍见 `09-ground-base-close.png`。
+### 3.5 树体与构图
 
-## 3. 十项真实截图
+- 树体展示缩放 1.24；
+- 树顶水晶心完整，底部展示台可见；
+- 520/1314 同步缩放；
+- 巨型爱心位于右后方，不遮挡树顶；
+- 照片轨道半径 ×1.16；
+- 5 个礼物位置 ×1.2，raycast 通过；
+- 截图：`final-screenshots/01-overall.png`、`09-tree.png`、`08-heart.png`。
 
-全部位于 `docs/F3/screenshots/`，由 Edge 真实 WebGL 画布输出，1440×900。
+## 4. 性能
 
-| # | 要求 | 文件 | 状态 |
-| --- | --- | --- | --- |
-| 1 | 正面全景 | `01-front.png` | 有 |
-| 2 | 45° 全景 | `02-angle45.png` | 有 |
-| 3 | 侧面全景 | `03-side.png` | 有 |
-| 4 | 树冠近景 | `04-crown-close.png` | 有 |
-| 5 | 双螺旋近景 | `05-helix-close.png` | 有 |
-| 6 | 灯泡近景 | `06-bulbs-close.png` | 有 |
-| 7 | 爱心装饰近景 | `07-heart-ornaments-close.png` | 有 |
-| 8 | 水晶树顶近景 | `08-crystal-heart-close.png` | 有 |
-| 9 | 地面光影近景 | `09-ground-base-close.png` | 有 |
-| 10 | 纯树体（关闭额外叙事层） | `10-pure-tree.png` | 有 |
-| + | F0 并排对比 | `00-f0-vs-f3.png` | 有 |
-| + | 参数面板 | `11-controls.png`、`12-controls-lights-helix.png` | 有 |
+| Case | FPS | P95 |
+| --- | ---: | ---: |
+| 1440×900 默认 | 174.1 | 8.4 ms |
+| 1920×1080 默认 | 160.9 | 8.4 ms |
+| 3840×2160 默认 | 185.9 | 8.4 ms |
+| 1440×900 完整 Bloom | 135.1 | 8.5 ms |
+| 3840×2160 完整 Bloom | 111.6 | 12.5 ms |
+| 1440×900 Performance | 164.1 | 8.4 ms |
+| 1440×900 24 张照片 | 125.4 | 12.4 ms |
 
-F0 侧使用 F0 正式版 `qa/f0/screenshots/compatible-1440.png`（F0 commit `c9e3d02`）；F3 侧使用真实 F3 构建截图。对比图为 Python/Pillow 拼接，未修改两张源图内容。
+全部 `contextLost=0`，0 console/page error。完整数据见 `PERFORMANCE_REPORT.md` 与 `qa/f3-final/performance.json`。
 
-## 4. 交互验收
+## 5. 回归
 
-14 个树体控件全部实测：
-
-- 树体旋转开关/速度、高度、半径、树叶颜色、整体亮度；
-- 双螺旋开关/速度/相位；
-- 360 灯开关/亮度/闪烁速度/颜色模式；
-- 48 爱心开关；
-- 树顶水晶爱心开关。
-
-`qa/f3/control-results.json` 记录：灯数配额精确 162/90/54/54，所有开关/数值进入真实场景状态；高度 9.7 刷新后持久化；连续四次重建 `195 geometries / 33 textures` 不变；控制台 0 error。
-
-## 5. 现有功能回归
-
-| 功能 | 结果 |
+| 测试 | 结果 |
 | --- | --- |
 | typecheck | 通过 |
-| build / build:single | 通过 |
-| smoke | 通过，0 console/page error |
-| raycast | 通过（照片/礼物/树顶/树体） |
-| qa2 | 通过（树点击、音乐、45s demo 暂停/恢复/replay、礼物） |
-| qa3 | 通过（520/1314、照片控件、浪漫模式） |
-| mobile | 通过（390×844 布局） |
-| singlefile | 通过（file: 协议，0 failed request） |
-| 照片上传/替换/删除/排序 | 保留并通过 smoke |
-| 5 个礼物 | 保留并通过 qa2 / control-results |
-| 音乐 | 保留并通过 qa2 |
-| 45 秒演示 | 保留；qa2 结束/重播通过 |
-| 暂停和恢复 | 通过 qa2 |
-| 浪漫模式 | 通过 qa3 |
-| 三档画质 | 通过 smoke；灯数仍 360 |
-| 设置持久化 | 通过 control-results |
-| 完整 Bloom | 通过；`pipeline=true` |
-| 资源释放 | 重建内存稳定；新模块 dispose |
+| build | 通过 |
+| build:single | 通过 |
+| smoke | 通过 |
+| raycast | 通过 |
+| qa2（树点击/音乐/45s demo/礼物） | 通过 |
+| qa3（浪漫模式/照片） | 通过 |
+| mobile | 通过 |
+| singlefile | 通过 |
+| 6/8/12/24 张照片 | 通过 |
+| 三档画质 | 通过 |
+| 完整 Bloom | 通过 |
+| 设置持久化 | 通过 |
 
-## 6. 性能
+详细记录见 `REGRESSION_REPORT.md`。
 
-详见 `PERFORMANCE_REPORT.md` 与 `qa/f3/performance.json`。
+## 6. 交付资产
 
-- 1440×900 兼容：平均 **95.4 FPS**，P95 **16.9 ms**，291 calls，461,210 triangles；
-- 1920×1080 兼容：113.2 FPS，P95 16.6 ms，291 calls；
-- 4K 等效：80.6 FPS，P95 25.0 ms，291 calls；
-- 1440×900 完整 Bloom：100.2 FPS，P95 16.6 ms，305 calls，pipeline=true；
-- 所有 case contextLost=0，0 console error；
-- 主分辨率平均 >60 FPS；4K 不承诺稳定 60 FPS。
+```text
+docs/F3/
+├── README.md
+├── STARFIELD_UPGRADE.md
+├── PARTICLE_WATERFALL.md
+├── PHOTO_LAYOUT.md
+├── GROUND_ENVIRONMENT.md
+├── SCENE_COMPOSITION.md
+├── SOURCE_REUSE_REPORT.md
+├── PERFORMANCE_REPORT.md
+├── REGRESSION_REPORT.md
+└── FINAL_ACCEPTANCE.md
 
-## 7. 产物与哈希
+docs/F3/final-screenshots/
+├── 01-overall.png
+├── 02-starfield.png
+├── 03-nebula-aurora.png
+├── 04-waterfall.png
+├── 05-photo-6.png
+├── 06-photo-24.png
+├── 07-ground.png
+├── 08-heart.png
+├── 09-tree.png
+├── 10-controls.png
+└── 11-before-after.png
 
-- 正式 standalone：`Christmas-Wish.html`
-  - SHA-256 `32A1DB7C8ECDE7807D38CB9E094B15A044086FE7659BFCE725C0B0E844B61A20`
-  - 父目录同名文件哈希一致
-- F0 旧正式版哈希（基线）：`12E39D0EFDDC6E24C0B6111F85321E7939E294E55268CBE85BDFF46CF94BD725`
-- F3 实现提交：`d9954c3`
-- F2 最终提交：`4d33116`
-- F3 修改前恢复点：`f3-pre-visual-reconstruction`（`4d33116`）
-- main / baseline：`c9e3d02` / `c9e3d02`
+docs/F3/final-video.webm
+Christmas-Wish.html
+```
 
-## 8. 已知限制
+截图均为真实 Edge/WebGL 输出；2/3/4 为 WP1/WP2 的正式截图资产，7 为 WP4 地面近景，1/5/6/8/9/10/11 为 WP5/WP6 最终构建。录屏为 Canvas `captureStream + MediaRecorder`，不是 AI 生成。
 
-1. 4K 等效 P95 25ms，不保证 4K 60 FPS。
-2. 1440/1920 P95 约 16.6–16.9ms，平均远高于 60，但并非每帧严格 <16.7ms。
-3. 树冠针叶是低多边形实例化针叶，近景可见三角；不是逐叶高模。
-4. 水晶爱心是低多边形切面 + clearcoat/透明，不启用真实 transmission/折射 pass。
-5. 地面反射是明确标注的模拟纹理，不是真实镜面/SSR。
-6. 48 爱心与部分灯点会被针叶遮挡；这是自然遮挡，不是丢失。
-7. 未覆盖移动 GPU、Firefox/Safari、低端集显性能。
-8. **授权记录：五位参考仓库作者已授权本项目直接复制、复用、修改其代码，使用时保留作者署名与来源。** 不再以“未独立核验”或缺少 LICENSE 文件限制该授权；F3 采用自有树体基础属于实现选择，不是授权限制。
+## 7. 已知边界
 
-## 9. 结论
+- 24 张照片在极端投影下仍可能有轻微边缘重叠；
+- 地面反射是 CanvasTexture 模拟反射，不是 SSR；
+- 性能数据仅代表本机 Edge + RTX 3070 Ti Laptop；
+- 移动端只验证布局与交互，不是移动 GPU 性能测试；
+- F4 的照片记忆、爱情交互、礼物内容、IndexedDB 和专属礼物包均未实现；
+- F5 的 60 秒电影未实现。
 
-F3 已把 9 层树体、双螺旋、360 灯、48 爱心、水晶树顶、树底光影与 14 个真实控件整合进正式项目；现有照片/礼物/音乐/45 秒演示/浪漫/画质/持久化/Bloom 均通过回归。
+## 8. 最终结论
 
-**F3 自检通过，等待用户最终验收。未进入 F4 或 F5。**
+F3 的视觉精修、地面、构图、性能、回归、截图和文档均已完成，未发现阻断级问题。等待用户最终验收后再进入 F4。

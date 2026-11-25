@@ -107,7 +107,7 @@ npm run build:single
 - 合并提交：`248e1c8`
 - standalone SHA-256：`A443243AFA0C50D222C8728A46178551635DB838A50C0417FEFF0D7CFAE0C511`
 
-## 视觉精修 WP0–WP3（进行中）
+## 视觉精修 WP0–WP6（完成，等待用户最终验收）
 
 - [WP0 基线](WP0_BASELINE.md)
 - [WP1 星空环境升级](STARFIELD_UPGRADE.md)
@@ -116,7 +116,14 @@ npm run build:single
 - WP2 截图/录屏：`docs/F3/wp2/`
 - [WP3 照片三层轨道布局](PHOTO_LAYOUT.md)
 - WP3 截图：`docs/F3/wp3/`
-- 状态：WP1/WP2 已确认；WP3 支持初始 6 张（左 3 / 右 3）逐步增长到 24 张（左 12 / 右 12），等待验收；WP4–WP6 未开始。
+- [WP4 冬日地面与展示台](GROUND_ENVIRONMENT.md)
+- WP4 截图：`docs/F3/wp4/`
+- [WP5 整体构图与树体比例](SCENE_COMPOSITION.md)
+- WP5 截图：`docs/F3/wp5/`
+- [WP6 源码复用](SOURCE_REUSE_REPORT.md)、[性能](PERFORMANCE_REPORT.md)、[回归](REGRESSION_REPORT.md)、[最终验收](FINAL_ACCEPTANCE.md)
+- 最终截图：`docs/F3/final-screenshots/`；最终录屏：`docs/F3/final-video.webm`
+- 最终 standalone SHA-256：`06F00FDDD8640A97568548F3385949751C4DD76C6CC86BECDA326ADD64F9DE49`
+- 状态：WP1–WP6 技术验收完成，等待用户最终验收；F4/F5 未开始。
 
 ## 参考仓库复用文档
 

@@ -157,6 +157,20 @@ export class GiftBoxes {
     GIFT_SPECS.forEach((spec, index) => this.buildGift(spec, index));
   }
 
+  /**
+   * Spreads the five gifts outward with the enlarged tree, without changing
+   * their box dimensions or the existing open/hover animations.
+   */
+  setPresentationScale(scale: number): void {
+    const safeScale = Math.max(0.8, scale);
+    for (const gift of this.gifts) {
+      const [x, y, z] = gift.spec.position;
+      gift.group.position.x = x * safeScale;
+      gift.group.position.z = z * safeScale;
+      gift.center.set(x * safeScale, y, z * safeScale);
+    }
+  }
+
   private buildGift(spec: GiftSpec, index: number): void {
     const group = new THREE.Group();
     group.name = `gift-${index + 1}`;
@@ -449,8 +463,8 @@ export class GiftBoxes {
     for (const gift of this.gifts) {
       const shadow = shadows[gift.index];
       if (shadow) {
-        shadow.position.x = gift.spec.position[0];
-        shadow.position.z = gift.spec.position[2];
+        shadow.position.x = gift.group.position.x;
+        shadow.position.z = gift.group.position.z;
         shadow.visible = true;
       }
     }

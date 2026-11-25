@@ -1,10 +1,10 @@
 # F3 WP3 · 照片卡片三层轨道布局
 
-> 分支：`f3-photo-layout`  
+> 分支：`f3-photo-layout`（已合并入 F3 最终分支）  
 > 基线：已验收 WP1/WP2 `0552147`  
-> 范围：只执行 WP3；WP4–WP6 未开始。  
-> standalone：`Christmas-Wish.html`  
-> SHA-256：`D1167379A7A29D9050D2CA6B1A6DA444B2916F39CEF321E78530C48B011FAD55`
+> 范围：WP3；WP4–WP6 已完成。  
+> 最终 standalone：`Christmas-Wish.html`  
+> 最终 SHA-256：`06F00FDDD8640A97568548F3385949751C4DD76C6CC86BECDA326ADD64F9DE49`
 
 ## 1. 三层轨道
 

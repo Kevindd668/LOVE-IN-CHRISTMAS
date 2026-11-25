@@ -1,69 +1,82 @@
-# F3 功能回归报告
+# F3 完整功能回归报告
 
-## 1. 门禁与构建
+> 分支：`f3-ground-composition`  
+> 最终 standalone SHA-256：`06F00FDDD8640A97568548F3385949751C4DD76C6CC86BECDA326ADD64F9DE49`  
+> 日志：`qa/f3-final-*.log`、`qa/smoke-results.json`、`qa/f3-final/performance.json`
 
-| 测试 | 结果 | 证据 |
-| --- | --- | --- |
-| `npm run typecheck` | 通过 | 无 TS 错误 |
-| `npm run build` | 通过 | 54 modules；仅 chunk >500kB 提示 |
-| `npm run build:single` | 通过 | `Christmas-Wish.html` 1.23MB；父目录同一文件 |
-| `qa/smoke-test.mjs` | 通过 | `qa/smoke-results.json`；console/page errors 空 |
-| `qa/raycast-test.mjs` | 通过 | 照片、礼物、树顶 star、树体 raycast probe 全部命中；0 errors |
-| `qa/qa2.mjs` | 通过 | 树点击、音乐、demo 暂停/恢复/replay、礼物开盖；0 errors |
-| `qa/qa3.mjs` | 通过 | 中英文标签、照片控件、浪漫模式/终章；0 errors |
-| `qa/mobile-test.mjs` | 通过 | 390×844 面板/许愿框均在视口；0 errors |
-| `qa/singlefile-test.mjs` | 通过 | `file:` 协议；0 errors；0 failed requests |
-| `qa/f3-performance.mjs` | 通过 | 5 cases；`contextLost=0` |
-| `qa/f3-controls.mjs` | 通过 | 14 个树体控件、灯光配额、持久化、内存稳定性 |
+## 1. 构建
 
-> 只对 QA 脚本做了必要的 F3 默认值/机位适配：smoke 的默认高度 9.5、灯数 360；raycast 的树体探针改为对新相机 framing 的屏幕列做真实 raycaster probe。产品逻辑未为通过测试而修改。
-
-## 2. 树体专项
-
-- 默认树高/半径/层数：9.5 / 3.0 / 9。
-- 树干：1.0 / 0.22（代码固定）。
-- 双螺旋：9 圈、两条独立曲线、宽度 0.035、颜色正确、开关/速度/相位真实生效。
-- 灯泡：360 颗，精确 162/90/54/54；单一 Points shader，非 360 个真实光源。
-- 爱心装饰：48 颗，4 个 InstancedMesh，开关生效。
-- 树顶水晶爱心：可见、点击仍触发 star blessing；关闭开关后从 pick meshes 排除。
-- 亮度、旋转、树叶颜色、灯光亮度/闪烁速度均有状态与场景侧证据。
-
-## 3. 现有功能回归
-
-| 功能 | 结果 |
+| 检查 | 结果 |
 | --- | --- |
-| 照片上传 | 通过（smoke 上传 2 张，count/label/rows 一致） |
-| 照片替换 | 通过（smoke 文件 chooser 替换为 3.jpg） |
-| 照片删除/排序 | 通过（smoke 删除/移动） |
-| 照片轨道 | 未改 PhotoOrbit；smoke/qa3 通过 |
-| 520 / 1314 | 通过（qa3 中英文标签） |
-| 现有爱心粒子 | 未改 HeartParticles；q3 中 heartMode 通过 |
-| 5 个礼物 | 保留；control-results gifts=5；qa2 礼物开盖 |
-| 礼物 raycast | 通过 |
-| 背景音乐 | 通过（qa2 开/关，AudioContext running） |
-| 45 秒演示 | 保留 `CINEMA_DURATION=45`；qa2 暂停/恢复/replay/结束 |
-| 浪漫模式 | 通过；qa3 启动/终章/退出 |
-| 三档画质 | 通过；smoke 切换 balanced/performance/ultra；灯数仍 360 |
-| 设置持久化 | 通过；treeHeight=9.7 刷新后仍为 9.7 |
-| 完整 Bloom | 通过；`?full=1`，`pipeline=true` |
-| 资源释放 | 连续四次重建 geometry/texture 195/33 不变；新模块有 dispose |
-| WebGL context | 性能 5 cases `contextLost=0` |
+| `npm run typecheck` | 通过 |
+| `npm run build` | 通过；仅 chunk size 提示 |
+| `npm run build:single` | 通过；`Christmas-Wish.html` 1.26MB |
+| `qa/singlefile-test.mjs` | 通过；`file:` 协议，0 failed requests |
 
-## 4. 明确没有做的事
+## 2. 自动化交互
 
-- 未修改照片存储机制/照片 API。
-- 未改礼物数量（仍 5 个）。
-- 未把 45 秒演示改成其他时长；仅第三幕文案灯数 220→360。
-- 未开发 F4/F5 的巨型爱心粒子系统或其他阶段功能。
-- 未改 main / `v1.0.0-baseline` / F0/F1/F2 报告。
-- 未新增生产依赖、未引入 GSAP、未升级 Three.js。
+| 测试 | 结果 |
+| --- | --- |
+| `qa/smoke-test.mjs` | 通过；console/page errors 空 |
+| `qa/raycast-test.mjs` | 通过；照片、礼物、树顶 star、树体 raycast |
+| `qa/qa2.mjs` | 通过；树点击、音乐、45s demo 暂停/恢复/replay、礼物开盖 |
+| `qa/qa3.mjs` | 通过；520/1314、照片控件、浪漫模式/终章 |
+| `qa/mobile-test.mjs` | 通过；390×844 面板/许愿框在视口内 |
+| `qa/wp3-photo-counts.mjs` | 通过；6/8/12/24 张，左右数量正确 |
+| `qa/f3-final-performance.mjs` | 通过；7 cases，contextLost=0 |
 
-## 5. 已知回归边界
+### 对 QA 的必要适配
 
-- qa3 的 `skyTop` 在深色背景下被现有测试记录为 `000000`（颜色空间/取色路径问题），未作为 F3 新增断言；背景光和 `backgroundColor` 均通过设置项验证。
-- `qa/raycast-test` 的树体点击改为 raycaster probe（生产 MouseInteraction 使用同一个 raycaster），未直接触发 `onPick` 的 point-bloom；树点击行为仍由 qa2 的真实点击覆盖。
-- 移动端只验证布局与许愿框，不是移动 GPU 性能测试。
+- `smoke-test` 的默认照片数改为动态读取（当前初始 6 张），不再硬编码 10；
+- `raycast-test` 的树顶坐标改用 `getWorldPosition()`，适配 WP5 的树体 1.24 倍缩放；产品代码未为通过测试而改；
+- 照片数量/卡片布局仍走真实 UI 上传/替换/删除/排序路径。
 
-## 6. 结论
+## 3. F3 视觉模块回归
 
-F3 未发现阻断级功能回归；现有照片、礼物、音乐、45 秒演示、暂停/恢复、浪漫模式、三档画质、持久化和完整 Bloom 均保留可运行。详细原始日志位于 `qa/f3-*.log`、`qa/smoke-results.json`、`qa/f3/*.json`。
+| 模块 | 结果 |
+| --- | --- |
+| WP1 星空/银河/星云/极光/流星 | 保留；截图 `final-screenshots/02-03` |
+| WP2 四条光瀑 | 保留；截图 `final-screenshots/04` |
+| WP3 照片轨道 | 初始 6（左3/右3）→8（4/4）→12（6/6）→24（12/12） |
+| WP4 地面 | 地面色、雪斑、冰晶、低空微光、环形光；三档画质 |
+| WP5 树体 | 1.24 倍；树顶/底部完整；520/1314/爱心构图 |
+| 5 个礼物 | 保留；位置外扩 1.2，raycast 通过 |
+| 520 / 1314 | 保留；随树体比例缩放 |
+| 巨型爱心 | 保留 10000 粒子能力；位置调整后不遮树 |
+| 45 秒演示 | 保留；qa2 通过 |
+| 浪漫模式 | 保留；qa3 通过 |
+| 三档画质 | 通过；地面细节/照片/星数按档位变化 |
+| 完整 Bloom | `?full=1` 通过；4K 性能 111.6 FPS |
+| 设置持久化 | 通过 smoke/qa3 |
+| 资源释放 | 新增地面 group 有 dispose；无环境重复创建 |
+
+## 4. 照片边界
+
+- 初始 6 张：左 3 / 右 3；
+- 8 张：左 4 / 右 4；
+- 12 张：左 6 / 右 6；
+- 24 张：左 12 / 右 12；
+- 上传、替换、删除、排序仍使用原 PhotoManager；
+- 照片轨道半径在 WP5 中整体 ×1.16，数量/左右分配算法未改；
+- 24 张时 draw calls 459，性能仍高于 60 FPS。
+
+## 5. 明确没有做的事
+
+- 未修改照片存储机制、未引入 IndexedDB；
+- 未修改礼物数量（仍 5 个）；
+- 未修改 45 秒演示时长；
+- 未开发 F4 的照片记忆/爱情交互/礼物内容；
+- 未开发 F5 的 60 秒电影；
+- 未修改 `main`、`v1.0.0-baseline`、F0/F1/F2 报告、`experiments/01…05`；
+- 未新增生产依赖、未升级 Three.js。
+
+## 6. 已知边界
+
+- 24 张照片在外侧弧形区域仍可能出现投影层面的轻微边缘重叠；已通过 1.16 轨道外扩和 0.74 卡片密度缩放降低；
+- 移动端只验证布局和交互，不是移动 GPU 性能测试；
+- 地面“反射”仍是 CanvasTexture 模拟反射，不是 SSR/镜面；
+- 性能数据仅代表本机 Edge + RTX 3070 Ti Laptop。
+
+## 7. 结论
+
+F3 WP1–WP6 未发现阻断级回归。树、星空、光瀑、照片、地面、构图、礼物、45 秒演示、浪漫模式、三档画质、完整 Bloom 和 standalone 均可运行；无 console/page error 或 context lost。

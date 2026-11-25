@@ -1,8 +1,9 @@
 # F3 WP4 · 冬日地面与展示台
 
 > 分支：`f3-ground-composition`  
-> 范围：只执行 WP4；WP5/WP6 未完成。  
-> 真实截图：`docs/F3/wp4/`
+> 范围：WP4 完成；WP5/WP6 已完成并进入最终验收。  
+> 真实截图：`docs/F3/wp4/`、`docs/F3/final-screenshots/`  
+> 最终 standalone SHA-256：`06F00FDDD8640A97568548F3385949751C4DD76C6CC86BECDA326ADD64F9DE49`
 
 ## 1. 目标
 
@@ -58,4 +59,4 @@
 
 - 地面细节是轻量装饰，不承担物理积雪/碰撞；
 - 24 张照片构图和树体放大属于 WP5；
-- WP6 的完整性能/回归和最终交付未在本阶段完成。
+- WP6 的完整性能/回归和最终交付见 `PERFORMANCE_REPORT.md`、`REGRESSION_REPORT.md`、`FINAL_ACCEPTANCE.md`。

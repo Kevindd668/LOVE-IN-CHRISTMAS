@@ -1,10 +1,10 @@
 # F3 WP2 · 金色粒子光瀑重构
 
-> 分支：`f3-visual-polish`  
+> 分支：`f3-visual-polish`（已合并入 F3 最终分支）  
 > 基线：WP1 `b5b8368`  
-> 范围：只执行 WP2；WP3–WP6 未开始。  
-> standalone：`Christmas-Wish.html`  
-> SHA-256：`EA4A0DAA5471A6C33890E3F216B605F5DF6C9387F12EE5B75AF7F0A440C0D5B3`
+> 范围：WP2；WP3–WP6 已完成。  
+> 最终 standalone：`Christmas-Wish.html`  
+> 最终 SHA-256：`06F00FDDD8640A97568548F3385949751C4DD76C6CC86BECDA326ADD64F9DE49`
 
 ## 1. 结果
 

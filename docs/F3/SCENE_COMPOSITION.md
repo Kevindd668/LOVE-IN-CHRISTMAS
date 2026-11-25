@@ -1,8 +1,9 @@
 # F3 WP5 · 整体构图与树体比例
 
 > 分支：`f3-ground-composition`  
-> 范围：只执行 WP5；WP6 未完成。  
-> 真实截图：`docs/F3/wp5/`
+> 范围：WP5 完成；WP6 已完成并进入最终验收。  
+> 真实截图：`docs/F3/wp5/`、`docs/F3/final-screenshots/`  
+> 最终 standalone SHA-256：`06F00FDDD8640A97568548F3385949751C4DD76C6CC86BECDA326ADD64F9DE49`
 
 ## 1. 目标
 
@@ -70,4 +71,4 @@
 - 不新增相机系统、不新增 Renderer/RAF；
 - 不改 WP3 数量分配/左右弧段算法；
 - 不提前实现 F4 照片记忆或礼物内容；
-- WP6 的三分辨率性能、完整回归和最终文档未在本阶段完成。
+- WP6 的三分辨率性能、完整回归和最终文档见 `PERFORMANCE_REPORT.md`、`REGRESSION_REPORT.md`、`FINAL_ACCEPTANCE.md`。

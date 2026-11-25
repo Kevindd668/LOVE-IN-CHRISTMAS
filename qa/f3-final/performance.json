@@ -1,0 +1,173 @@
+{
+  "cases": [
+    {
+      "name": "f3-1440-default",
+      "fps": 174.1,
+      "p50": 4.2,
+      "p95": 8.4,
+      "max": 29.2,
+      "calls": 315,
+      "triangles": 467184,
+      "points": 34142,
+      "textures": 30,
+      "geometries": 206,
+      "programs": 48,
+      "heapMB": 34.6,
+      "photoCount": 6,
+      "quality": "ultra",
+      "canvas": [
+        1440,
+        900
+      ],
+      "waterfallGroups": 4,
+      "treeScale": 1.24,
+      "contextLost": 0,
+      "errors": []
+    },
+    {
+      "name": "f3-1920-default",
+      "fps": 160.9,
+      "p50": 4.3,
+      "p95": 8.4,
+      "max": 24.9,
+      "calls": 315,
+      "triangles": 467184,
+      "points": 34142,
+      "textures": 30,
+      "geometries": 206,
+      "programs": 48,
+      "heapMB": 33.7,
+      "photoCount": 6,
+      "quality": "ultra",
+      "canvas": [
+        1920,
+        1080
+      ],
+      "waterfallGroups": 4,
+      "treeScale": 1.24,
+      "contextLost": 0,
+      "errors": []
+    },
+    {
+      "name": "f3-3840-default",
+      "fps": 185.9,
+      "p50": 4.2,
+      "p95": 8.4,
+      "max": 12.5,
+      "calls": 315,
+      "triangles": 467184,
+      "points": 34142,
+      "textures": 30,
+      "geometries": 206,
+      "programs": 48,
+      "heapMB": 31.9,
+      "photoCount": 6,
+      "quality": "ultra",
+      "canvas": [
+        3840,
+        2160
+      ],
+      "waterfallGroups": 4,
+      "treeScale": 1.24,
+      "contextLost": 0,
+      "errors": []
+    },
+    {
+      "name": "f3-1440-full-bloom",
+      "fps": 135.1,
+      "p50": 8.3,
+      "p95": 8.5,
+      "max": 12.8,
+      "calls": 329,
+      "triangles": 467198,
+      "points": 34142,
+      "textures": 43,
+      "geometries": 207,
+      "programs": 54,
+      "heapMB": 36.6,
+      "photoCount": 6,
+      "quality": "ultra",
+      "canvas": [
+        1440,
+        900
+      ],
+      "waterfallGroups": 4,
+      "treeScale": 1.24,
+      "contextLost": 0,
+      "errors": []
+    },
+    {
+      "name": "f3-3840-full-bloom",
+      "fps": 111.6,
+      "p50": 8.3,
+      "p95": 12.5,
+      "max": 12.7,
+      "calls": 329,
+      "triangles": 467198,
+      "points": 34142,
+      "textures": 43,
+      "geometries": 207,
+      "programs": 54,
+      "heapMB": 22.4,
+      "photoCount": 6,
+      "quality": "ultra",
+      "canvas": [
+        3840,
+        2160
+      ],
+      "waterfallGroups": 4,
+      "treeScale": 1.24,
+      "contextLost": 0,
+      "errors": []
+    },
+    {
+      "name": "f3-1440-performance",
+      "fps": 164.1,
+      "p50": 4.3,
+      "p95": 8.4,
+      "max": 12.6,
+      "calls": 306,
+      "triangles": 458922,
+      "points": 15012,
+      "textures": 30,
+      "geometries": 206,
+      "programs": 48,
+      "heapMB": 22.5,
+      "photoCount": 6,
+      "quality": "performance",
+      "canvas": [
+        1180,
+        738
+      ],
+      "waterfallGroups": 4,
+      "treeScale": 1.24,
+      "contextLost": 0,
+      "errors": []
+    },
+    {
+      "name": "f3-1440-24-photos",
+      "fps": 125.4,
+      "p50": 8.3,
+      "p95": 12.4,
+      "max": 16.8,
+      "calls": 459,
+      "triangles": 493392,
+      "points": 34142,
+      "textures": 66,
+      "geometries": 332,
+      "programs": 48,
+      "heapMB": 34.8,
+      "photoCount": 24,
+      "quality": "ultra",
+      "canvas": [
+        1440,
+        900
+      ],
+      "waterfallGroups": 4,
+      "treeScale": 1.24,
+      "contextLost": 0,
+      "errors": []
+    }
+  ],
+  "errors": []
+}

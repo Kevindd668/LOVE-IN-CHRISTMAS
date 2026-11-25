@@ -1,10 +1,10 @@
 # F3 WP1 · 星空环境升级
 
-> 分支：`f3-visual-polish`  
+> 分支：`f3-visual-polish`（已合并入 F3 最终分支）  
 > 基线：`bb7f05c`（已验收 F3）  
-> 范围：只执行 WP1；WP2–WP6 未开始。  
-> standalone：`Christmas-Wish.html`  
-> SHA-256：`DA749C79D69C059020B1EA973A881A1CFF381DB2BBD7409C5FBF9469D4D1E289`
+> 范围：WP1；WP2–WP6 已完成。  
+> 最终 standalone：`Christmas-Wish.html`  
+> 最终 SHA-256：`06F00FDDD8640A97568548F3385949751C4DD76C6CC86BECDA326ADD64F9DE49`
 
 ## 1. 五层结构
 
