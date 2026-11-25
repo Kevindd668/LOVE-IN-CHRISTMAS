@@ -1,0 +1,137 @@
+{
+  "cases": [
+    {
+      "name": "wp1-1440x900",
+      "frames": 1035,
+      "fps": 206.8,
+      "p95": 8.4,
+      "max": 8.5,
+      "calls": 314,
+      "triangles": 469392,
+      "points": 33162,
+      "textures": 34,
+      "geometries": 214,
+      "heapMB": 33.3,
+      "canvas": [
+        1440,
+        900
+      ],
+      "mode": "compatible",
+      "quality": "ultra",
+      "stats": {
+        "stars": 8000,
+        "farStars": 6000,
+        "waterfall": 5000,
+        "nebulaLayers": 3,
+        "auroraLayers": 4,
+        "meteors": 5,
+        "orbits": 3,
+        "quality": "ultra"
+      },
+      "legacyStarsVisible": false,
+      "legacyAuroraVisible": false,
+      "contextLost": 0,
+      "errors": []
+    },
+    {
+      "name": "wp1-1920x1080",
+      "frames": 1195,
+      "fps": 238.8,
+      "p95": 4.3,
+      "max": 8.5,
+      "calls": 314,
+      "triangles": 469392,
+      "points": 33162,
+      "textures": 34,
+      "geometries": 214,
+      "heapMB": 25,
+      "canvas": [
+        1920,
+        1080
+      ],
+      "mode": "compatible",
+      "quality": "ultra",
+      "stats": {
+        "stars": 8000,
+        "farStars": 6000,
+        "waterfall": 5000,
+        "nebulaLayers": 3,
+        "auroraLayers": 4,
+        "meteors": 5,
+        "orbits": 3,
+        "quality": "ultra"
+      },
+      "legacyStarsVisible": false,
+      "legacyAuroraVisible": false,
+      "contextLost": 0,
+      "errors": []
+    },
+    {
+      "name": "wp1-3840x2160",
+      "frames": 796,
+      "fps": 132.9,
+      "p95": 8.4,
+      "max": 1000.1,
+      "calls": 314,
+      "triangles": 469392,
+      "points": 33162,
+      "textures": 34,
+      "geometries": 214,
+      "heapMB": 35.9,
+      "canvas": [
+        3840,
+        2160
+      ],
+      "mode": "compatible",
+      "quality": "ultra",
+      "stats": {
+        "stars": 8000,
+        "farStars": 6000,
+        "waterfall": 5000,
+        "nebulaLayers": 3,
+        "auroraLayers": 4,
+        "meteors": 5,
+        "orbits": 3,
+        "quality": "ultra"
+      },
+      "legacyStarsVisible": false,
+      "legacyAuroraVisible": false,
+      "contextLost": 0,
+      "errors": []
+    },
+    {
+      "name": "wp1-bloom-1440x900",
+      "frames": 485,
+      "fps": 96.8,
+      "p95": 16.6,
+      "max": 50,
+      "calls": 328,
+      "triangles": 469406,
+      "points": 33162,
+      "textures": 47,
+      "geometries": 215,
+      "heapMB": 35.7,
+      "canvas": [
+        1440,
+        900
+      ],
+      "mode": "full",
+      "quality": "ultra",
+      "stats": {
+        "stars": 8000,
+        "farStars": 6000,
+        "waterfall": 5000,
+        "nebulaLayers": 3,
+        "auroraLayers": 4,
+        "meteors": 5,
+        "orbits": 3,
+        "quality": "ultra"
+      },
+      "legacyStarsVisible": false,
+      "legacyAuroraVisible": false,
+      "contextLost": 0,
+      "errors": []
+    }
+  ],
+  "errors": []
+}

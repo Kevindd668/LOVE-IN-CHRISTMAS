@@ -127,7 +127,7 @@ export const DEFAULT_SETTINGS: WishSettings = {
   snowSpeed: 1,
   starsOn: true,
   auroraOn: true,
-  backgroundColor: '#061522',
+  backgroundColor: '#080E20',
   ambientBrightness: 1,
 
   text520: '520',

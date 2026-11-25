@@ -208,7 +208,7 @@ class ChristmasWishApp {
     this.aurora = new AuroraEffect();
     this.magic = new MagicParticles();
     this.galaxy = new GalaxyEnvironment({
-      count: 12000,
+      count: 8000,
       farCount: 6000,
       waterfallCount: 5000,
       quality: settings.quality
@@ -962,6 +962,12 @@ class ChristmasWishApp {
     this.snow.update(delta, elapsed);
     this.stars.update(delta, elapsed);
     this.aurora.update(delta, elapsed);
+    // WP1: GalaxyEnvironment owns the normal-scene sky. The legacy layers are
+    // retained only for the 45s demo and romance sequence so their original
+    // opacity choreography still works without stacking a second starfield.
+    const legacySkyVisible = this.demo.isActive || this.romance.isActive;
+    this.stars.group.visible = legacySkyVisible;
+    this.aurora.group.visible = legacySkyVisible;
     this.galaxy.update(delta, elapsed);
     this.giantHeart.update(delta, elapsed);
     this.gifts.update(delta, elapsed, this.cameraManager.camera);

@@ -107,6 +107,14 @@ npm run build:single
 - 合并提交：`248e1c8`
 - standalone SHA-256：`A443243AFA0C50D222C8728A46178551635DB838A50C0417FEFF0D7CFAE0C511`
 
+## 视觉精修 WP0 / WP1（进行中）
+
+- [WP0 基线](WP0_BASELINE.md)
+- [WP1 星空环境升级](STARFIELD_UPGRADE.md)
+- 截图：`docs/F3/wp1/`
+- 数据：`qa/wp1/performance.json`
+- 状态：WP1 实现与回归完成，等待验收；WP2–WP6 未开始。
+
 ## 参考仓库复用文档
 
 - [五仓库逐模块直接复用清单](DIRECT_REUSE_INVENTORY.md)

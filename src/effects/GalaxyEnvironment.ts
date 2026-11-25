@@ -20,21 +20,49 @@ interface MeteorRuntime {
   z: number;
 }
 
+const SKY_VERTEX = /* glsl */ `
+  varying vec3 vWorldDir;
+  void main(){
+    vWorldDir=normalize(position);
+    gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
+  }
+`;
+
+const SKY_FRAGMENT = /* glsl */ `
+  uniform float uTime;
+  varying vec3 vWorldDir;
+  void main(){
+    float h=clamp(vWorldDir.y*0.5+0.5,0.0,1.0);
+    vec3 top=vec3(0.031,0.055,0.125);
+    vec3 mid=vec3(0.043,0.075,0.16);
+    vec3 horizon=vec3(0.10,0.16,0.28);
+    vec3 color=mix(horizon,mid,smoothstep(0.18,0.55,h));
+    color=mix(color,top,smoothstep(0.55,0.96,h));
+    float haze=sin(vWorldDir.x*3.2+uTime*0.006)*0.5+0.5;
+    color+=vec3(0.018,0.024,0.05)*haze*smoothstep(0.55,0.0,h);
+    gl_FragColor=vec4(color,1.0);
+  }
+`;
+
 const STAR_VERTEX = /* glsl */ `
   attribute float aPhase;
   attribute float aSize;
   attribute float aHue;
   uniform float uTime;
   uniform float uPixelRatio;
+  uniform float uDust;
   varying vec3 vColor;
   varying float vAlpha;
   void main(){
     vec4 mv=modelViewMatrix*vec4(position,1.0);
     float twinkle=0.35+0.65*(0.5+0.5*sin(uTime*1.25+aPhase));
-    gl_PointSize=clamp(aSize*uPixelRatio*(112.0/max(1.0,-mv.z))*(0.55+twinkle),0.35,2.4);
+    float dustGain=1.0+uDust*0.55;
+    gl_PointSize=clamp(aSize*uPixelRatio*(112.0/max(1.0,-mv.z))*(0.55+twinkle)*dustGain,0.35,3.2);
     gl_Position=projectionMatrix*mv;
-    vColor=mix(vec3(0.48,0.62,1.0),vec3(1.0,0.78,0.58),aHue);
-    vAlpha=0.2+twinkle*0.36;
+    vec3 far=mix(vec3(0.48,0.62,1.0),vec3(1.0,0.78,0.58),aHue);
+    vec3 dust=mix(vec3(0.28,0.38,0.95),vec3(0.95,0.56,0.92),aHue);
+    vColor=mix(far,dust,uDust);
+    vAlpha=(0.2+twinkle*0.36)*(1.0+uDust*0.35);
   }
 `;
 
@@ -46,6 +74,29 @@ const STAR_FRAGMENT = /* glsl */ `
     float core=1.0-smoothstep(0.0,0.18,d);
     float halo=1.0-smoothstep(0.08,0.5,d);
     gl_FragColor=vec4(vColor*(0.62+core*0.95),(halo*0.18+core*0.62)*vAlpha);
+  }
+`;
+
+const GALAXY_BAND_FRAGMENT = /* glsl */ `
+  uniform float uTime;
+  varying vec2 vUv;
+  float hash(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
+  float noise(vec2 p){ vec2 i=floor(p),f=fract(p); f=f*f*(3.-2.*f); return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y); }
+  float fbm(vec2 p){ float v=0.,a=.5; for(int i=0;i<5;i++){v+=a*noise(p);p=p*2.03+vec2(7.1,3.7);a*=.5;} return v; }
+  void main(){
+    vec2 uv=vUv;
+    float diagonal=uv.y - (uv.x*0.22 + 0.46);
+    float band=exp(-pow(diagonal*5.5,2.0));
+    float cloud=fbm(vec2(uv.x*5.0+uTime*.006,uv.y*3.2));
+    float core=exp(-pow(diagonal*18.0,2.0));
+    vec3 blue=vec3(0.055,0.11,0.27);
+    vec3 violet=vec3(0.24,0.14,0.34);
+    vec3 color=mix(blue,violet,smoothstep(.25,.82,cloud));
+    color+=vec3(.55,.62,1.0)*core*.16;
+    float stars=step(.995,hash(floor(uv*vec2(520.0,220.0))))*band;
+    color+=vec3(.8,.86,1.0)*stars*.8;
+    float alpha=(band*.2+core*.1)*smoothstep(0.,.22,uv.y)*smoothstep(1.,.78,uv.y);
+    gl_FragColor=vec4(color,alpha);
   }
 `;
 
@@ -66,7 +117,7 @@ const NEBULA_FRAGMENT = /* glsl */ `
     float vein=fbm(vec2(uv.x*5.0+uSeed*.7,uv.y*2.4-uTime*.012));
     float cloud=smoothstep(.34,.78,n)*smoothstep(.22,.65,vein);
     float edge=smoothstep(0.,.18,uv.x)*smoothstep(1.,.82,uv.x)*smoothstep(0.,.2,uv.y)*smoothstep(1.,.8,uv.y);
-    float alpha=(cloud*.3+vein*.1)*uOpacity*edge;
+    float alpha=(cloud*.78+vein*.24)*uOpacity*edge;
     vec3 color=mix(uColorB,uColor,smoothstep(.22,.86,n));
     gl_FragColor=vec4(color*(.66+cloud*.62),alpha);
   }
@@ -96,7 +147,7 @@ const AURORA_FRAGMENT = /* glsl */ `
     float curtain=pow(max(0.,wave-.28),1.5)*1.8;
     float sideFade=smoothstep(0.,.22,uv.x)*smoothstep(1.,.78,uv.x);
     float topFade=smoothstep(0.,.18,uv.y)*smoothstep(1.,.82,uv.y);
-    float alpha=(band*.075+curtain*.16)*uOpacity*sideFade*topFade;
+    float alpha=(band*.11+curtain*.22)*uOpacity*sideFade*topFade;
     vec3 c=mix(uColor,vec3(.35,.98,.82),curtain*.3);
     gl_FragColor=vec4(c*(.78+curtain*.6),alpha);
   }
@@ -159,6 +210,8 @@ const CURTAIN_FRAGMENT = /* glsl */ `
  */
 export class GalaxyEnvironment {
   readonly group = new THREE.Group();
+  private skyDome: THREE.Mesh<THREE.SphereGeometry, THREE.ShaderMaterial>;
+  private galaxyBand: THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial>;
   private nearStars: THREE.Points<THREE.BufferGeometry, THREE.ShaderMaterial> | null = null;
   private farStars: THREE.Points<THREE.BufferGeometry, THREE.ShaderMaterial> | null = null;
   private nebulaGroup = new THREE.Group();
@@ -183,7 +236,7 @@ export class GalaxyEnvironment {
   private rng = mulberry32(71237);
 
   constructor(options: GalaxyOptions = {}) {
-    this.baseCount = 12000;
+    this.baseCount = 8000;
     this.baseFarCount = 6000;
     this.baseWaterfall = 5000;
     this.starCount = options.count ?? this.baseCount;
@@ -192,6 +245,10 @@ export class GalaxyEnvironment {
     this.quality = options.quality ?? 'ultra';
     this.group.name = 'galaxy-environment';
     this.group.renderOrder = -20;
+    this.skyDome = this.buildSkyDome();
+    this.group.add(this.skyDome);
+    this.galaxyBand = this.buildGalaxyBand();
+    this.group.add(this.galaxyBand);
     this.buildStars();
     this.buildNebula();
     this.buildAurora();
@@ -202,9 +259,50 @@ export class GalaxyEnvironment {
     this.applyQuality(this.quality);
   }
 
+  private buildSkyDome(): THREE.Mesh<THREE.SphereGeometry, THREE.ShaderMaterial> {
+    const geometry = new THREE.SphereGeometry(155, 40, 20);
+    const material = new THREE.ShaderMaterial({
+      uniforms: { uTime: { value: 0 } },
+      vertexShader: SKY_VERTEX,
+      fragmentShader: SKY_FRAGMENT,
+      side: THREE.BackSide,
+      depthWrite: false,
+      depthTest: true,
+      fog: false,
+      toneMapped: false
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.frustumCulled = false;
+    mesh.renderOrder = -50;
+    return mesh;
+  }
+
+  private buildGalaxyBand(): THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial> {
+    const geometry = new THREE.PlaneGeometry(150, 70);
+    const material = new THREE.ShaderMaterial({
+      uniforms: { uTime: { value: 0 } },
+      vertexShader: NEBULA_VERTEX,
+      fragmentShader: GALAXY_BAND_FRAGMENT,
+      transparent: true,
+      depthWrite: false,
+      depthTest: true,
+      blending: THREE.AdditiveBlending,
+      side: THREE.DoubleSide,
+      toneMapped: false
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(0, 22, -58);
+    mesh.rotation.z = -0.08;
+    mesh.renderOrder = -19;
+    mesh.frustumCulled = false;
+    return mesh;
+  }
+
   private buildStars(): void {
-    this.nearStars = this.buildStarLayer(this.starCount, 28, 62, 0.72, 1.35);
-    this.farStars = this.buildStarLayer(this.farCount, 62, 105, 0.42, 0.7);
+    // Layer 2: far stars; layer 3: denser dust locked to a diagonal
+    // galactic band rather than another uniform sphere.
+    this.nearStars = this.buildStarLayer(this.starCount, 34, 72, 0.66, 1.15, true);
+    this.farStars = this.buildStarLayer(this.farCount, 72, 118, 0.32, 0.6, false);
     this.group.add(this.farStars, this.nearStars);
   }
 
@@ -213,7 +311,8 @@ export class GalaxyEnvironment {
     radiusMin: number,
     radiusMax: number,
     sizeScale: number,
-    speed: number
+    speed: number,
+    dust: boolean
   ): THREE.Points<THREE.BufferGeometry, THREE.ShaderMaterial> {
     const n = Math.max(1, Math.round(count));
     const positions = new Float32Array(n * 3);
@@ -222,14 +321,30 @@ export class GalaxyEnvironment {
     const hues = new Float32Array(n);
     for (let i = 0; i < n; i += 1) {
       const radius = radiusMin + Math.pow(this.rng(), 0.55) * (radiusMax - radiusMin);
-      const theta = this.rng() * Math.PI * 2;
-      const phi = Math.acos(2 * this.rng() - 1);
-      positions[i * 3] = Math.sin(phi) * Math.cos(theta) * radius;
-      positions[i * 3 + 1] = Math.cos(phi) * radius * 0.72 + 5;
-      positions[i * 3 + 2] = Math.sin(phi) * Math.sin(theta) * radius;
+      if (dust) {
+        // A dense diagonal river in the far sky, not another uniform shell.
+        // The band is deliberately broad but has a bright narrow core so it
+        // reads like the Milky Way at panorama scale.
+        const bandX = (this.rng() - 0.5) * 126;
+        const core = this.rng() < 0.68;
+        const bandY =
+          20 + bandX * 0.155 + (this.rng() - 0.5) * (core ? 4.2 : 11);
+        const z = -50 - this.rng() * 24;
+        positions[i * 3] = bandX;
+        positions[i * 3 + 1] = bandY;
+        positions[i * 3 + 2] = z;
+        sizes[i] = (core ? 0.8 : 0.45) + this.rng() * (core ? 1.7 : 1.1);
+        hues[i] = this.rng();
+      } else {
+        const theta = this.rng() * Math.PI * 2;
+        const phi = Math.acos(2 * this.rng() - 1);
+        positions[i * 3] = Math.sin(phi) * Math.cos(theta) * radius;
+        positions[i * 3 + 1] = Math.cos(phi) * radius * 0.72 + 5;
+        positions[i * 3 + 2] = Math.sin(phi) * Math.sin(theta) * radius;
+        sizes[i] = 0.7 + this.rng() * 1.9;
+        hues[i] = this.rng();
+      }
       phases[i] = this.rng() * Math.PI * 2;
-      sizes[i] = 0.7 + this.rng() * 1.9;
-      hues[i] = this.rng();
     }
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -239,7 +354,8 @@ export class GalaxyEnvironment {
     const material = new THREE.ShaderMaterial({
       uniforms: {
         uTime: { value: 0 },
-        uPixelRatio: { value: Math.min(window.devicePixelRatio || 1, 2) }
+        uPixelRatio: { value: Math.min(window.devicePixelRatio || 1, 2) },
+        uDust: { value: dust ? 1 : 0 }
       },
       vertexShader: STAR_VERTEX,
       fragmentShader: STAR_FRAGMENT,
@@ -260,16 +376,16 @@ export class GalaxyEnvironment {
   }
 
   private buildNebula(): void {
-    const colors = ['#B68AFF', '#4A50B8', '#FF75A9', '#167C89'];
+    const colors = ['#704A91', '#243F78', '#3B5AA6'];
     for (let i = 0; i < 3; i += 1) {
-      const geometry = new THREE.PlaneGeometry(110, 62);
+      const geometry = new THREE.PlaneGeometry(132, 78);
       const material = new THREE.ShaderMaterial({
         uniforms: {
           uTime: { value: 0 },
           uSeed: { value: 2.1 + i * 4.7 },
           uColor: { value: new THREE.Color(colors[i % colors.length]) },
-          uColorB: { value: new THREE.Color('#0a0920') },
-          uOpacity: { value: 0.72 - i * 0.1 }
+          uColorB: { value: new THREE.Color('#080E20') },
+          uOpacity: { value: 0.98 - i * 0.06 }
         },
         vertexShader: NEBULA_VERTEX,
         fragmentShader: NEBULA_FRAGMENT,
@@ -281,22 +397,23 @@ export class GalaxyEnvironment {
         toneMapped: false
       });
       const mesh = new THREE.Mesh(geometry, material);
-      mesh.position.set(-2 + i * 1.8, 12 + i * 1.2, -58 - i * 8);
-      mesh.rotation.z = i * 0.05;
+      mesh.position.set(-4 + i * 4, 15 + i * 4.2, -46 - i * 8);
+      mesh.rotation.z = i * 0.08 - 0.06;
       mesh.renderOrder = -18 + i;
       this.nebulaGroup.add(mesh);
     }
   }
 
   private buildAurora(): void {
+    const colors = ['#36C9B0', '#2E9AAE', '#5DE0C0', '#2B7F9A'];
     for (let i = 0; i < 4; i += 1) {
-      const geometry = new THREE.PlaneGeometry(54 + i * 5, 14 + i * 1.5, 60, 16);
+      const geometry = new THREE.PlaneGeometry(62 + i * 7, 18 + i * 2, 60, 16);
       const material = new THREE.ShaderMaterial({
         uniforms: {
           uTime: { value: 0 },
           uSeed: { value: i * 4.3 },
-          uColor: { value: new THREE.Color('#167C89') },
-          uOpacity: { value: 0.7 - i * 0.06 }
+          uColor: { value: new THREE.Color(colors[i]) },
+          uOpacity: { value: 0.62 - i * 0.055 }
         },
         vertexShader: AURORA_VERTEX,
         fragmentShader: AURORA_FRAGMENT,
@@ -307,8 +424,8 @@ export class GalaxyEnvironment {
         side: THREE.DoubleSide
       });
       const mesh = new THREE.Mesh(geometry, material);
-      mesh.position.set(0, 13 + i * 2.4, -48 - i * 6);
-      mesh.rotation.x = -0.04 + i * 0.025;
+      mesh.position.set(0, 18 + i * 2.2, -52 - i * 5);
+      mesh.rotation.x = -0.05 + i * 0.03;
       mesh.renderOrder = -12;
       this.auroraGroup.add(mesh);
     }
@@ -520,7 +637,7 @@ export class GalaxyEnvironment {
     const starScale = quality === 'performance' ? 0.3 : quality === 'balanced' ? 0.6 : 1;
     const waterfallScale = quality === 'performance' ? 0.35 : quality === 'balanced' ? 0.65 : 1;
     if (this.nearStars) {
-      this.nearStars.geometry.setDrawRange(0, Math.round(12000 * starScale));
+      this.nearStars.geometry.setDrawRange(0, Math.round(8000 * starScale));
     }
     if (this.farStars) {
       this.farStars.geometry.setDrawRange(0, Math.round(6000 * starScale));
@@ -537,6 +654,8 @@ export class GalaxyEnvironment {
 
   update(dt: number, elapsed: number): void {
     if (!this.group.visible) return;
+    this.skyDome.material.uniforms.uTime.value = elapsed;
+    this.galaxyBand.material.uniforms.uTime.value = elapsed;
     for (const points of [this.nearStars, this.farStars]) {
       if (!points) continue;
       points.material.uniforms.uTime.value = elapsed;

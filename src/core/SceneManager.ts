@@ -45,7 +45,7 @@ export class SceneManager {
   private readonly contactShadows: THREE.Group;
   private readonly treeBase: THREE.Group;
   private readonly pmrem: THREE.PMREMGenerator;
-  private readonly backgroundColor = new THREE.Color('#061522');
+  private readonly backgroundColor = new THREE.Color('#080E20');
 
   constructor(renderer: THREE.WebGLRenderer, options: SceneManagerOptions) {
     this.scene = new THREE.Scene();
