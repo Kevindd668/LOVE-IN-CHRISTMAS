@@ -11,7 +11,7 @@
 
 | 项 | 内容 |
 | --- | --- |
-| 参考 | `ChristmasTree`（master `59b14c5`，无 LICENSE 文件，README 声称 MIT）；`Interactive-Xmas-Tree`（MIT，main `be75d04`） |
+| 参考 | `ChristmasTree`（master `59b14c5`，README 声称 MIT；作者已授权本项目直接复用）；`Interactive-Xmas-Tree`（MIT，main `be75d04`） |
 | 参考内容 | 灯光/粒子层行为、相机组织 |
 | 树冠基础 | 本项目既有 `src/objects/ChristmasTree.ts` 的本地实验副本，esbuild 打包为 `src/product-tree.js`；不是正式应用运行时 import |
 | 双螺旋/水晶心/机位 | 本实验实现 |

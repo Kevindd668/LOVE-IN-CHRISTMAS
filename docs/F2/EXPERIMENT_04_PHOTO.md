@@ -11,7 +11,7 @@
 
 | 项 | 内容 |
 | --- | --- |
-| 参考 | `Immersive-Photo-Gallery`（MIT，main `c862c70`）；`Christmas-Tree-Photos`（无 LICENSE，main `b5f4870`，仅行为研究） |
+| 参考 | `Immersive-Photo-Gallery`（MIT，main `c862c70`）；`Christmas-Tree-Photos`（main `b5f4870`；作者已授权本项目直接复用） |
 | 参考内容 | 3D 轨道、聚焦、本地文件处理、照片记忆交互 |
 | 实际实现 | 独立 Canvas/Three.js：卡片、上传、替换、删除、排序、相机聚焦、IndexedDB 实验入口 |
 | 第三方素材 | 无；12 张初始图由 Canvas 生成，QA 上传图在 `qa/placeholders/` |

@@ -11,7 +11,7 @@
 
 | 项 | 内容 |
 | --- | --- |
-| 参考 | `Interactive-Xmas-Tree`（MIT，main `be75d04`）；`Christmas-Tree-Photos`（无 LICENSE，main `b5f4870`，仅行为研究） |
+| 参考 | `Interactive-Xmas-Tree`（MIT，main `be75d04`）；`Christmas-Tree-Photos`（main `b5f4870`；作者已授权本项目直接复用） |
 | 参考内容 | 星场/相机组织、空间氛围 |
 | 实际实现 | 独立 GLSL/Three.js；无参考代码或素材复制 |
 | 第三方素材 | 无 |

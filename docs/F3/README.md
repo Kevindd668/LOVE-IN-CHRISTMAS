@@ -19,6 +19,10 @@
 | 正式 standalone | `Christmas-Wish.html`，SHA-256 `32A1DB7C8ECDE7807D38CB9E094B15A044086FE7659BFCE725C0B0E844B61A20` |
 | main / v1.0.0-baseline | `c9e3d02` / 标签目标 `c9e3d02`（未修改） |
 
+## 授权记录
+
+**五位参考仓库作者已授权本项目直接复制、复用、修改其代码，使用时保留作者署名与来源。** 该授权适用于 F2/F3；不再以“未独立核验”或“缺少 LICENSE 文件”作为复用限制。详细来源档案见 `docs/F2/SOURCE_REUSE_REPORT.md`。
+
 ## 本阶段只做了什么
 
 把 F2 实验 02 验证过的树体方向落到正式项目：
