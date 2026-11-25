@@ -1,0 +1,6 @@
+﻿import { chromium } from 'playwright-core';
+const browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:false,args:['--window-position=20,20','--window-size=1480,960']});
+const page=await browser.newPage({viewport:{width:1440,height:900},deviceScaleFactor:1}); const errors=[]; page.on('pageerror',e=>errors.push(e.message)); page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+await page.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'}); await page.bringToFront(); await page.waitForFunction(()=>window.__CHRISTMAS_WISH__?.ready,{timeout:30000}); await page.waitForTimeout(3400); await page.evaluate(()=>{document.querySelector('#btn-panel-close')?.click(); const a=window.__CHRISTMAS_WISH__.app; a.cameraManager.beginCinematic(); a.cameraManager.camera.position.set(5.2,7.0,11.8); a.cameraManager.controls.target.set(2.9,7.0,-7.5); a.cameraManager.camera.lookAt(2.9,7.0,-7.5); a.photos.group.visible=false; a.numbers.group.visible=false; a.hearts.group.visible=false;});
+await page.waitForTimeout(600); await page.screenshot({path:'docs/F3/heart-look/after-heart-close.png'});
+console.log(JSON.stringify({errors},null,2)); await browser.close();

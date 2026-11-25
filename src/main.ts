@@ -215,7 +215,7 @@ class ChristmasWishApp {
     });
     this.giantHeart = new HeartParticleSystem({
       count: settings.giantHeartCount,
-      size: 0.05,
+      size: 0.085,
       heartColor: settings.giantHeartColor,
       starColor: '#FFD58A',
       gatherTime: 2.5,
