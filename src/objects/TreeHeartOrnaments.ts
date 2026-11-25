@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { clamp, mulberry32 } from '../core/utils';
+import { createHeartShape } from './reuse/heartGeometry';
 
 export interface TreeHeartConfig {
   height: number;
@@ -69,13 +70,9 @@ const HEART_VARIANTS = [
 ] as const;
 
 const createHeartGeometry = (): THREE.ExtrudeGeometry => {
-  const shape = new THREE.Shape();
-  shape.moveTo(0, -0.5);
-  shape.bezierCurveTo(0.05, -0.24, 0.5, 0.02, 0.5, 0.3);
-  shape.bezierCurveTo(0.5, 0.62, 0.05, 0.68, 0, 0.34);
-  shape.bezierCurveTo(-0.05, 0.68, -0.5, 0.62, -0.5, 0.3);
-  shape.bezierCurveTo(-0.5, 0.02, -0.05, -0.24, 0, -0.5);
-  shape.closePath();
+  // Reused Heart-Star parametric outline, normalized to the previous F3
+  // ornament footprint so instance scale and placement remain unchanged.
+  const shape = createHeartShape({ width: 1, height: 1.18, samples: 64 });
   const geometry = new THREE.ExtrudeGeometry(shape, {
     depth: 0.16,
     bevelEnabled: true,

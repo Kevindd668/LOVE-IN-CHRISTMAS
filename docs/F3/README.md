@@ -94,4 +94,5 @@ npm run build:single
 
 - [五仓库逐模块直接复用清单](DIRECT_REUSE_INVENTORY.md)
 - [参考仓库复用整合计划](REUSE_INTEGRATION_PLAN.md)
-- 当前状态：清单/计划已完成；正式代码整合需用户确认 WP1 或指定批次后执行。
+- 当前状态：清单/计划已完成；`f3-reuse` 分支已实现 **WP1**（Heart-Star 心形几何），A/B 与回归完成，尚未合并。
+- [WP1 复用报告](REUSE_WP1_REPORT.md)

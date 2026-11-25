@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { makeCanvasTexture, mulberry32 } from '../core/utils';
+import { createHeartOutline, createHeartShape } from './reuse/heartGeometry';
 
 const SPARKLE_VERTEX = /* glsl */ `
   attribute float aPhase;
@@ -87,16 +88,18 @@ export class TreeStar {
     this.edges.scale.setScalar(1.012);
     this.root.add(this.edges);
 
-    const innerGeometry = new THREE.ExtrudeGeometry(this.createHeartShape(), {
-      depth: 0.06,
-      bevelEnabled: true,
-      bevelThickness: 0.02,
-      bevelSize: 0.025,
-      bevelSegments: 2,
-      curveSegments: 16
-    });
+    const innerGeometry = new THREE.ExtrudeGeometry(
+      createHeartShape({ width: 0.52, height: 0.45, samples: 64 }),
+      {
+        depth: 0.06,
+        bevelEnabled: true,
+        bevelThickness: 0.02,
+        bevelSize: 0.025,
+        bevelSegments: 2,
+        curveSegments: 16
+      }
+    );
     innerGeometry.center();
-    innerGeometry.scale(0.52, 0.52, 0.52);
     this.innerHeart = new THREE.Mesh(
       innerGeometry,
       new THREE.MeshBasicMaterial({
@@ -155,39 +158,11 @@ export class TreeStar {
     this.root.add(this.light);
   }
 
-  private createHeartShape(): THREE.Shape {
-    const shape = new THREE.Shape();
-    shape.moveTo(0, -0.5);
-    shape.bezierCurveTo(0.06, -0.24, 0.52, 0.0, 0.52, 0.29);
-    shape.bezierCurveTo(0.52, 0.64, 0.05, 0.7, 0, 0.34);
-    shape.bezierCurveTo(-0.05, 0.7, -0.52, 0.64, -0.52, 0.29);
-    shape.bezierCurveTo(-0.52, 0.0, -0.06, -0.24, 0, -0.5);
-    shape.closePath();
-    return shape;
-  }
-
   private createHeartGeometry(): THREE.BufferGeometry {
-    // A low-poly crystal heart rather than a rounded extrusion: front/back
-    // pyramid fans + a side band create visible gemstone facets and the exact
-    // 0.95 × 0.85 × 0.22 target dimensions.
-    const outline = this.createHeartShape().getPoints(64);
-    let minX = Infinity;
-    let maxX = -Infinity;
-    let minY = Infinity;
-    let maxY = -Infinity;
-    for (const point of outline) {
-      minX = Math.min(minX, point.x);
-      maxX = Math.max(maxX, point.x);
-      minY = Math.min(minY, point.y);
-      maxY = Math.max(maxY, point.y);
-    }
-    const sx = 0.95 / Math.max(0.001, maxX - minX);
-    const sy = 0.85 / Math.max(0.001, maxY - minY);
-    const cx = (minX + maxX) * 0.5;
-    const cy = (minY + maxY) * 0.5;
-    const ring = outline.map(
-      (point) => new THREE.Vector3((point.x - cx) * sx, (point.y - cy) * sy, 0)
-    );
+    // Reused Heart-Star parametric outline, normalized by the shared helper
+    // to the exact F3 crystal dimensions.
+    const outline = createHeartOutline({ width: 0.95, height: 0.85, samples: 64 });
+    const ring = outline.map((point) => new THREE.Vector3(point.x, point.y, 0));
     const n = ring.length;
     const positions: number[] = [0, 0, 0.11, 0, 0, -0.11];
     const indices: number[] = [];

@@ -52,7 +52,7 @@
       "musicOn": false,
       "quality": "ultra"
     },
-    "fps": 240,
+    "fps": 239,
     "drawCalls": 291,
     "panelOpen": true,
     "photoCount": 8,
@@ -95,21 +95,21 @@
     "snow": 1300,
     "lights": 360,
     "hearts": 500,
-    "fps": 234
+    "fps": 222
   },
   "quality_performance": {
     "quality": "performance",
     "snow": 720,
     "lights": 360,
     "hearts": 300,
-    "fps": 234
+    "fps": 224
   },
   "quality_ultra": {
     "quality": "ultra",
     "snow": 1800,
     "lights": 360,
     "hearts": 600,
-    "fps": 237
+    "fps": 224
   },
   "reset": {
     "settings": {
@@ -219,7 +219,7 @@
       "musicOn": false,
       "quality": "ultra"
     },
-    "fps": 216,
+    "fps": 219,
     "drawCalls": 302,
     "panelOpen": false,
     "photoCount": 9,
@@ -284,7 +284,7 @@
       "musicOn": false,
       "quality": "ultra"
     },
-    "fps": 234,
+    "fps": 181,
     "drawCalls": 300,
     "panelOpen": false,
     "photoCount": 9,
@@ -350,7 +350,7 @@
       "quality": "ultra"
     },
     "fps": 240,
-    "drawCalls": 137,
+    "drawCalls": 132,
     "panelOpen": false,
     "photoCount": 9,
     "photoDomCount": 9,
@@ -414,8 +414,8 @@
       "musicOn": false,
       "quality": "ultra"
     },
-    "fps": 200,
-    "drawCalls": 146,
+    "fps": 196,
+    "drawCalls": 149,
     "panelOpen": false,
     "photoCount": 9,
     "photoDomCount": 9,
@@ -479,7 +479,7 @@
       "musicOn": true,
       "quality": "ultra"
     },
-    "fps": 108,
+    "fps": 140,
     "drawCalls": 29,
     "panelOpen": false,
     "photoCount": 9,
@@ -544,7 +544,7 @@
       "musicOn": true,
       "quality": "ultra"
     },
-    "fps": 109,
+    "fps": 185,
     "drawCalls": 292,
     "panelOpen": false,
     "photoCount": 9,
@@ -609,7 +609,7 @@
       "musicOn": true,
       "quality": "ultra"
     },
-    "fps": 72,
+    "fps": 236,
     "drawCalls": 302,
     "panelOpen": false,
     "photoCount": 9,
@@ -679,8 +679,8 @@
       "musicOn": false,
       "quality": "ultra"
     },
-    "fps": 226,
-    "drawCalls": 299,
+    "fps": 239,
+    "drawCalls": 300,
     "panelOpen": false,
     "photoCount": 9,
     "photoDomCount": 9,
