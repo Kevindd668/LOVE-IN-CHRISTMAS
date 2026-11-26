@@ -12,7 +12,16 @@
 
 ---
 
-## 直接打开
+## 在线体验
+
+直接打开：
+
+**https://kevindd668.github.io/LOVE-IN-CHRISTMAS/**
+
+手机上可直接把链接发给对方；微信内打开后点击「开启专属圣诞惊喜」即可。  
+如果对方只想看 68 秒电影、不想互动，发送 `delivery/LOVE-IN-CHRISTMAS-68s.mp4`。
+
+## 直接打开单文件
 
 **双击 [`Christmas-Wish.html`](./Christmas-Wish.html)**，用 Chrome 或 Edge 打开即可。
 

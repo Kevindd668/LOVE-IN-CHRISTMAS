@@ -17,6 +17,7 @@
 
 当前分支：`main`（最终基线 `v1.0.0`）。  
 GitHub：https://github.com/Kevindd668/LOVE-IN-CHRISTMAS  
+在线体验：https://kevindd668.github.io/LOVE-IN-CHRISTMAS/  
 完整电影：68 秒（8 秒开场 + 60 秒故事）。
 
 ## 交付

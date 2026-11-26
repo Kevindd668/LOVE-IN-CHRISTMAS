@@ -8,6 +8,7 @@
 | 版本 | `v1.0.0` |
 | 分支 | `main` |
 | GitHub | https://github.com/Kevindd668/LOVE-IN-CHRISTMAS |
+| 在线体验 | https://kevindd668.github.io/LOVE-IN-CHRISTMAS/ |
 | 技术基线 | Three.js `0.160.0` / TypeScript / Vite |
 | 单文件 | `Christmas-Wish.html` |
 | 电影 | 68 秒（8 秒开场 + 60 秒故事） |
